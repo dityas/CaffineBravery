@@ -1,0 +1,609 @@
+(defvar HostType (c nc hp c_hp))
+(defvar EDR (active inactive))
+
+-- Defender modeling the attacker
+(defvar Defl1ModelsAttl0        (m0))
+(defvar Defl1ModelsAttl0EC      (ec0))
+(defvar PassiveDefl1ModelsAttl0         (m0))
+(defvar PassiveDefl1ModelsAttl0EC       (ec0))
+
+(defvar Attl2ModelsDefl1        (m0 m1 m2 m3 m4 m5))
+(defvar Attl2ModelsDefl1EC      (ec0))
+
+(defvar AttackerFrame   (att))
+(defvar DefFrame        (highCap lowCap))
+
+-- Actions for both agents
+(defvar DefActions (DEPLOY_EDR DISABLE_EDR NOP))
+(defvar AttActions (RECON EXFIL NOP EXIT))
+
+-- Defender observations
+(defvar HType (obs_c obs_nc obs_hp))
+
+-- Attacker observations
+(defvar HTObs (obs_c_hp obs_nc))
+
+-- L2 attacker observations about defender actions
+(defvar DefActionsObs (edrAction noAction))
+
+-- Initial belief for defender
+(defdd initDef
+    (HostType hp)
+)
+
+-- Defender deploys/disables EDR
+(defdd actionDeployEDR
+    (EDR' active)
+)
+
+(defdd actionDisableEDR
+    (EDR' inactive)
+)
+
+-- Initial belief for attacker
+(defdd initAtt
+    (HostType 
+        (c      (0.0))
+        (nc     (0.5))
+        (hp     (0.0))
+        (c_hp   (0.5))
+    )
+)
+
+-- L0 Attacker's guess of L1 defender's action distribution
+(defdd distDefActions
+    (DefActions
+        (DEPLOY_EDR     (0.005))
+        (DISABLE_EDR    (0.005))
+        (NOP            (0.99))
+    )
+)
+
+-- Attacker's RECON action
+(defdd reconHostType
+    (HostType'
+        (c      
+            (HTObs' 
+                (obs_c_hp  (0.9))
+                (obs_nc    (0.1))
+            )
+        )
+
+        (nc     
+            (HTObs' 
+                (obs_nc         (0.9))
+                (obs_c_hp       (0.1))
+            )
+        )
+
+        (hp     
+            (HTObs' 
+                (obs_c_hp       (0.9))
+                (obs_nc         (0.1))
+            )
+        )
+
+        (c_hp
+            (HTObs' 
+                (obs_c_hp       (0.9))
+                (obs_nc         (0.1))
+            )
+        )
+    )
+)
+
+(defdd EDRTransition
+    (DefActions
+        
+        (DEPLOY_EDR     
+            (EDR' active)
+        )
+        
+        (DISABLE_EDR       
+            (EDR' inactive)
+        )
+        
+        (NOP              
+            (SAME EDR)
+        )
+    )
+)
+
+(defdbn attackerReconDBN
+    (HostType   (SAME HostType))
+    (EDR        (# (DefActions) (EDRTransition * distDefActions)))
+    (HTObs      (reconHostType))
+)
+
+(defdbn attackerExfilDBN
+    (HostType   (SAME HostType))
+    (EDR        (# (DefActions) (EDRTransition * distDefActions)))
+)
+
+(defdbn attackerExitDBN
+    (HostType   (SAME HostType))
+    (EDR        (# (DefActions) (EDRTransition * distDefActions)))
+)
+
+(defdbn attackerNopDBN
+    (HostType   (SAME HostType)
+    (EDR        (# (DefActions) (EDRTransition * distDefActions)))
+)
+
+
+-- Attacker model
+(defpomdp attLevel0
+    (S
+        (HostType EDR)
+    )
+
+    (O
+        (HTObs)
+    )
+
+    (A  AttActions)
+
+    (dynamics
+        (RECON  (attackerReconDBN))
+        (EXFIL  (attackerExfilDBN))
+        (NOP    (attackerNopDBN))
+        (EXIT   (attackerExitDBN))
+    )
+    
+    (R
+        (RECON  (-1.0))
+        (NOP    (-0.5))
+        (EXFIL  
+            (EDR
+                (active
+                    (-100.0)                    
+                )
+
+                (inactive
+                    (HostType
+                        (c      (0.0))
+                        (nc     (-100.0))
+                        (hp     (0.0))
+                        (c_hp   (10.0))
+                    )
+                )
+            )
+
+        )
+
+        (EXIT
+            (EDR
+                (active
+                    (0.0)                    
+                )
+
+                (inactive
+                    (HostType
+                        (c      (0.0))
+                        (nc     (0.0))
+                        (hp     (0.0))
+                        (c_hp   (-1.0))
+                    )
+                )
+            )
+        )
+    )
+
+    (discount 0.9)
+)
+
+-- Initial belief of the attacker
+(defdd initAttl0
+    (HostType
+        (c      (0.0))
+        (nc     (0.5))
+        (hp     (0.0))
+        (c_hp   (0.5))
+    )
+
+    * (EDR inactive)
+)
+
+(initmodelvar Defl1ModelsAttl0
+    (frames AttackerFrame)
+    (
+        (att    (m0     (initAttl0)))
+    )
+)
+
+-- Defender's DDs
+(defdd defObs
+    (HostType'
+        (c
+            (HType'
+                (obs_c  (0.99))
+                (obs_nc (0.005))
+                (obs_hp (0.005))
+            )
+        )
+
+        (nc
+            (HType'
+                (obs_c  (0.005))
+                (obs_nc (0.99))
+                (obs_hp (0.005))
+            )
+
+        )
+
+        (hp
+            (HType'
+                (obs_c  (0.005))
+                (obs_nc (0.005))
+                (obs_hp (0.99))
+            )
+
+        )
+
+        (c_hp
+            (HType' UNIFORM)
+
+        )
+    )
+)
+
+(defdd defHostTypeEnd
+    (SAME HostType)
+)
+
+(defdbn actionDeployEDR
+    (HostType   (AttActions
+            (RECON      (SAME HostType))
+            (EXFIL      (defHostTypeEnd))
+            (NOP        (SAME HostType))
+            (EXIT       (defHostTypeEnd))
+        )
+    )
+
+    (EDR (AttActions
+            (RECON      (EDR' active))
+            (EXFIL      (EDR' active))
+            (NOP        (EDR' active))
+            (EXIT       (EDR' active))
+        )
+    )
+
+    (HType      (defObs))
+)
+
+(defdbn actionDisableEDR
+    (HostType   (AttActions
+            (RECON      (SAME HostType))
+            (EXFIL      (defHostTypeEnd))
+            (NOP        (SAME HostType))
+            (EXIT       (defHostTypeEnd))
+        )
+    )
+
+    (EDR (AttActions
+            (RECON      (EDR' inactive))
+            (EXFIL      (EDR' inactive))
+            (NOP        (EDR' inactive))
+            (EXIT       (EDR' inactive))
+        )
+    )
+
+    (HType      (defObs))
+)
+
+(defdbn actionNOP
+    (HostType   (AttActions
+            (RECON      (SAME HostType))
+            (EXFIL      (defHostTypeEnd))
+            (NOP        (SAME HostType))
+            (EXIT       (defHostTypeEnd))
+        )
+    )
+
+    (EDR (AttActions
+            (RECON      (SAME EDR))
+            (EXFIL      (SAME EDR))
+            (NOP        (SAME EDR))
+            (EXIT       (SAME EDR))
+        )
+    )
+
+    (HType      (defObs))
+)
+
+-- defender reward
+
+(defdd edrReward
+    (HostType
+        (c
+            (EDR
+                (active         (1.0))
+                (inactive       (0.0))
+            )
+        )
+        (nc     (0.0))
+        (hp     (0.0))
+        (c_hp   (0.0))
+    )
+)
+
+-- defender L1 model
+(defipomdp defLevel1
+    (S
+        (HostType EDR)
+    )
+
+    (O
+        (HType)
+    )
+
+    (A  DefActions)
+    (Aj AttActions)
+
+    (Mj Defl1ModelsAttl0)
+    (EC Defl1ModelsAttl0EC)
+
+    (Thetaj AttackerFrame
+        (att    attLevel0)
+    )
+
+    (dynamics
+        (DEPLOY_EDR     (actionDeployEDR))
+        (DISABLE_EDR    (actionDisableEDR))
+        (NOP            (actionNOP))
+    )
+    
+    (R
+        (DEPLOY_EDR     (edrReward - 0.5))
+        (DISABLE_EDR    (edrReward - 0.5))
+        (NOP            (edrReward - 0.1))
+    )
+
+    (discount 0.9)
+    (H 6)
+)
+
+-- Initial belief of L1 defender
+
+(defdd initDefl1c
+    (HostType   c)
+    * (EDR      inactive)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1nc
+    (HostType   nc)
+    * (EDR      inactive)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1hp
+    (HostType   hp)
+    * (EDR      inactive)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1Actual
+    (HostType
+        (c      (0.333333))
+        (nc     (0.333333))
+        (hp     (0.333334))
+        (c_hp   (0.0))
+    )
+    * (EDR      inactive)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(initmodelvar PassiveDefl1ModelsAttl0
+    (frames AttackerFrame)
+    (
+        (att    (m0     (initAttl0)))
+    )
+)
+
+-- passive defender l1 model
+(defipomdp defLevel1Passive
+    (S
+        (HostType EDR)
+    )
+
+    (O
+        (HType)
+    )
+
+    (A  DefActions)
+    (Aj AttActions)
+
+    (Mj PassiveDefl1ModelsAttl0)
+    (EC PassiveDefl1ModelsAttl0EC)
+
+    (Thetaj AttackerFrame
+        (att    attLevel0)
+    )
+
+    (dynamics
+        (DEPLOY_EDR     (actionDeployEDR))
+        (DISABLE_EDR    (actionDisableEDR))
+        (NOP            (actionNOP))
+    )
+    
+    (R
+        (DEPLOY_EDR     -(1.0))
+        (DISABLE_EDR    -(1.0))
+        (NOP            (0.0))
+    )
+
+    (discount 0.9)
+    (H 6)
+)
+
+(defdd initPassiveDefl1c
+    (HostType   c)
+    * (EDR      inactive)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+(defdd initPassiveDefl1nc
+    (HostType   nc)
+    * (EDR      inactive)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+(defdd initPassiveDefl1hp
+    (HostType   hp)
+    * (EDR      inactive)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+-- Make level 2 attacker here.
+
+-- Add dynamics for new observation
+
+(defdd defActionsObs
+    (DefActions
+        (DEPLOY_EDR
+            (DefActionsObs'
+                (edrAction      (0.9))
+                (noAction       (0.1))
+            )
+        )
+
+        (DISABLE_EDR
+            (DefActionsObs'
+                (edrAction      (0.9))
+                (noAction       (0.1))
+            )
+        )
+
+        (NOP
+            (DefActionsObs'
+                (edrAction      (0.1))
+                (noAction       (0.9))
+            )
+        )
+    )
+)
+
+(defdbn attackerReconlNDBN
+    (HostType   (SAME HostType))
+    (EDR        (EDRTransition))
+    (HTObs      (reconHostType))
+    (DefActionsObs      (defActionsObs))
+)
+
+(defdbn attackerExfillNDBN
+    (HostType   (SAME HostType))
+    (EDR        (EDRTransition))
+)
+
+(defdbn attackerNoplNDBN
+    (HostType   (SAME HostType))
+    (EDR        (EDRTransition))
+)
+
+(defdbn attackerExitNDBN
+    (HostType   (SAME HostType))
+    (EDR        (EDRTransition))
+)
+
+(initmodelvar Attl2ModelsDefl1
+    (frames DefFrame)
+    (
+        (lowCap    (m0     (initDefl1c)))
+        (lowCap    (m1     (initDefl1nc)))
+        (lowCap    (m2     (initDefl1hp)))
+        (highCap   (m3     (initPassiveDefl1c)))
+        (highCap   (m4     (initPassiveDefl1nc)))
+        (highCap   (m5     (initPassiveDefl1hp)))
+    )
+)
+
+-- Level 2 Attacker model
+(defipomdp attLevel2
+    (S
+        (HostType EDR)
+    )
+
+    (O
+        (HTObs DefActionsObs)
+    )
+
+    (A  AttActions)
+    (Aj DefActions)
+
+    (Mj Attl2ModelsDefl1)
+    (EC Attl2ModelsDefl1EC)
+
+    (Thetaj DefFrame
+        (lowCap    defLevel1Passive)
+        (highCap   defLevel1)
+    )
+
+    (dynamics
+        (RECON  (attackerReconlNDBN))
+        (EXFIL  (attackerExfillNDBN))
+        (NOP    (attackerNoplNDBN))
+        (EXIT   (attackerExitNDBN))
+    )
+    
+    (R
+        (RECON  (-1.0))
+        (NOP    (-0.99))
+        (EXFIL  
+            (EDR
+                (active
+                    (-10.0)                    
+                )
+
+                (inactive
+                    (HostType
+                        (c      (0.0))
+                        (nc     (-10.0))
+                        (hp     (0.0))
+                        (c_hp   (10.0))
+                    )
+                )
+            )
+
+        )
+        
+        (EXIT
+            (EDR
+                (active
+                    (0.0)                    
+                )
+
+                (inactive
+                    (HostType
+                        (c      (0.0))
+                        (nc     (0.0))
+                        (hp     (0.0))
+                        (c_hp   (-1.0))
+                    )
+                )
+            )
+        )
+    )
+
+    (discount 0.9)
+    (H 7)
+)
+
+(defdd initAttl2
+    (HostType
+        (c      (0.0))
+        (nc     (0.5))
+        (hp     (0.0))
+        (c_hp   (0.5))
+    )
+
+    * (EDR inactive)
+    * (Attl2ModelsDefl1
+        (m0     (0.1666666))
+        (m1     (0.1666666))
+        (m2     (0.1666666))
+        (m3     (0.1666666))
+        (m4     (0.1666666))
+        (m5     (0.1666666))
+    )
+)
