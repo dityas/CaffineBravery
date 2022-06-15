@@ -1,5 +1,5 @@
 (defvar HostType (c nc hp))
-(defvar EDR (active inactive))
+-- (defvar EDR (active inactive))
 
 -- Defender modeling the attacker
 (defvar Defl1ModelsAttl0        (m0))
@@ -14,14 +14,14 @@
 (defvar DefFrame        (highCap lowCap))
 
 -- Actions for both agents
-(defvar DefActions (DEPLOY_EDR DISABLE_EDR NOP))
+(defvar DefActions (BLOCK_ACTION NOP))
 (defvar AttActions (RECON EXFIL NOP EXIT))
 
 -- Defender observations
 (defvar HType (obs_c obs_nc obs_hp))
 
 -- Attacker observations
-(defvar HTObs (obs_c obs_nc obs_hp))
+(defvar ReconObs (protected_asset unprotected_asset blocked none))
 
 -- L2 attacker observations about defender actions
 (defvar DefActionsObs (edrAction noAction))
@@ -29,15 +29,6 @@
 -- Initial belief for defender
 (defdd initDef
     (HostType hp)
-)
-
--- Defender deploys/disables EDR
-(defdd actionDeployEDR
-    (EDR' active)
-)
-
-(defdd actionDisableEDR
-    (EDR' inactive)
 )
 
 -- Initial belief for attacker
@@ -52,88 +43,82 @@
 -- L0 Attacker's guess of L1 defender's action distribution
 (defdd distDefActions
     (DefActions
-        (DEPLOY_EDR     (0.005))
-        (DISABLE_EDR    (0.005))
+        (BLOCK_ACTION   (0.01))
         (NOP            (0.99))
     )
 )
 
 -- Attacker's RECON action
-(defdd reconHostType
+(defdd reconObs
     (HostType'
         (c      
-            (HTObs' 
-                (obs_c     (0.9))
-                (obs_nc    (0.05))
-                (obs_hp    (0.05))
+            (ReconObs' 
+                (protected_asset    (0.9))
+                (unprotected_asset  (0.04))
+                (blocked            (0.02))
+                (none               (0.04))
             )
         )
 
         (nc     
-            (HTObs' 
-                (obs_nc         (0.9))
-                (obs_c          (0.05))
-                (obs_hp         (0.05))
+            (ReconObs' 
+                (protected_asset    (0.04))
+                (unprotected_asset  (0.04))
+                (blocked            (0.02))
+                (none               (0.9))
             )
         )
 
         (hp     
-            (HTObs' 
-                (obs_hp         (0.9))
-                (obs_nc         (0.05))
-                (obs_c          (0.05))
+            (ReconObs' 
+                (protected_asset    (0.04))
+                (unprotected_asset  (0.9))
+                (blocked            (0.02))
+                (none               (0.04))
             )
         )
     )
 )
 
-(defdd EDRTransition
-    (DefActions
-        
-        (DEPLOY_EDR     
-            (EDR' active)
-        )
-        
-        (DISABLE_EDR       
-            (EDR' inactive)
-        )
-        
-        (NOP              
-            (SAME EDR)
-        )
+-- recon observation for other actions
+(defdd reconObsDefault
+    (ReconObs'
+       (protected_asset    (0.04))
+       (unprotected_asset  (0.04))
+       (blocked            (0.02))
+       (none               (0.9))
     )
 )
 
 (defdbn attackerReconDBN
     (HostType   (SAME HostType))
-    (EDR        (# (DefActions) (EDRTransition * distDefActions)))
-    (HTObs      (reconHostType))
+    (ReconObs   (reconObs))
 )
 
 (defdbn attackerExfilDBN
     (HostType   (SAME HostType))
-    (EDR        (# (DefActions) (EDRTransition * distDefActions)))
+    (ReconObs   (reconObs))
 )
 
 (defdbn attackerExitDBN
     (HostType   (SAME HostType))
-    (EDR        (# (DefActions) (EDRTransition * distDefActions)))
+    (ReconObs   (reconObsDefault))
 )
 
 (defdbn attackerNopDBN
     (HostType   (SAME HostType)
-    (EDR        (# (DefActions) (EDRTransition * distDefActions)))
+    (ReconObs   (reconObsDefault))
 )
 
 
 -- Attacker model
 (defpomdp attLevel0
     (S
-        (HostType EDR)
+        (HostType)
     )
 
     (O
-        (HTObs)
+        (reconObs)
     )
 
     (A  AttActions)
@@ -494,12 +479,12 @@
 (initmodelvar Attl2ModelsDefl1
     (frames DefFrame)
     (
-        (lowCap    (m0     (initDefl1c)))
-        (lowCap    (m1     (initDefl1nc)))
-        (lowCap    (m2     (initDefl1hp)))
-        (highCap   (m3     (initPassiveDefl1c)))
-        (highCap   (m4     (initPassiveDefl1nc)))
-        (highCap   (m5     (initPassiveDefl1hp)))
+        (lowCap    (m0     (initPassiveDefl1c)))
+        (lowCap    (m1     (initPassiveDefl1nc)))
+        (lowCap    (m2     (initPassiveDefl1hp)))
+        (highCap   (m3     (initDefl1c)))
+        (highCap   (m4     (initDefl1nc)))
+        (highCap   (m5     (initDefl1hp)))
     )
 )
 
@@ -572,20 +557,50 @@
     (H 7)
 )
 
+(defdd dependentMj
+    (HostType
+        (c
+            (Attl2ModelsDefl1
+                (m0     (0.5))
+                (m1     (0.0))
+                (m2     (0.0))
+                (m3     (0.5))
+                (m4     (0.0))
+                (m5     (0.0))
+            )      
+        )
+
+        (nc
+            (Attl2ModelsDefl1
+                (m0     (0.0))
+                (m1     (0.5))
+                (m2     (0.0))
+                (m3     (0.0))
+                (m4     (0.5))
+                (m5     (0.0))
+            )
+        )
+
+        (hp
+            (Attl2ModelsDefl1
+                (m0     (0.0))
+                (m1     (0.0))
+                (m2     (0.5))
+                (m3     (0.0))
+                (m4     (0.0))
+                (m5     (0.5))
+            )
+        )
+    )
+)
+
 (defdd initAttl2
     (HostType
-        (c      (0.33333))
-        (nc     (0.33333))
-        (hp     (0.33334))
+        (c      (0.33))
+        (nc     (0.33))
+        (hp     (0.34))
     )
 
     * (EDR inactive)
-    * (Attl2ModelsDefl1
-        (m0     (0.1666666))
-        (m1     (0.1666666))
-        (m2     (0.1666666))
-        (m3     (0.1666666))
-        (m4     (0.1666666))
-        (m5     (0.1666666))
-    )
+    * (dependentMj)
 )

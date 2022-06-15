@@ -2,7 +2,6 @@
 package CognitiveBiases;
 
 import java.util.List;
-import thinclab.models.POMDP;
 import thinclab.models.IPOMDP.IPOMDP;
 import thinclab.models.datastructures.PolicyGraph;
 import thinclab.policy.AlphaVectorPolicy;
@@ -21,7 +20,7 @@ public class Level1 {
 
         System.out.println(String.format("[=] Parsed %s", args[0]));
 
-        var defLevel1 = (IPOMDP) runner.getModel("defLevel1").orElseGet(() ->
+        var defLevel1 = (IPOMDP) runner.getModel("defl1").orElseGet(() ->
                 {
 
                     System.err.println("No model found");
@@ -29,11 +28,19 @@ public class Level1 {
                     return null;
                 });
 
-        var initBelDefLevel1 = defLevel1.getECDDFromMjDD(runner.getDDs().get("initDefl1Actual"));
-        var policy = new SymbolicPerseusSolver<>().solve(List.of(initBelDefLevel1), defLevel1, 100,
-                10, AlphaVectorPolicy.fromR(defLevel1.R()));
+        var initBelDefLevel1 = defLevel1.getECDDFromMjDD(
+                runner.getDDs().get("initDefl1Actual"));
 
-        var G = PolicyGraph.makePolicyGraph(List.of(initBelDefLevel1), defLevel1, policy);
+        var policy = new SymbolicPerseusSolver<>()
+            .solve(
+                    List.of(initBelDefLevel1), 
+                    defLevel1, 100, 10, 
+                    AlphaVectorPolicy.fromR(defLevel1.R()));
+
+        var G = PolicyGraph.makePolicyGraph(
+                List.of(initBelDefLevel1), 
+                defLevel1, policy);
+
         System.out.println(String.format("Graph is %s", G));
     }
 }

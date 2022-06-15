@@ -1,0 +1,295 @@
+(defvar HostType (c nc hp))
+
+-- Defender modeling the attacker
+(defvar Defl1ModelsAttl0        (m0))
+(defvar Defl1ModelsAttl0EC      (ec0))
+(defvar PassiveDefl1ModelsAttl0         (m0))
+(defvar PassiveDefl1ModelsAttl0EC       (ec0))
+
+(defvar Attl2ModelsDefl1        (m0 m1 m2 m3 m4 m5))
+(defvar Attl2ModelsDefl1EC      (ec0))
+
+(defvar AttackerFrame   (att))
+(defvar DefFrame        (highCap lowCap))
+
+-- Actions for both agents
+(defvar DefActions (BLOCK_ACTION NOP))
+(defvar AttActions (RECON EXFIL NOP EXIT))
+
+-- Defender observations
+(defvar HType (obs_c obs_nc obs_hp))
+
+-- Attacker observations
+(defvar ReconObs (protected_asset unprotected_asset blocked none))
+
+-- L2 attacker observations about defender actions
+(defvar DefActionsObs (edrAction noAction))
+
+-- Initial belief for defender
+(defdd initDef
+    (HostType hp)
+)
+
+-- Initial belief for attacker
+(defdd initAtt
+    (HostType 
+        (c      (0.333333))
+        (nc     (0.333333))
+        (hp     (0.333334))
+    )
+)
+
+-- L0 Attacker's guess of L1 defender's action distribution
+(defdd distDefActions
+    (DefActions
+        (BLOCK_ACTION   (0.01))
+        (NOP            (0.99))
+    )
+)
+
+-- Attacker's RECON action
+(defdd reconObs
+    (HostType'
+        (c      
+            (ReconObs' 
+                (protected_asset    (0.9))
+                (unprotected_asset  (0.04))
+                (blocked            (0.02))
+                (none               (0.04))
+            )
+        )
+
+        (nc     
+            (ReconObs' 
+                (protected_asset    (0.04))
+                (unprotected_asset  (0.04))
+                (blocked            (0.02))
+                (none               (0.9))
+            )
+        )
+
+        (hp     
+            (ReconObs' 
+                (protected_asset    (0.04))
+                (unprotected_asset  (0.9))
+                (blocked            (0.02))
+                (none               (0.04))
+            )
+        )
+    )
+)
+
+-- recon observation for other actions
+(defdd reconObsDefault
+    (ReconObs'
+       (protected_asset    (0.04))
+       (unprotected_asset  (0.04))
+       (blocked            (0.02))
+       (none               (0.9))
+    )
+)
+
+(defdd reconObsExfil
+    (DefActions
+        (BLOCK_ACTION
+            (ReconObs'                            
+               (protected_asset    (0.04))
+               (unprotected_asset  (0.04))
+               (blocked            (0.9))
+               (none               (0.02)) 
+            )                             
+        )
+
+        (NOP
+            (ReconObs'                    
+               (protected_asset    (0.04))
+               (unprotected_asset  (0.04))
+               (blocked            (0.02))
+               (none               (0.9)) 
+            )                             
+        )
+    )
+)
+
+(defdbn attackerReconDBN
+    (HostType   (SAME HostType))
+    (ReconObs   (reconObs))
+)
+
+(defdbn attackerExfilDBN
+    (HostType   (SAME HostType))
+    (ReconObs   (# (DefActions) (distDefActions * reconObsExfil)))
+)
+
+(defdbn attackerExitDBN
+    (HostType   (SAME HostType))
+    (ReconObs   (reconObsDefault))
+)
+
+(defdbn attackerNopDBN
+    (HostType   (SAME HostType)
+    (ReconObs   (reconObsDefault))
+)
+
+-- multi agent reward DD for level 0
+
+(defdd exfilReward
+    (HostType
+        (c      (10.0))
+        (nc     (-100.0))
+        (hp     (-100.0))
+    )
+)
+
+-- Attacker model
+(defpomdp attl0
+    (S
+        (HostType)
+    )
+
+    (O
+        (ReconObs)
+    )
+
+    (A  AttActions)
+
+    (dynamics
+        (RECON  (attackerReconDBN))
+        (EXFIL  (attackerExfilDBN))
+        (NOP    (attackerNopDBN))
+        (EXIT   (attackerExitDBN))
+    )
+    
+    (R
+        (RECON  (-1.0))
+        (NOP    (-0.5))
+        (EXFIL  
+            (# (DefActions) (distDefActions * exfilReward)) 
+        )
+
+        (EXIT
+            (HostType
+                (c      (-1.0))
+                (nc     (0.0))
+                (hp     (0.0))
+            )
+        )
+    )
+
+    (discount 0.9)
+)
+
+-- Initial belief of the attacker
+(defdd initAttl0
+    (HostType
+        (c      (0.33333))
+        (nc     (0.33333))
+        (hp     (0.33334))
+    )
+)
+
+(initmodelvar Defl1ModelsAttl0
+    (frames AttackerFrame)
+    (
+        (att    (m0     (initAttl0)))
+    )
+)
+
+-- Defender's DDs
+(defdd defObs
+    (HostType'
+        (c
+            (HType'
+                (obs_c  (0.99))
+                (obs_nc (0.005))
+                (obs_hp (0.005))
+            )
+        )
+
+        (nc
+            (HType'
+                (obs_c  (0.005))
+                (obs_nc (0.99))
+                (obs_hp (0.005))
+            )
+
+        )
+
+        (hp
+            (HType'
+                (obs_c  (0.005))
+                (obs_nc (0.005))
+                (obs_hp (0.99))
+            )
+
+        )
+    )
+)
+
+(defdd attActHostType
+    (AttActions
+        (RECON  (SAME HostType))
+        (EXFIL  (SAME HostType))
+        (NOP    (SAME HostType))
+        (EXIT   (SAME HostType))
+    )
+)
+
+(defdbn actionBlockAction
+    (HostType   (attActHostType))
+    (HType      (defObs))
+)
+
+(defdbn actionNOP
+    (HostType   (attActHostType))
+    (HType      (defObs))
+)
+
+-- defender L1 model
+(defipomdp defl1
+    (S
+        (HostType)
+    )
+
+    (O
+        (HType)
+    )
+
+    (A  DefActions)
+    (Aj AttActions)
+
+    (Mj Defl1ModelsAttl0)
+    (EC Defl1ModelsAttl0EC)
+
+    (Thetaj AttackerFrame
+        (att    attl0)
+    )
+
+    (dynamics
+        (BLOCK_ACTION   (actionBlockAction))
+        (NOP            (actionNOP))
+    )
+    
+    (R
+        (BLOCK_ACTION   (AttActions
+            (RECON  (10.0))
+            (EXFIL  (10.0))
+            (EXIT   (-100.0))
+            (NOP    (-100.0))
+        ))
+        (NOP            (-0.1))
+    )
+
+    (discount 0.9)
+    (H 6)
+)
+
+(defdd initDefl1Actual
+    (HostType
+        (c      (0.333333))
+        (nc     (0.333333))
+        (hp     (0.333334))
+    )
+    * (Defl1ModelsAttl0 m0)
+)
+

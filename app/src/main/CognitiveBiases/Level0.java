@@ -20,7 +20,7 @@ public class Level0 {
 
         System.out.println(String.format("[=] Parsed %s", args[0]));
 
-        var attLevel0 = (POMDP) runner.getModel("attLevel0").orElseGet(() ->
+        var attLevel0 = (POMDP) runner.getModel("attl0").orElseGet(() ->
                 {
 
                     System.err.println("No model found");
