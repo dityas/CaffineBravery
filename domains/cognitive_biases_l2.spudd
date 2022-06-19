@@ -22,9 +22,6 @@
 -- Attacker observations
 (defvar ReconObs (protected_asset unprotected_asset blocked none))
 
--- L2 attacker observations about defender actions
-(defvar DefActionsObs (blockAction noAction))
-
 -- Initial belief for defender
 (defdd initDef
     (HostType hp)
@@ -48,7 +45,9 @@
 )
 
 -- Attacker's RECON action
-(defdd reconObs
+
+-- When defender does not block the attacker's actions
+(defdd reconObsDefNop
     (HostType'
         (c      
             (ReconObs' 
@@ -76,6 +75,46 @@
                 (none               (0.04))
             )
         )
+    )
+)
+
+-- When defender blocks the attacker's actions
+(defdd reconObsDefBlockAction
+    (HostType'
+        (c      
+            (ReconObs' 
+                (protected_asset    (0.08))
+                (unprotected_asset  (0.01))
+                (blocked            (0.9))
+                (none               (0.01))
+            )
+        )
+
+        (nc     
+            (ReconObs' 
+                (protected_asset    (0.01))
+                (unprotected_asset  (0.01))
+                (blocked            (0.9))
+                (none               (0.08))
+            )
+        )
+
+        (hp     
+            (ReconObs' 
+                (protected_asset    (0.01))
+                (unprotected_asset  (0.08))
+                (blocked            (0.9))
+                (none               (0.01))
+            )
+        )
+    )
+)
+
+-- Combined observ function based on joint actions
+(defdd reconObs
+    (DefActions
+        (BLOCK_ACTION   (reconObsDefBlockAction))
+        (NOP    (reconObsDefNop))
     )
 )
 
@@ -113,7 +152,7 @@
 
 (defdbn attackerReconDBN
     (HostType   (SAME HostType))
-    (ReconObs   (reconObs))
+    (ReconObs   (# (DefActions) (distDefActions * reconObs)))
 )
 
 (defdbn attackerExfilDBN
@@ -272,7 +311,7 @@
     
     (R
         (BLOCK_ACTION   (AttActions
-            (RECON  (10.0))
+            (RECON  (-1.0))
             (EXFIL  (10.0))
             (EXIT   (-100.0))
             (NOP    (-100.0))
@@ -370,30 +409,9 @@
 
 -- Attacker l2
 
--- Add dynamics for new observation
-
-(defdd defActionsObs
-    (DefActions
-        (BLOCK_ACTION
-            (DefActionsObs'
-                (blockAction    (0.9))
-                (noAction       (0.1))
-            )
-        )
-
-        (NOP
-            (DefActionsObs'
-                (blockAction    (0.1))
-                (noAction       (0.9))
-            )
-        )
-    )
-)
-
 (defdbn attackerReconlNDBN
     (HostType       (SAME HostType))
     (ReconObs       (reconObs))
-    (DefActionsObs  (defActionsObs))
 )
 
 (defdbn attackerExfillNDBN
@@ -430,7 +448,7 @@
     )
 
     (O
-        (ReconObs DefActionsObs)
+        (ReconObs)
     )
 
     (A  AttActions)
