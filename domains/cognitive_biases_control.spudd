@@ -396,19 +396,31 @@
 -- Initial beliefs of l1 defender
 
 (defdd initDefl1c
-    (HostType   c)
+    (HostType
+        (c  (0.9))
+        (nc (0.05))
+        (hp (0.05))
+    )
     * (AccessLevel user)
     * (Defl1ModelsAttl0 m0)
 )
 
 (defdd initDefl1nc
-    (HostType   nc)
+    (HostType
+        (c  (0.05))
+        (nc (0.9))
+        (hp (0.05))
+    )
     * (AccessLevel user)
     * (Defl1ModelsAttl0 m0)
 )
 
 (defdd initDefl1hp
-    (HostType   hp)
+    (HostType
+        (c  (0.05))
+        (nc (0.05))
+        (hp (0.9))
+    )
     * (AccessLevel user)
     * (Defl1ModelsAttl0 m0)
 )
@@ -457,19 +469,31 @@
 )
 
 (defdd initPassiveDefl1c
-    (HostType   c)
+    (HostType
+        (c  (0.9))
+        (nc (0.05))
+        (hp (0.05))
+    )
     * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
 (defdd initPassiveDefl1nc
-    (HostType   nc)
+    (HostType
+        (c  (0.05))
+        (nc (0.9))
+        (hp (0.05))
+    )
     * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
 (defdd initPassiveDefl1hp
-    (HostType   hp)
+    (HostType
+        (c  (0.05))
+        (nc (0.05))
+        (hp (0.9))
+    )
     * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
