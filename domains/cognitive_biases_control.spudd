@@ -1,5 +1,5 @@
-(defvar HostType (c nc hp))
--- (defvar EDR (active inactive))
+(defvar HostType    (c nc hp))
+(defvar AccessLevel (user root))
 
 -- Defender modeling the attacker
 (defvar Defl1ModelsAttl0        (m0))
@@ -15,16 +15,13 @@
 
 -- Actions for both agents
 (defvar DefActions (BLOCK_ACTION NOP))
-(defvar AttActions (RECON EXFIL NOP EXIT))
+(defvar AttActions (RECON PRIV_ESC EXFIL NOP EXIT))
 
 -- Defender observations
 (defvar HType (obs_c obs_nc obs_hp))
 
 -- Attacker observations
 (defvar ReconObs (protected_asset unprotected_asset blocked none))
-
--- L2 attacker observations about defender actions
-(defvar DefActionsObs (edrAction noAction))
 
 -- Initial belief for defender
 (defdd initDef
@@ -48,8 +45,31 @@
     )
 )
 
+-- Attacker's Priv Esc
+
+(defdd privEscAccessLevel
+    (DefActions
+        (BLOCK_ACTION
+            (SAME AccessLevel)
+        )
+
+        (NOP
+            (AccessLevel' root)
+        )
+    )
+)
+
+(defdd privEscReconObs
+    (AccessLevel'
+        (user   (ReconObs' blocked))
+        (root   (ReconObs' none))
+    )
+)
+
 -- Attacker's RECON action
-(defdd reconObs
+
+-- When defender does not block the attacker's actions
+(defdd reconObsDefNop
     (HostType'
         (c      
             (ReconObs' 
@@ -80,6 +100,46 @@
     )
 )
 
+-- When defender blocks the attacker's actions
+(defdd reconObsDefBlockAction
+    (HostType'
+        (c      
+            (ReconObs' 
+                (protected_asset    (0.08))
+                (unprotected_asset  (0.01))
+                (blocked            (0.9))
+                (none               (0.01))
+            )
+        )
+
+        (nc     
+            (ReconObs' 
+                (protected_asset    (0.01))
+                (unprotected_asset  (0.01))
+                (blocked            (0.9))
+                (none               (0.08))
+            )
+        )
+
+        (hp     
+            (ReconObs' 
+                (protected_asset    (0.01))
+                (unprotected_asset  (0.08))
+                (blocked            (0.9))
+                (none               (0.01))
+            )
+        )
+    )
+)
+
+-- Combined observ function based on joint actions
+(defdd reconObs
+    (DefActions
+        (BLOCK_ACTION   (reconObsDefBlockAction))
+        (NOP    (reconObsDefNop))
+    )
+)
+
 -- recon observation for other actions
 (defdd reconObsDefault
     (ReconObs'
@@ -90,35 +150,86 @@
     )
 )
 
+(defdd reconObsExfil
+    (DefActions
+        (BLOCK_ACTION
+            (ReconObs'                            
+               (protected_asset    (0.04))
+               (unprotected_asset  (0.04))
+               (blocked            (0.9))
+               (none               (0.02)) 
+            )                             
+        )
+
+        (NOP
+            (ReconObs'                    
+               (protected_asset    (0.04))
+               (unprotected_asset  (0.04))
+               (blocked            (0.02))
+               (none               (0.9)) 
+            )                             
+        )
+    )
+)
+
 (defdbn attackerReconDBN
-    (HostType   (SAME HostType))
-    (ReconObs   (reconObs))
+    (HostType       (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
+    (ReconObs       (# (DefActions) (distDefActions * reconObs)))
 )
 
 (defdbn attackerExfilDBN
     (HostType   (SAME HostType))
-    (ReconObs   (reconObs))
+    (AccessLevel    (SAME AccessLevel))
+    (ReconObs   (# (DefActions) (distDefActions * reconObsExfil)))
 )
 
 (defdbn attackerExitDBN
     (HostType   (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs   (reconObsDefault))
 )
 
 (defdbn attackerNopDBN
     (HostType   (SAME HostType)
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs   (reconObsDefault))
 )
 
+(defdbn attackerPrivEscDBN
+    (HostType   (SAME HostType)
+    (AccessLevel    (# (DefActions) (distDefActions * privEscAccessLevel)))
+    (ReconObs   (privEscReconObs))
+)
+-- multi agent reward DD for level 0
+
+(defdd exfilReward
+
+    (DefActions
+        (NOP
+            (AccessLevel
+                (user   (-1.0))
+                (root
+                    (HostType
+                        (c      (10.0))
+                        (nc     (-20.0))
+                        (hp     (-20.0))
+                    )
+                )
+            )
+        )
+        (BLOCK_ACTION   (-1.0))
+    )
+)
 
 -- Attacker model
-(defpomdp attLevel0
+(defpomdp attl0
     (S
-        (HostType)
+        (HostType AccessLevel)
     )
 
     (O
-        (reconObs)
+        (ReconObs)
     )
 
     (A  AttActions)
@@ -128,41 +239,22 @@
         (EXFIL  (attackerExfilDBN))
         (NOP    (attackerNopDBN))
         (EXIT   (attackerExitDBN))
+        (PRIV_ESC   (attackerPrivEscDBN))
     )
     
     (R
-        (RECON  (-1.0))
+        (RECON      (-1.0))
+        (PRIV_ESC   (-1.0))
         (NOP    (-0.5))
         (EXFIL  
-            (EDR
-                (active
-                    (-100.0)                    
-                )
-
-                (inactive
-                    (HostType
-                        (c      (10.0))
-                        (nc     (-100.0))
-                        (hp     (-100.0))
-                    )
-                )
-            )
-
+            (# (DefActions) (distDefActions * exfilReward)) 
         )
 
         (EXIT
-            (EDR
-                (active
-                    (0.0)                    
-                )
-
-                (inactive
-                    (HostType
-                        (c      (-1.0))
-                        (nc     (0.0))
-                        (hp     (0.0))
-                    )
-                )
+            (HostType
+                (c      (-1.0))
+                (nc     (0.0))
+                (hp     (0.0))
             )
         )
     )
@@ -178,7 +270,7 @@
         (hp     (0.33334))
     )
 
-    * (EDR inactive)
+    * (AccessLevel user)
 )
 
 (initmodelvar Defl1ModelsAttl0
@@ -219,89 +311,42 @@
     )
 )
 
-(defdd defHostTypeEnd
-    (SAME HostType)
+(defdd attActHostType
+    (AttActions
+        (RECON  (SAME HostType))
+        (EXFIL  (SAME HostType))
+        (NOP    (SAME HostType))
+        (EXIT   (SAME HostType))
+        (PRIV_ESC   (SAME HostType))
+    )
 )
 
-(defdbn actionDeployEDR
-    (HostType   (AttActions
-            (RECON      (SAME HostType))
-            (EXFIL      (defHostTypeEnd))
-            (NOP        (SAME HostType))
-            (EXIT       (defHostTypeEnd))
-        )
+(defdd attActAccessLevel
+    (AttActions
+        (RECON  (SAME AccessLevel))
+        (EXFIL  (SAME AccessLevel))
+        (NOP    (SAME AccessLevel))
+        (EXIT   (SAME AccessLevel))
+        (PRIV_ESC   (AccessLevel' root))
     )
-
-    (EDR (AttActions
-            (RECON      (EDR' active))
-            (EXFIL      (EDR' active))
-            (NOP        (EDR' active))
-            (EXIT       (EDR' active))
-        )
-    )
-
-    (HType      (defObs))
 )
 
-(defdbn actionDisableEDR
-    (HostType   (AttActions
-            (RECON      (SAME HostType))
-            (EXFIL      (defHostTypeEnd))
-            (NOP        (SAME HostType))
-            (EXIT       (defHostTypeEnd))
-        )
-    )
-
-    (EDR (AttActions
-            (RECON      (EDR' inactive))
-            (EXFIL      (EDR' inactive))
-            (NOP        (EDR' inactive))
-            (EXIT       (EDR' inactive))
-        )
-    )
-
-    (HType      (defObs))
+(defdbn actionBlockAction
+    (HostType       (attActHostType))
+    (AccessLevel    (attActAccessLevel))
+    (HType          (defObs))
 )
 
 (defdbn actionNOP
-    (HostType   (AttActions
-            (RECON      (SAME HostType))
-            (EXFIL      (defHostTypeEnd))
-            (NOP        (SAME HostType))
-            (EXIT       (defHostTypeEnd))
-        )
-    )
-
-    (EDR (AttActions
-            (RECON      (SAME EDR))
-            (EXFIL      (SAME EDR))
-            (NOP        (SAME EDR))
-            (EXIT       (SAME EDR))
-        )
-    )
-
+    (HostType   (attActHostType))
+    (AccessLevel    (attActAccessLevel))
     (HType      (defObs))
 )
 
--- defender reward
-
-(defdd edrReward
-    (HostType
-        (c
-            (EDR
-                (active         (1.0))
-                (inactive       (0.0))
-            )
-        )
-        (nc     (0.0))
-        (hp     (0.0))
-    )
-)
-
 -- defender L1 model
-(defipomdp defLevel1
+(defipomdp defl1
     (S
-        (HostType EDR)
+        (HostType AccessLevel)
     )
 
     (O
@@ -315,43 +360,27 @@
     (EC Defl1ModelsAttl0EC)
 
     (Thetaj AttackerFrame
-        (att    attLevel0)
+        (att    attl0)
     )
 
     (dynamics
-        (DEPLOY_EDR     (actionDeployEDR))
-        (DISABLE_EDR    (actionDisableEDR))
+        (BLOCK_ACTION   (actionBlockAction))
         (NOP            (actionNOP))
     )
     
     (R
-        (DEPLOY_EDR     (edrReward - 0.5))
-        (DISABLE_EDR    (edrReward - 0.5))
-        (NOP            (edrReward - 0.1))
+        (BLOCK_ACTION   (AttActions
+            (RECON      (-1.0))
+            (EXFIL      (10.0))
+            (PRIV_ESC   (10.0))
+            (EXIT       (-100.0))
+            (NOP        (-100.0))
+        ))
+        (NOP            (-0.1))
     )
 
     (discount 0.9)
     (H 6)
-)
-
--- Initial belief of L1 defender
-
-(defdd initDefl1c
-    (HostType   c)
-    * (EDR      inactive)
-    * (Defl1ModelsAttl0 m0)
-)
-
-(defdd initDefl1nc
-    (HostType   nc)
-    * (EDR      inactive)
-    * (Defl1ModelsAttl0 m0)
-)
-
-(defdd initDefl1hp
-    (HostType   hp)
-    * (EDR      inactive)
-    * (Defl1ModelsAttl0 m0)
 )
 
 (defdd initDefl1Actual
@@ -360,9 +389,31 @@
         (nc     (0.333333))
         (hp     (0.333334))
     )
-    * (EDR      inactive)
+    * (AccessLevel user)
     * (Defl1ModelsAttl0 m0)
 )
+
+-- Initial beliefs of l1 defender
+
+(defdd initDefl1c
+    (HostType   c)
+    * (AccessLevel user)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1nc
+    (HostType   nc)
+    * (AccessLevel user)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1hp
+    (HostType   hp)
+    * (AccessLevel user)
+    * (Defl1ModelsAttl0 m0)
+)
+
+-- Make passive defender model
 
 (initmodelvar PassiveDefl1ModelsAttl0
     (frames AttackerFrame)
@@ -372,9 +423,9 @@
 )
 
 -- passive defender l1 model
-(defipomdp defLevel1Passive
+(defipomdp defl1Passive
     (S
-        (HostType EDR)
+        (HostType AccessLevel)
     )
 
     (O
@@ -388,18 +439,16 @@
     (EC PassiveDefl1ModelsAttl0EC)
 
     (Thetaj AttackerFrame
-        (att    attLevel0)
+        (att    attl0)
     )
 
     (dynamics
-        (DEPLOY_EDR     (actionDeployEDR))
-        (DISABLE_EDR    (actionDisableEDR))
+        (BLOCK_ACTION   (actionBlockAction))
         (NOP            (actionNOP))
     )
     
     (R
-        (DEPLOY_EDR     -(1.0))
-        (DISABLE_EDR    -(1.0))
+        (BLOCK_ACTION   -(1.0))
         (NOP            (0.0))
     )
 
@@ -409,71 +458,52 @@
 
 (defdd initPassiveDefl1c
     (HostType   c)
-    * (EDR      inactive)
+    * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
 (defdd initPassiveDefl1nc
     (HostType   nc)
-    * (EDR      inactive)
+    * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
 (defdd initPassiveDefl1hp
     (HostType   hp)
-    * (EDR      inactive)
+    * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
--- Make level 2 attacker here.
-
--- Add dynamics for new observation
-
-(defdd defActionsObs
-    (DefActions
-        (DEPLOY_EDR
-            (DefActionsObs'
-                (edrAction      (0.9))
-                (noAction       (0.1))
-            )
-        )
-
-        (DISABLE_EDR
-            (DefActionsObs'
-                (edrAction      (0.9))
-                (noAction       (0.1))
-            )
-        )
-
-        (NOP
-            (DefActionsObs'
-                (edrAction      (0.1))
-                (noAction       (0.9))
-            )
-        )
-    )
-)
+-- Attacker l2
 
 (defdbn attackerReconlNDBN
-    (HostType   (SAME HostType))
-    (EDR        (EDRTransition))
-    (HTObs      (reconHostType))
-    (DefActionsObs      (defActionsObs))
+    (HostType       (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
+    (ReconObs       (reconObs))
 )
 
 (defdbn attackerExfillNDBN
     (HostType   (SAME HostType))
-    (EDR        (EDRTransition))
+    (AccessLevel    (SAME AccessLevel))
+    (ReconObs   (reconObsExfil))
+)
+
+(defdbn attackerExitlNDBN
+    (HostType   (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
+    (ReconObs   (reconObsDefault))
 )
 
 (defdbn attackerNoplNDBN
-    (HostType   (SAME HostType))
-    (EDR        (EDRTransition))
+    (HostType   (SAME HostType)
+    (AccessLevel    (SAME AccessLevel))
+    (ReconObs   (reconObsDefault))
 )
 
-(defdbn attackerExitNDBN
-    (HostType   (SAME HostType))
-    (EDR        (EDRTransition))
+(defdbn attackerPrivEsclNDBN
+    (HostType       (SAME HostType)
+    (AccessLevel    (privEscAccessLevel))
+    (ReconObs       (privEscReconObs))
 )
 
 (initmodelvar Attl2ModelsDefl1
@@ -489,13 +519,13 @@
 )
 
 -- Level 2 Attacker model
-(defipomdp attLevel2
+(defipomdp attl2
     (S
-        (HostType EDR)
+        (HostType AccessLevel)
     )
 
     (O
-        (HTObs DefActionsObs)
+        (ReconObs)
     )
 
     (A  AttActions)
@@ -505,50 +535,31 @@
     (EC Attl2ModelsDefl1EC)
 
     (Thetaj DefFrame
-        (lowCap    defLevel1Passive)
-        (highCap   defLevel1)
+        (lowCap    defl1Passive)
+        (highCap   defl1)
     )
 
     (dynamics
         (RECON  (attackerReconlNDBN))
         (EXFIL  (attackerExfillNDBN))
         (NOP    (attackerNoplNDBN))
-        (EXIT   (attackerExitNDBN))
+        (EXIT   (attackerExitlNDBN))
+        (PRIV_ESC   (attackerPrivEsclNDBN))
     )
-    
+
     (R
-        (RECON  (-1.0))
+        (RECON      (-1.0))
+        (PRIV_ESC   (-1.0))
         (NOP    (-0.5))
         (EXFIL  
-            (EDR
-                (active
-                    (-100.0)                    
-                )
-
-                (inactive
-                    (HostType
-                        (c      (10.0))
-                        (nc     (-100.0))
-                        (hp     (-100.0))
-                    )
-                )
-            )
-
+            (exfilReward) 
         )
 
         (EXIT
-            (EDR
-                (active
-                    (0.0)                    
-                )
-
-                (inactive
-                    (HostType
-                        (c      (-1.0))
-                        (nc     (0.0))
-                        (hp     (0.0))
-                    )
-                )
+            (HostType
+                (c      (-1.0))
+                (nc     (0.0))
+                (hp     (0.0))
             )
         )
     )
@@ -600,7 +611,6 @@
         (nc     (0.33))
         (hp     (0.34))
     )
-
-    * (EDR inactive)
+    * (AccessLevel user)
     * (dependentMj)
 )
