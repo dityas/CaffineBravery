@@ -1,4 +1,5 @@
-(defvar HostType (c nc hp))
+(defvar HostType    (c nc hp c_hp))
+(defvar AccessLevel (user root))
 
 -- Defender modeling the attacker
 (defvar Defl1ModelsAttl0        (m0))
@@ -14,7 +15,7 @@
 
 -- Actions for both agents
 (defvar DefActions (BLOCK_ACTION NOP))
-(defvar AttActions (RECON EXFIL NOP EXIT))
+(defvar AttActions (RECON PRIV_ESC EXFIL NOP EXIT))
 
 -- Defender observations
 (defvar HType (obs_c obs_nc obs_hp))
@@ -30,9 +31,10 @@
 -- Initial belief for attacker
 (defdd initAtt
     (HostType 
-        (c      (0.333333))
-        (nc     (0.333333))
-        (hp     (0.333334))
+        (c      (0.0))
+        (nc     (0.5))
+        (hp     (0.0))
+        (c_hp   (0.5))
     )
 )
 
@@ -41,6 +43,27 @@
     (DefActions
         (BLOCK_ACTION   (0.01))
         (NOP            (0.99))
+    )
+)
+
+-- Attacker's Priv Esc
+
+(defdd privEscAccessLevel
+    (DefActions
+        (BLOCK_ACTION
+            (SAME AccessLevel)
+        )
+
+        (NOP
+            (AccessLevel' root)
+        )
+    )
+)
+
+(defdd privEscReconObs
+    (AccessLevel'
+        (user   (ReconObs' blocked))
+        (root   (ReconObs' none))
     )
 )
 
@@ -75,6 +98,15 @@
                 (none               (0.04))
             )
         )
+
+        (c_hp     
+            (ReconObs' 
+                (protected_asset    (0.45))
+                (unprotected_asset  (0.45))
+                (blocked            (0.05))
+                (none               (0.05))
+            )
+        )
     )
 )
 
@@ -103,6 +135,15 @@
             (ReconObs' 
                 (protected_asset    (0.01))
                 (unprotected_asset  (0.08))
+                (blocked            (0.9))
+                (none               (0.01))
+            )
+        )
+
+        (c_hp     
+            (ReconObs' 
+                (protected_asset    (0.045))
+                (unprotected_asset  (0.045))
                 (blocked            (0.9))
                 (none               (0.01))
             )
@@ -151,39 +192,60 @@
 )
 
 (defdbn attackerReconDBN
-    (HostType   (SAME HostType))
-    (ReconObs   (# (DefActions) (distDefActions * reconObs)))
+    (HostType       (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
+    (ReconObs       (# (DefActions) (distDefActions * reconObs)))
 )
 
 (defdbn attackerExfilDBN
     (HostType   (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs   (# (DefActions) (distDefActions * reconObsExfil)))
 )
 
 (defdbn attackerExitDBN
     (HostType   (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs   (reconObsDefault))
 )
 
 (defdbn attackerNopDBN
     (HostType   (SAME HostType)
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs   (reconObsDefault))
 )
 
+(defdbn attackerPrivEscDBN
+    (HostType   (SAME HostType)
+    (AccessLevel    (# (DefActions) (distDefActions * privEscAccessLevel)))
+    (ReconObs   (privEscReconObs))
+)
 -- multi agent reward DD for level 0
 
 (defdd exfilReward
-    (HostType
-        (c      (10.0))
-        (nc     (-100.0))
-        (hp     (-100.0))
+
+    (DefActions
+        (NOP
+            (AccessLevel
+                (user   (-1.0))
+                (root
+                    (HostType
+                        (c      (0.0))
+                        (nc     (-20.0))
+                        (hp     (0.0))
+                        (c_hp   (10.0))
+                    )
+                )
+            )
+        )
+        (BLOCK_ACTION   (-1.0))
     )
 )
 
 -- Attacker model
 (defpomdp attl0
     (S
-        (HostType)
+        (HostType AccessLevel)
     )
 
     (O
@@ -197,10 +259,12 @@
         (EXFIL  (attackerExfilDBN))
         (NOP    (attackerNopDBN))
         (EXIT   (attackerExitDBN))
+        (PRIV_ESC   (attackerPrivEscDBN))
     )
     
     (R
-        (RECON  (-1.0))
+        (RECON      (-1.0))
+        (PRIV_ESC   (-1.0))
         (NOP    (-0.5))
         (EXFIL  
             (# (DefActions) (distDefActions * exfilReward)) 
@@ -208,9 +272,10 @@
 
         (EXIT
             (HostType
-                (c      (-1.0))
+                (c      (0.0))
                 (nc     (0.0))
                 (hp     (0.0))
+                (c_hp   (-1.0))
             )
         )
     )
@@ -221,10 +286,13 @@
 -- Initial belief of the attacker
 (defdd initAttl0
     (HostType
-        (c      (0.33333))
-        (nc     (0.33333))
-        (hp     (0.33334))
+        (c      (0.0))
+        (nc     (0.5))
+        (hp     (0.0))
+        (c_hp   (0.5))
     )
+
+    * (AccessLevel user)
 )
 
 (initmodelvar Defl1ModelsAttl0
@@ -260,7 +328,14 @@
                 (obs_nc (0.005))
                 (obs_hp (0.99))
             )
+        )
 
+        (c_hp
+            (HType'
+                (obs_c  (0.333))
+                (obs_nc (0.333))
+                (obs_hp (0.334))
+            )
         )
     )
 )
@@ -271,23 +346,36 @@
         (EXFIL  (SAME HostType))
         (NOP    (SAME HostType))
         (EXIT   (SAME HostType))
+        (PRIV_ESC   (SAME HostType))
+    )
+)
+
+(defdd attActAccessLevel
+    (AttActions
+        (RECON  (SAME AccessLevel))
+        (EXFIL  (SAME AccessLevel))
+        (NOP    (SAME AccessLevel))
+        (EXIT   (SAME AccessLevel))
+        (PRIV_ESC   (AccessLevel' root))
     )
 )
 
 (defdbn actionBlockAction
-    (HostType   (attActHostType))
-    (HType      (defObs))
+    (HostType       (attActHostType))
+    (AccessLevel    (attActAccessLevel))
+    (HType          (defObs))
 )
 
 (defdbn actionNOP
     (HostType   (attActHostType))
+    (AccessLevel    (attActAccessLevel))
     (HType      (defObs))
 )
 
 -- defender L1 model
 (defipomdp defl1
     (S
-        (HostType)
+        (HostType AccessLevel)
     )
 
     (O
@@ -311,10 +399,11 @@
     
     (R
         (BLOCK_ACTION   (AttActions
-            (RECON  (-1.0))
-            (EXFIL  (10.0))
-            (EXIT   (-100.0))
-            (NOP    (-100.0))
+            (RECON      (-1.0))
+            (EXFIL      (10.0))
+            (PRIV_ESC   (10.0))
+            (EXIT       (-100.0))
+            (NOP        (-100.0))
         ))
         (NOP            (-0.1))
     )
@@ -328,24 +417,44 @@
         (c      (0.333333))
         (nc     (0.333333))
         (hp     (0.333334))
+        (c_hp   (0.0))
     )
+    * (AccessLevel user)
     * (Defl1ModelsAttl0 m0)
 )
 
 -- Initial beliefs of l1 defender
 
 (defdd initDefl1c
-    (HostType   c)
+    (HostType
+        (c      (0.9))
+        (nc     (0.05))
+        (hp     (0.05))
+        (c_hp   (0.0))
+    )
+    * (AccessLevel user)
     * (Defl1ModelsAttl0 m0)
 )
 
 (defdd initDefl1nc
-    (HostType   nc)
+    (HostType
+        (c  (0.05))
+        (nc (0.9))
+        (hp (0.05))
+        (c_hp   (0.0))
+    )
+    * (AccessLevel user)
     * (Defl1ModelsAttl0 m0)
 )
 
 (defdd initDefl1hp
-    (HostType   hp)
+    (HostType
+        (c  (0.05))
+        (nc (0.05))
+        (hp (0.9))
+        (c_hp   (0.0))
+    )
+    * (AccessLevel user)
     * (Defl1ModelsAttl0 m0)
 )
 
@@ -361,7 +470,7 @@
 -- passive defender l1 model
 (defipomdp defl1Passive
     (S
-        (HostType)
+        (HostType AccessLevel)
     )
 
     (O
@@ -393,17 +502,35 @@
 )
 
 (defdd initPassiveDefl1c
-    (HostType   c)
+    (HostType
+        (c  (0.9))
+        (nc (0.05))
+        (hp (0.05))
+        (c_hp   (0.0))
+    )
+    * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
 (defdd initPassiveDefl1nc
-    (HostType   nc)
+    (HostType
+        (c  (0.05))
+        (nc (0.9))
+        (hp (0.05))
+        (c_hp   (0.0))
+    )
+    * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
 (defdd initPassiveDefl1hp
-    (HostType   hp)
+    (HostType
+        (c  (0.05))
+        (nc (0.05))
+        (hp (0.9))
+        (c_hp   (0.0))
+    )
+    * (AccessLevel user)
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
@@ -411,22 +538,32 @@
 
 (defdbn attackerReconlNDBN
     (HostType       (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs       (reconObs))
 )
 
 (defdbn attackerExfillNDBN
     (HostType   (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs   (reconObsExfil))
 )
 
 (defdbn attackerExitlNDBN
     (HostType   (SAME HostType))
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs   (reconObsDefault))
 )
 
 (defdbn attackerNoplNDBN
     (HostType   (SAME HostType)
+    (AccessLevel    (SAME AccessLevel))
     (ReconObs   (reconObsDefault))
+)
+
+(defdbn attackerPrivEsclNDBN
+    (HostType       (SAME HostType)
+    (AccessLevel    (privEscAccessLevel))
+    (ReconObs       (privEscReconObs))
 )
 
 (initmodelvar Attl2ModelsDefl1
@@ -444,7 +581,7 @@
 -- Level 2 Attacker model
 (defipomdp attl2
     (S
-        (HostType)
+        (HostType AccessLevel)
     )
 
     (O
@@ -467,17 +604,23 @@
         (EXFIL  (attackerExfillNDBN))
         (NOP    (attackerNoplNDBN))
         (EXIT   (attackerExitlNDBN))
+        (PRIV_ESC   (attackerPrivEsclNDBN))
     )
 
     (R
-        (RECON  (-1.0))
+        (RECON      (-1.0))
+        (PRIV_ESC   (-1.0))
         (NOP    (-0.5))
-        (EXFIL  (exfilReward)) 
+        (EXFIL  
+            (exfilReward) 
+        )
+
         (EXIT
             (HostType
-                (c      (-1.0))
+                (c      (0.0))
                 (nc     (0.0))
                 (hp     (0.0))
+                (c_hp   (-1.0))
             )
         )
     )
@@ -525,9 +668,18 @@
 
 (defdd initAttl2
     (HostType
-        (c      (0.33))
-        (nc     (0.33))
-        (hp     (0.34))
+        (c      (0.0))
+        (nc     (0.5))
+        (hp     (0.0))
+        (c_hp   (0.5))
     )
-    * (dependentMj)
+    * (AccessLevel user)
+    * (Attl2ModelsDefl1
+        (m0     (0.1667))
+        (m1     (0.1667))
+        (m2     (0.1666))
+        (m3     (0.1667))
+        (m4     (0.1667))
+        (m5     (0.1666))
+    )
 )
