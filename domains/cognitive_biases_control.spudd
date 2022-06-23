@@ -1,5 +1,6 @@
 (defvar HostType    (c nc hp))
 (defvar AccessLevel (user root))
+(defvar ExfilDone   (yes no))
 
 -- Defender modeling the attacker
 (defvar Defl1ModelsAttl0        (m0))
@@ -151,7 +152,7 @@
 )
 
 (defdd reconObsExfil
-    (DefActions
+    (ExfilDone
         (BLOCK_ACTION
             (ReconObs'                            
                (protected_asset    (0.04))
