@@ -152,7 +152,7 @@
 )
 
 (defdd reconObsExfil
-    (ExfilDone
+    (DefActions
         (BLOCK_ACTION
             (ReconObs'                            
                (protected_asset    (0.04))
