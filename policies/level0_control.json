@@ -1,67 +1,23 @@
 [
   {
-    "actId": 0,
-    "alpha": {
-      "name": "ExfilDone",
-      "value": {
-        "no": {
-          "name": "AccessLevel",
-          "value": {
-            "root": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 8.124136
-                },
-                "hp": {
-                  "value": -11.495411
-                },
-                "nc": {
-                  "value": -1.6856376
-                }
-              }
-            },
-            "user": {
-              "value": -26.917698
-            }
-          }
-        },
-        "yes": {
-          "name": "HostType",
-          "value": {
-            "c": {
-              "value": 8.454018
-            },
-            "hp": {
-              "value": -11.325429
-            },
-            "nc": {
-              "value": -1.4357053
-            }
-          }
-        }
-      }
-    }
-  },
-  {
     "actId": 1,
     "alpha": {
       "name": "ExfilDone",
       "value": {
         "no": {
-          "value": -0.3344289
+          "value": 22.403965
         },
         "yes": {
           "name": "HostType",
           "value": {
             "c": {
-              "value": 9.665571
+              "value": 37.403965
             },
             "hp": {
-              "value": -10.334429
+              "value": 2.403965
             },
             "nc": {
-              "value": -0.3344289
+              "value": 22.403965
             }
           }
         }
@@ -80,18 +36,29 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 8.05633
+                  "value": 34.539547
                 },
                 "hp": {
-                  "value": -11.257863
+                  "value": 3.3545551
                 },
                 "nc": {
-                  "value": -1.6007667
+                  "value": 21.174555
                 }
               }
             },
             "user": {
-              "value": -24.970488
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 34.4059
+                },
+                "hp": {
+                  "value": 3.532755
+                },
+                "nc": {
+                  "value": 21.174555
+                }
+              }
             }
           }
         },
@@ -99,13 +66,13 @@
           "name": "HostType",
           "value": {
             "c": {
-              "value": 8.542931
+              "value": 36.02456
             },
             "hp": {
-              "value": -11.252702
+              "value": 1.3745551
             },
             "nc": {
-              "value": -1.354885
+              "value": 21.174555
             }
           }
         }
@@ -124,13 +91,13 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 5.340259
+                  "value": 30.785944
                 },
                 "hp": {
-                  "value": -1.8498099
+                  "value": 19.288662
                 },
                 "nc": {
-                  "value": -1.4569094
+                  "value": 21.052845
                 }
               }
             },
@@ -138,13 +105,13 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 5.330416
+                  "value": 30.624645
                 },
                 "hp": {
-                  "value": -1.8501687
+                  "value": 19.262712
                 },
                 "nc": {
-                  "value": -1.457308
+                  "value": 21.050005
                 }
               }
             }
@@ -157,13 +124,13 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 6.4461856
+                  "value": 34.932064
                 },
                 "hp": {
-                  "value": -11.335502
+                  "value": 1.2726438
                 },
                 "nc": {
-                  "value": -1.4468992
+                  "value": 21.052845
                 }
               }
             },
@@ -171,87 +138,13 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 6.4363117
+                  "value": 34.93844
                 },
                 "hp": {
-                  "value": -11.335861
+                  "value": 1.2702656
                 },
                 "nc": {
-                  "value": -1.4472988
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  {
-    "actId": 3,
-    "alpha": {
-      "name": "ExfilDone",
-      "value": {
-        "no": {
-          "name": "AccessLevel",
-          "value": {
-            "root": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 7.0408974
-                },
-                "hp": {
-                  "value": -12.382455
-                },
-                "nc": {
-                  "value": -2.6707788
-                }
-              }
-            },
-            "user": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 7.0300655
-                },
-                "hp": {
-                  "value": -12.391325
-                },
-                "nc": {
-                  "value": -2.6806293
-                }
-              }
-            }
-          }
-        },
-        "yes": {
-          "name": "AccessLevel",
-          "value": {
-            "root": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 7.3674803
-                },
-                "hp": {
-                  "value": -12.214171
-                },
-                "nc": {
-                  "value": -2.423346
-                }
-              }
-            },
-            "user": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 7.356617
-                },
-                "hp": {
-                  "value": -12.223058
-                },
-                "nc": {
-                  "value": -2.4332216
+                  "value": 21.050005
                 }
               }
             }
