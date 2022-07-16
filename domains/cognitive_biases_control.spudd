@@ -34,52 +34,6 @@
 )
 
 --------------------------------------------------------------------
--- Joint action transitions and observations
-
--- for state var host type
-(defdd hostTypeTransition
-    (SAME HostType)
-)
-
--- for state var AccessLevel 
-
-(defdd privEscUnblocked
-    (AttActions
-        (RECON
-            (SAME AccessLevel)
-        ) 
-
-        (PRIV_ESC 
-            (AccessLevel' root)
-        )
-
-        (EXFIL 
-            (SAME AccessLevel)
-        )
-
-        (NOP 
-            (SAME AccessLevel)
-        )
-
-        (EXIT
-            (SAME AccessLevel)
-        )
-    )
-)
-
-(defdd accessLevelTransition
-    (DefActions
-        (BLOCK_ACTION
-            (SAME AccessLevel)
-        )
-
-        (NOP
-            (privEscUnblocked)
-        )
-    )
-)
-
---------------------------------------------------------------------
 
 -- Attacker's Priv Esc
 
@@ -98,25 +52,9 @@
 -- Attacker's Exfil action
 
 (defdd exfilExfilDone
-    (DefActions
-        (BLOCK_ACTION   
-            (AccessLevel
-                (user   (SAME ExfilDone))
-                (root
-                    (ExfilDone
-                        (yes    (ExfilDone' yes))
-                        (no
-                            (ExfilDone'
-                                (yes    (0.9))
-                                (no     (0.1))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-
-        (NOP
+    (AccessLevel
+        (user   (SAME ExfilDone))
+        (root
             (ExfilDone
                 (yes    (ExfilDone' yes))
                 (no
@@ -137,8 +75,8 @@
         (c      
             (ReconObs' 
                 (protected_asset    (0.8))
-                (unprotected_asset  (0.1))
-                (none               (0.1))
+                (unprotected_asset  (0.15))
+                (none               (0.05))
             )
         )
 
@@ -152,9 +90,9 @@
 
         (hp     
             (ReconObs' 
-                (protected_asset    (0.1))
+                (protected_asset    (0.15))
                 (unprotected_asset  (0.8))
-                (none               (0.1))
+                (none               (0.05))
             )
         )
     )
@@ -175,7 +113,7 @@
 -- Combined observ function based on joint actions
 (defdd reconObs
     (DefActions
-        (BLOCK_ACTION   (reconObsDefBlockAction))
+        (BLOCK_ACTION   (ReconObs' UNIFORM))
         (NOP            (reconObsDefNop))
     )
 )
@@ -239,9 +177,11 @@
 (defdbn attackerPrivEscDBN
     (HostType       (SAME HostType)
     (AccessLevel    (# (DefActions) (distDefActions * privEscAccessLevel)))
+--    (AccessLevel    (SAME AccessLevel))
     (ExfilDone      (SAME ExfilDone))
     (ReconObs       (ReconObs' UNIFORM))
     (ExecResult     (# (DefActions) (distDefActions * defaultExecResult)))
+--    (ExecResult     (ExecResult' UNIFORM))
 )
 -- multi agent reward DD for level 0
 
@@ -249,17 +189,25 @@
     (HostType
         (c
             (ExfilDone
-                (yes    (15.0))
+                (yes    (20.0))
                 (no     (0.0))
             )
         )
         (nc     (0.0))
         (hp
             (ExfilDone
-                (yes    (-20.0))
+                (yes    (-40.0))
                 (no     (0.0))
             )
         )
+    )
+)
+
+(defdd exitCost
+    (HostType
+        (c      (1.0))
+        (nc     (0.0))
+        (hp     (-1.0))
     )
 )
 
@@ -288,7 +236,7 @@
         (PRIV_ESC   (-1.0))
         (NOP        (-0.9))
         (EXFIL      (-1.0))
-        (EXIT       (attackerReward - (1.0)))
+        (EXIT       (attackerReward - exitCost))
     )
 
     (discount 0.99)
@@ -304,140 +252,140 @@
 ---------------------------------------------------------------
 -- Defender l1 models
 
-(initmodelvar Defl1ModelsAttl0
-    (frames AttackerFrame)
-    (
-        (att    (m0     (initAttl0)))
-    )
-)
-
--- Defender's DDs
-(defdd defObs
-    (HostType'
-        (c
-            (HType'
-                (obs_c  (0.99))
-                (obs_nc (0.005))
-                (obs_hp (0.005))
-            )
-        )
-
-        (nc
-            (HType'
-                (obs_c  (0.005))
-                (obs_nc (0.99))
-                (obs_hp (0.005))
-            )
-
-        )
-
-        (hp
-            (HType'
-                (obs_c  (0.005))
-                (obs_nc (0.005))
-                (obs_hp (0.99))
-            )
-
-        )
-    )
-)
-
-(defdd attActHostType
-    (AttActions
-        (RECON      (SAME HostType))
-        (EXFIL      (SAME HostType))
-        (NOP        (SAME HostType))
-        (EXIT       (HostType' UNIFORM))
-        (PRIV_ESC   (SAME HostType))
-    )
-)
-
-(defdd attActAccessLevel
-    (AttActions
-        (RECON      (SAME AccessLevel))
-        (EXFIL      (SAME AccessLevel))
-        (NOP        (SAME AccessLevel))
-        (EXIT       (SAME AccessLevel))
-        (PRIV_ESC   (privEscAccessLevel))
-    )
-)
-
-(defdd attActExfilDone
-    (AttActions
-        (RECON      (SAME ExfilDone))
-        (EXFIL      (exfilExfilDone))
-        (NOP        (SAME ExfilDone))
-        (EXIT       (SAME ExfilDone))
-        (PRIV_ESC   (SAME ExfilDone))
-    )
-)
-
-(defdbn actionBlockAction
-    (HostType       (attActHostType))
-    (AccessLevel    (attActAccessLevel))
-    (HType          (defObs))
-)
-
-(defdbn actionNOP
-    (HostType   (attActHostType))
-    (AccessLevel    (attActAccessLevel))
-    (HType      (defObs))
-)
-
-(defdd defReward
-    (HostType
-        (c
-            (ExfilDone
-                (yes    (-10.0))
-                (yes    (0.0))
-            )
-        )
-        (nc     (0.0))
-        (hp     (0.0))
-    )
-)
-
--- defender L1 model
-(defipomdp defl1
-    (S
-        (HostType AccessLevel ExfilDone)
-    )
-
-    (O
-        (HType)
-    )
-
-    (A  DefActions)
-    (Aj AttActions)
-
-    (Mj Defl1ModelsAttl0)
-    (EC Defl1ModelsAttl0EC)
-
-    (Thetaj AttackerFrame
-        (att    attl0)
-    )
-
-    (dynamics
-        (BLOCK_ACTION   (actionBlockAction))
-        (NOP            (actionNOP))
-    )
-    
-    (R
-        (BLOCK_ACTION   (defReward - (1.0)))
-        (NOP            (defReward - (0.5)))
-    )
-
-    (discount 0.9)
-    (H 6)
-)
-
-(defdd initDefl1Actual
-    (HostType UNIFORM)
-    * (AccessLevel user)
-    * (ExfilDone no)
-    * (Defl1ModelsAttl0 m0)
-)
-
+--(initmodelvar Defl1ModelsAttl0
+--    (frames AttackerFrame)
+--    (
+--        (att    (m0     (initAttl0)))
+--    )
+--)
+--
+---- Defender's DDs
+--(defdd defObs
+--    (HostType'
+--        (c
+--            (HType'
+--                (obs_c  (0.99))
+--                (obs_nc (0.005))
+--                (obs_hp (0.005))
+--            )
+--        )
+--
+--        (nc
+--            (HType'
+--                (obs_c  (0.005))
+--                (obs_nc (0.99))
+--                (obs_hp (0.005))
+--            )
+--
+--        )
+--
+--        (hp
+--            (HType'
+--                (obs_c  (0.005))
+--                (obs_nc (0.005))
+--                (obs_hp (0.99))
+--            )
+--
+--        )
+--    )
+--)
+--
+--(defdd attActHostType
+--    (AttActions
+--        (RECON      (SAME HostType))
+--        (EXFIL      (SAME HostType))
+--        (NOP        (SAME HostType))
+--        (EXIT       (HostType' UNIFORM))
+--        (PRIV_ESC   (SAME HostType))
+--    )
+--)
+--
+--(defdd attActAccessLevel
+--    (AttActions
+--        (RECON      (SAME AccessLevel))
+--        (EXFIL      (SAME AccessLevel))
+--        (NOP        (SAME AccessLevel))
+--        (EXIT       (SAME AccessLevel))
+--        (PRIV_ESC   (privEscAccessLevel))
+--    )
+--)
+--
+--(defdd attActExfilDone
+--    (AttActions
+--        (RECON      (SAME ExfilDone))
+--        (EXFIL      (exfilExfilDone))
+--        (NOP        (SAME ExfilDone))
+--        (EXIT       (SAME ExfilDone))
+--        (PRIV_ESC   (SAME ExfilDone))
+--    )
+--)
+--
+--(defdbn actionBlockAction
+--    (HostType       (attActHostType))
+--    (AccessLevel    (attActAccessLevel))
+--    (HType          (defObs))
+--)
+--
+--(defdbn actionNOP
+--    (HostType   (attActHostType))
+--    (AccessLevel    (attActAccessLevel))
+--    (HType      (defObs))
+--)
+--
+--(defdd defReward
+--    (HostType
+--        (c
+--            (ExfilDone
+--                (yes    (-10.0))
+--                (yes    (0.0))
+--            )
+--        )
+--        (nc     (0.0))
+--        (hp     (0.0))
+--    )
+--)
+--
+---- defender L1 model
+--(defipomdp defl1
+--    (S
+--        (HostType AccessLevel ExfilDone)
+--    )
+--
+--    (O
+--        (HType)
+--    )
+--
+--    (A  DefActions)
+--    (Aj AttActions)
+--
+--    (Mj Defl1ModelsAttl0)
+--    (EC Defl1ModelsAttl0EC)
+--
+--    (Thetaj AttackerFrame
+--        (att    attl0)
+--    )
+--
+--    (dynamics
+--        (BLOCK_ACTION   (actionBlockAction))
+--        (NOP            (actionNOP))
+--    )
+--    
+--    (R
+--        (BLOCK_ACTION   (defReward - (1.0)))
+--        (NOP            (defReward - (0.5)))
+--    )
+--
+--    (discount 0.9)
+--    (H 6)
+--)
+--
+--(defdd initDefl1Actual
+--    (HostType UNIFORM)
+--    * (AccessLevel user)
+--    * (ExfilDone no)
+--    * (Defl1ModelsAttl0 m0)
+--)
+--
 ---- Initial beliefs of l1 defender
 --
 --(defdd initDefl1c

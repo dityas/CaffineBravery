@@ -1,31 +1,6 @@
 [
   {
-    "actId": 1,
-    "alpha": {
-      "name": "ExfilDone",
-      "value": {
-        "no": {
-          "value": 22.403965
-        },
-        "yes": {
-          "name": "HostType",
-          "value": {
-            "c": {
-              "value": 37.403965
-            },
-            "hp": {
-              "value": 2.403965
-            },
-            "nc": {
-              "value": 22.403965
-            }
-          }
-        }
-      }
-    }
-  },
-  {
-    "actId": 0,
+    "actId": 3,
     "alpha": {
       "name": "ExfilDone",
       "value": {
@@ -36,13 +11,13 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 34.539547
+                  "value": 77.080765
                 },
                 "hp": {
-                  "value": 3.3545551
+                  "value": 26.115562
                 },
                 "nc": {
-                  "value": 21.174555
+                  "value": 60.419056
                 }
               }
             },
@@ -50,13 +25,13 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 34.4059
+                  "value": 76.90435
                 },
                 "hp": {
-                  "value": 3.532755
+                  "value": 26.4684
                 },
                 "nc": {
-                  "value": 21.174555
+                  "value": 60.419056
                 }
               }
             }
@@ -66,13 +41,13 @@
           "name": "HostType",
           "value": {
             "c": {
-              "value": 36.02456
+              "value": 79.04096
             },
             "hp": {
-              "value": 1.3745551
+              "value": 22.195164
             },
             "nc": {
-              "value": 21.174555
+              "value": 60.419056
             }
           }
         }
@@ -91,13 +66,13 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 30.785944
+                  "value": 70.06128
                 },
                 "hp": {
-                  "value": 19.288662
+                  "value": 61.42942
                 },
                 "nc": {
-                  "value": 21.052845
+                  "value": 61.630966
                 }
               }
             },
@@ -105,32 +80,54 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 30.624645
+                  "value": 69.92881
                 },
                 "hp": {
-                  "value": 19.262712
+                  "value": 61.439083
                 },
                 "nc": {
-                  "value": 21.050005
+                  "value": 61.630966
                 }
               }
             }
           }
         },
         "yes": {
+          "name": "HostType",
+          "value": {
+            "c": {
+              "value": 76.09595
+            },
+            "hp": {
+              "value": 22.949692
+            },
+            "nc": {
+              "value": 61.630966
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 4,
+    "alpha": {
+      "name": "ExfilDone",
+      "value": {
+        "no": {
           "name": "AccessLevel",
           "value": {
             "root": {
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 34.932064
+                  "value": 70.472916
                 },
                 "hp": {
-                  "value": 1.2726438
+                  "value": 61.253925
                 },
                 "nc": {
-                  "value": 21.052845
+                  "value": 59.86226
                 }
               }
             },
@@ -138,15 +135,285 @@
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 34.93844
+                  "value": 70.333145
                 },
                 "hp": {
-                  "value": 1.2702656
+                  "value": 61.264114
                 },
                 "nc": {
-                  "value": 21.050005
+                  "value": 59.86226
                 }
               }
+            }
+          }
+        },
+        "yes": {
+          "name": "HostType",
+          "value": {
+            "c": {
+              "value": 75.73682
+            },
+            "hp": {
+              "value": 22.857113
+            },
+            "nc": {
+              "value": 59.86226
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 4,
+    "alpha": {
+      "name": "ExfilDone",
+      "value": {
+        "no": {
+          "name": "AccessLevel",
+          "value": {
+            "root": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 74.15768
+                },
+                "hp": {
+                  "value": 53.976288
+                },
+                "nc": {
+                  "value": 58.11623
+                }
+              }
+            },
+            "user": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 73.98897
+                },
+                "hp": {
+                  "value": 54.040714
+                },
+                "nc": {
+                  "value": 58.11623
+                }
+              }
+            }
+          }
+        },
+        "yes": {
+          "name": "HostType",
+          "value": {
+            "c": {
+              "value": 76.62402
+            },
+            "hp": {
+              "value": 21.451735
+            },
+            "nc": {
+              "value": 58.11623
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 1,
+    "alpha": {
+      "name": "ExfilDone",
+      "value": {
+        "no": {
+          "name": "HostType",
+          "value": {
+            "c": {
+              "value": 62.685192
+            },
+            "hp": {
+              "value": 64.685196
+            },
+            "nc": {
+              "value": 63.685192
+            }
+          }
+        },
+        "yes": {
+          "name": "HostType",
+          "value": {
+            "c": {
+              "value": 82.685196
+            },
+            "hp": {
+              "value": 24.685192
+            },
+            "nc": {
+              "value": 63.685192
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 4,
+    "alpha": {
+      "name": "ExfilDone",
+      "value": {
+        "no": {
+          "name": "AccessLevel",
+          "value": {
+            "root": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 74.12486
+                },
+                "hp": {
+                  "value": 54.01091
+                },
+                "nc": {
+                  "value": 59.609016
+                }
+              }
+            },
+            "user": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 73.95664
+                },
+                "hp": {
+                  "value": 54.075146
+                },
+                "nc": {
+                  "value": 59.609016
+                }
+              }
+            }
+          }
+        },
+        "yes": {
+          "name": "HostType",
+          "value": {
+            "c": {
+              "value": 76.64242
+            },
+            "hp": {
+              "value": 21.463734
+            },
+            "nc": {
+              "value": 59.609016
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 4,
+    "alpha": {
+      "name": "ExfilDone",
+      "value": {
+        "no": {
+          "name": "AccessLevel",
+          "value": {
+            "root": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 73.49744
+                },
+                "hp": {
+                  "value": 54.672794
+                },
+                "nc": {
+                  "value": 61.50492
+                }
+              }
+            },
+            "user": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 73.33863
+                },
+                "hp": {
+                  "value": 54.73343
+                },
+                "nc": {
+                  "value": 61.50492
+                }
+              }
+            }
+          }
+        },
+        "yes": {
+          "name": "HostType",
+          "value": {
+            "c": {
+              "value": 76.99408
+            },
+            "hp": {
+              "value": 21.69313
+            },
+            "nc": {
+              "value": 61.50492
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 0,
+    "alpha": {
+      "name": "ExfilDone",
+      "value": {
+        "no": {
+          "name": "AccessLevel",
+          "value": {
+            "root": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 78.87393
+                },
+                "hp": {
+                  "value": 27.393929
+                },
+                "nc": {
+                  "value": 62.043926
+                }
+              }
+            },
+            "user": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 61.053925
+                },
+                "hp": {
+                  "value": 63.033936
+                },
+                "nc": {
+                  "value": 62.043934
+                }
+              }
+            }
+          }
+        },
+        "yes": {
+          "name": "HostType",
+          "value": {
+            "c": {
+              "value": 80.853935
+            },
+            "hp": {
+              "value": 23.43393
+            },
+            "nc": {
+              "value": 62.043934
             }
           }
         }

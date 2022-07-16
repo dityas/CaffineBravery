@@ -1,0 +1,134 @@
+(defvar HostType    (c nc hp c_hp))
+(defvar Modelj      (defp_c_nop
+                     defp_nc_nop
+                     defp_hp_nop
+                     defa_c_nop
+                     defa_nc_nop
+                     defa_hp_nop
+                     defa_c_defend))
+
+(defvar Theta       (passive aggressive))
+
+(defvar ReconObs    (p_asset np_asset none))
+(defvar Action      (nop defend))
+
+(defdd hostTransition
+    (SAME HostType)
+)
+
+(defdd modeljTransition
+    (Modelj
+        (defp_c_nop     (Modelj'    defp_c_nop))
+        (defp_nc_nop    (Modelj'    defp_nc_nop))
+        (defp_hp_nop    (Modelj'    defp_hp_nop))
+        (defa_c_nop     (Modelj'    defa_c_nop))
+        (defa_nc_nop    (Modelj'    defa_nc_nop))
+        (defa_hp_nop    (Modelj'    defa_hp_nop))
+        (defa_c_defend  (Modelj'    defa_c_nop))
+    )
+)
+
+(defdd thetajBelief
+    (Modelj
+        (defp_c_nop     (Theta    passive))
+        (defp_nc_nop    (Theta    passive))
+        (defp_hp_nop    (Theta    passive))
+        (defa_c_nop     (Theta    aggressive))
+        (defa_nc_nop    (Theta    aggressive))
+        (defa_hp_nop    (Theta    aggressive))
+        (defa_c_defend  (Theta    aggressive))
+    )
+)
+
+(defdd assetObs
+    (HostType'
+        (c      (ReconObs' p_asset))
+        (nc     (ReconObs' none))
+        (hp     (ReconObs' np_asset))
+        (c_hp
+            (ReconObs'
+                (p_asset    (0.5))
+                (np_asset   (0.5))
+                (none       (0.0))
+            )
+        )
+    )
+)
+
+(defdd actionObs
+    (Modelj
+        (defp_c_nop     (Action'   nop))
+        (defp_nc_nop    (Action'   nop))
+        (defp_hp_nop    (Action'   nop))
+        (defa_c_nop     (Action'   nop))
+        (defa_nc_nop    (Action'   nop))
+        (defa_hp_nop    (Action'   nop))
+        (defa_c_defend  (Action'   defend))
+    )
+)
+
+(defdd initState
+    (HostType
+        (c      (0.0))
+        (nc     (0.5))
+        (hp     (0.0))
+        (c_hp   (0.5))
+    )
+
+--    (HostType
+--        (c      (0.333))
+--        (nc     (0.333))
+--        (hp     (0.334))
+--        (c_hp   (0.0))
+--    )
+
+    * (HostType
+        (c
+            (Modelj
+                (defp_c_nop    (0.5))
+                (defp_nc_nop   (0.0))
+                (defp_hp_nop   (0.0))
+                (defa_c_nop    (0.0))
+                (defa_nc_nop   (0.0))
+                (defa_hp_nop   (0.0))
+                (defa_c_defend (0.5))
+            )
+        )
+
+        (nc
+            (Modelj
+                (defp_c_nop    (0.0))
+                (defp_nc_nop   (0.5))
+                (defp_hp_nop   (0.0))
+                (defa_c_nop    (0.0))
+                (defa_nc_nop   (0.5))
+                (defa_hp_nop   (0.0))
+                (defa_c_defend (0.0))
+            )
+        )
+
+        (hp
+            (Modelj
+                (defp_c_nop    (0.0))
+                (defp_nc_nop   (0.0))
+                (defp_hp_nop   (0.5))
+                (defa_c_nop    (0.0))
+                (defa_nc_nop   (0.0))
+                (defa_hp_nop   (0.5))
+                (defa_c_defend (0.0))
+            )
+        )
+
+        (c_hp
+            (Modelj
+                (defp_c_nop    (0.25))
+                (defp_nc_nop   (0.0))
+                (defp_hp_nop   (0.25))
+                (defa_c_nop    (0.0))
+                (defa_nc_nop   (0.0))
+                (defa_hp_nop   (0.25))
+                (defa_c_defend (0.25))
+            )
+        )
+    )
+)

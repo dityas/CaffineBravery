@@ -1,0 +1,17 @@
+
+rVar HostType [c nc hp]
+rVar AccessLevel [user root]
+rVar LocalVuln [yes no]
+rVar ExfilDone [yes no]
+
+let exfilExfilDone = 
+(dd DefActions
+    ()
+)
+ 
+
+let transition-function = [
+    hostTypeTransition
+    accessLevelTransition
+
+]
