@@ -12,6 +12,9 @@
 (defvar Attl2ModelsDefl1        (m0 m1 m2 m3 m4 m5))
 (defvar Attl2ModelsDefl1EC      (ec0))
 
+(defvar Defl3ModelsAttl2    (m0))
+(defvar Defl3ModelsAttl2EC  (ec0))
+
 (defvar AttackerFrame   (att))
 (defvar DefFrame        (highCap lowCap))
 
@@ -729,3 +732,5 @@
     * (AttActive    yes)
     * (dependentMj)
 )
+
+
