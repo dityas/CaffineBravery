@@ -1,254 +1,53 @@
 [
   {
-    "actId": 3,
-    "alpha": {
-      "name": "ExfilDone",
-      "value": {
-        "no": {
-          "name": "AccessLevel",
-          "value": {
-            "root": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 77.080765
-                },
-                "hp": {
-                  "value": 26.115562
-                },
-                "nc": {
-                  "value": 60.419056
-                }
-              }
-            },
-            "user": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 76.90435
-                },
-                "hp": {
-                  "value": 26.4684
-                },
-                "nc": {
-                  "value": 60.419056
-                }
-              }
-            }
-          }
-        },
-        "yes": {
-          "name": "HostType",
-          "value": {
-            "c": {
-              "value": 79.04096
-            },
-            "hp": {
-              "value": 22.195164
-            },
-            "nc": {
-              "value": 60.419056
-            }
-          }
-        }
-      }
-    }
-  },
-  {
-    "actId": 4,
-    "alpha": {
-      "name": "ExfilDone",
-      "value": {
-        "no": {
-          "name": "AccessLevel",
-          "value": {
-            "root": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 70.06128
-                },
-                "hp": {
-                  "value": 61.42942
-                },
-                "nc": {
-                  "value": 61.630966
-                }
-              }
-            },
-            "user": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 69.92881
-                },
-                "hp": {
-                  "value": 61.439083
-                },
-                "nc": {
-                  "value": 61.630966
-                }
-              }
-            }
-          }
-        },
-        "yes": {
-          "name": "HostType",
-          "value": {
-            "c": {
-              "value": 76.09595
-            },
-            "hp": {
-              "value": 22.949692
-            },
-            "nc": {
-              "value": 61.630966
-            }
-          }
-        }
-      }
-    }
-  },
-  {
-    "actId": 4,
-    "alpha": {
-      "name": "ExfilDone",
-      "value": {
-        "no": {
-          "name": "AccessLevel",
-          "value": {
-            "root": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 70.472916
-                },
-                "hp": {
-                  "value": 61.253925
-                },
-                "nc": {
-                  "value": 59.86226
-                }
-              }
-            },
-            "user": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 70.333145
-                },
-                "hp": {
-                  "value": 61.264114
-                },
-                "nc": {
-                  "value": 59.86226
-                }
-              }
-            }
-          }
-        },
-        "yes": {
-          "name": "HostType",
-          "value": {
-            "c": {
-              "value": 75.73682
-            },
-            "hp": {
-              "value": 22.857113
-            },
-            "nc": {
-              "value": 59.86226
-            }
-          }
-        }
-      }
-    }
-  },
-  {
-    "actId": 4,
-    "alpha": {
-      "name": "ExfilDone",
-      "value": {
-        "no": {
-          "name": "AccessLevel",
-          "value": {
-            "root": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 74.15768
-                },
-                "hp": {
-                  "value": 53.976288
-                },
-                "nc": {
-                  "value": 58.11623
-                }
-              }
-            },
-            "user": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 73.98897
-                },
-                "hp": {
-                  "value": 54.040714
-                },
-                "nc": {
-                  "value": 58.11623
-                }
-              }
-            }
-          }
-        },
-        "yes": {
-          "name": "HostType",
-          "value": {
-            "c": {
-              "value": 76.62402
-            },
-            "hp": {
-              "value": 21.451735
-            },
-            "nc": {
-              "value": 58.11623
-            }
-          }
-        }
-      }
-    }
-  },
-  {
     "actId": 1,
     "alpha": {
-      "name": "ExfilDone",
+      "name": "AttActive",
       "value": {
         "no": {
           "name": "HostType",
           "value": {
             "c": {
-              "value": 62.685192
+              "value": -2.0
             },
             "hp": {
-              "value": 64.685196
+              "value": 0.0
             },
             "nc": {
-              "value": 63.685192
+              "value": -1.0
             }
           }
         },
         "yes": {
-          "name": "HostType",
+          "name": "ExfilDone",
           "value": {
-            "c": {
-              "value": 82.685196
+            "no": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": -1.0
+                },
+                "hp": {
+                  "value": 1.0
+                },
+                "nc": {
+                  "value": -0.0
+                }
+              }
             },
-            "hp": {
-              "value": 24.685192
-            },
-            "nc": {
-              "value": 63.685192
+            "yes": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 19.0
+                },
+                "hp": {
+                  "value": -19.0
+                },
+                "nc": {
+                  "value": 0.0
+                }
+              }
             }
           }
         }
@@ -256,109 +55,219 @@
     }
   },
   {
-    "actId": 4,
+    "actId": 2,
     "alpha": {
-      "name": "ExfilDone",
+      "name": "AttActive",
       "value": {
         "no": {
-          "name": "AccessLevel",
-          "value": {
-            "root": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 74.12486
-                },
-                "hp": {
-                  "value": 54.01091
-                },
-                "nc": {
-                  "value": 59.609016
-                }
-              }
-            },
-            "user": {
-              "name": "HostType",
-              "value": {
-                "c": {
-                  "value": 73.95664
-                },
-                "hp": {
-                  "value": 54.075146
-                },
-                "nc": {
-                  "value": 59.609016
-                }
-              }
-            }
-          }
+          "value": 0.0
         },
         "yes": {
-          "name": "HostType",
-          "value": {
-            "c": {
-              "value": 76.64242
-            },
-            "hp": {
-              "value": 21.463734
-            },
-            "nc": {
-              "value": 59.609016
-            }
-          }
+          "value": -0.9
         }
       }
     }
   },
   {
-    "actId": 4,
+    "actId": 3,
     "alpha": {
-      "name": "ExfilDone",
+      "name": "AttActive",
       "value": {
         "no": {
-          "name": "AccessLevel",
+          "name": "ExfilDone",
           "value": {
-            "root": {
-              "name": "HostType",
+            "no": {
+              "name": "AccessLevel",
               "value": {
-                "c": {
-                  "value": 73.49744
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.7777169
+                    },
+                    "hp": {
+                      "value": -1.975241
+                    },
+                    "nc": {
+                      "value": -2.8764791
+                    }
+                  }
                 },
-                "hp": {
-                  "value": 54.672794
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.8515375
+                    },
+                    "hp": {
+                      "value": -2.0572639
+                    },
+                    "nc": {
+                      "value": -2.954401
+                    }
+                  }
                 },
-                "nc": {
-                  "value": 61.50492
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.8515375
+                    },
+                    "hp": {
+                      "value": -2.0572639
+                    },
+                    "nc": {
+                      "value": -2.954401
+                    }
+                  }
                 }
               }
             },
-            "user": {
-              "name": "HostType",
+            "yes": {
+              "name": "AccessLevel",
               "value": {
-                "c": {
-                  "value": 73.33863
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.7550821
+                    },
+                    "hp": {
+                      "value": -1.9500911
+                    },
+                    "nc": {
+                      "value": -2.8525865
+                    }
+                  }
                 },
-                "hp": {
-                  "value": 54.73343
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.7630382
+                    },
+                    "hp": {
+                      "value": -1.9589312
+                    },
+                    "nc": {
+                      "value": -2.8609848
+                    }
+                  }
                 },
-                "nc": {
-                  "value": 61.50492
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.7630382
+                    },
+                    "hp": {
+                      "value": -1.9589312
+                    },
+                    "nc": {
+                      "value": -2.8609848
+                    }
+                  }
                 }
               }
             }
           }
         },
         "yes": {
-          "name": "HostType",
+          "name": "ExfilDone",
           "value": {
-            "c": {
-              "value": 76.99408
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -2.8764791
+                    },
+                    "hp": {
+                      "value": -1.0740031
+                    },
+                    "nc": {
+                      "value": -1.975241
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 14.752642
+                    },
+                    "hp": {
+                      "value": -18.86717
+                    },
+                    "nc": {
+                      "value": -2.0572639
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 14.752642
+                    },
+                    "hp": {
+                      "value": -18.86717
+                    },
+                    "nc": {
+                      "value": -2.0572639
+                    }
+                  }
+                }
+              }
             },
-            "hp": {
-              "value": 21.69313
-            },
-            "nc": {
-              "value": 61.50492
+            "yes": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 15.197321
+                    },
+                    "hp": {
+                      "value": -19.097502
+                    },
+                    "nc": {
+                      "value": -1.9500911
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 15.180082
+                    },
+                    "hp": {
+                      "value": -19.097948
+                    },
+                    "nc": {
+                      "value": -1.9589312
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 15.180082
+                    },
+                    "hp": {
+                      "value": -19.097948
+                    },
+                    "nc": {
+                      "value": -1.9589312
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -368,52 +277,763 @@
   {
     "actId": 0,
     "alpha": {
-      "name": "ExfilDone",
+      "name": "AttActive",
       "value": {
         "no": {
-          "name": "AccessLevel",
+          "name": "ExfilDone",
           "value": {
-            "root": {
-              "name": "HostType",
+            "no": {
+              "name": "AccessLevel",
               "value": {
-                "c": {
-                  "value": 78.87393
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -2.9
+                    },
+                    "hp": {
+                      "value": -1.0
+                    },
+                    "nc": {
+                      "value": -1.95
+                    }
+                  }
                 },
-                "hp": {
-                  "value": 27.393929
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -2.8999999
+                    },
+                    "hp": {
+                      "value": -1.0
+                    },
+                    "nc": {
+                      "value": -1.9499999
+                    }
+                  }
                 },
-                "nc": {
-                  "value": 62.043926
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -2.9
+                    },
+                    "hp": {
+                      "value": -1.0
+                    },
+                    "nc": {
+                      "value": -1.95
+                    }
+                  }
                 }
               }
             },
-            "user": {
+            "yes": {
               "name": "HostType",
               "value": {
                 "c": {
-                  "value": 61.053925
+                  "value": -2.9
                 },
                 "hp": {
-                  "value": 63.033936
+                  "value": -1.0
                 },
                 "nc": {
-                  "value": 62.043934
+                  "value": -1.95
                 }
               }
             }
           }
         },
         "yes": {
-          "name": "HostType",
+          "name": "ExfilDone",
           "value": {
-            "c": {
-              "value": 80.853935
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -1.95
+                    },
+                    "hp": {
+                      "value": -0.050000012
+                    },
+                    "nc": {
+                      "value": -1.0
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 15.15
+                    },
+                    "hp": {
+                      "value": -17.15
+                    },
+                    "nc": {
+                      "value": -1.0
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -1.95
+                    },
+                    "hp": {
+                      "value": -0.050000012
+                    },
+                    "nc": {
+                      "value": -1.0
+                    }
+                  }
+                }
+              }
             },
-            "hp": {
-              "value": 23.43393
+            "yes": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 17.05
+                },
+                "hp": {
+                  "value": -19.05
+                },
+                "nc": {
+                  "value": -1.0
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 0,
+    "alpha": {
+      "name": "AttActive",
+      "value": {
+        "no": {
+          "name": "ExfilDone",
+          "value": {
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -5.2912555
+                    },
+                    "hp": {
+                      "value": -3.6569505
+                    },
+                    "nc": {
+                      "value": -4.474103
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.0034375
+                    },
+                    "hp": {
+                      "value": -1.1149309
+                    },
+                    "nc": {
+                      "value": -2.0591843
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -5.2912555
+                    },
+                    "hp": {
+                      "value": -3.6569505
+                    },
+                    "nc": {
+                      "value": -4.474103
+                    }
+                  }
+                }
+              }
             },
-            "nc": {
-              "value": 62.043934
+            "yes": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": -2.908632
+                },
+                "hp": {
+                  "value": -1.0095911
+                },
+                "nc": {
+                  "value": -1.9591115
+                }
+              }
+            }
+          }
+        },
+        "yes": {
+          "name": "ExfilDone",
+          "value": {
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.474103
+                    },
+                    "hp": {
+                      "value": -2.839798
+                    },
+                    "nc": {
+                      "value": -3.6569505
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 16.785528
+                    },
+                    "hp": {
+                      "value": -19.015388
+                    },
+                    "nc": {
+                      "value": -1.1149309
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.474103
+                    },
+                    "hp": {
+                      "value": -2.839798
+                    },
+                    "nc": {
+                      "value": -3.6569505
+                    }
+                  }
+                }
+              }
+            },
+            "yes": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 17.031296
+                },
+                "hp": {
+                  "value": -19.05048
+                },
+                "nc": {
+                  "value": -1.0095911
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 0,
+    "alpha": {
+      "name": "AttActive",
+      "value": {
+        "no": {
+          "name": "ExfilDone",
+          "value": {
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.74645
+                    },
+                    "hp": {
+                      "value": -1.9405
+                    },
+                    "nc": {
+                      "value": -2.8434749
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -2.9923398
+                    },
+                    "hp": {
+                      "value": -1.1026
+                    },
+                    "nc": {
+                      "value": -2.04747
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.74645
+                    },
+                    "hp": {
+                      "value": -1.9405
+                    },
+                    "nc": {
+                      "value": -2.8434749
+                    }
+                  }
+                }
+              }
+            },
+            "yes": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": -2.90855
+                },
+                "hp": {
+                  "value": -1.0095
+                },
+                "nc": {
+                  "value": -1.959025
+                }
+              }
+            }
+          }
+        },
+        "yes": {
+          "name": "ExfilDone",
+          "value": {
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -2.8434749
+                    },
+                    "hp": {
+                      "value": -1.037525
+                    },
+                    "nc": {
+                      "value": -1.9405
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 16.636152
+                    },
+                    "hp": {
+                      "value": -18.841352
+                    },
+                    "nc": {
+                      "value": -1.1026
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -2.8434749
+                    },
+                    "hp": {
+                      "value": -1.037525
+                    },
+                    "nc": {
+                      "value": -1.9405
+                    }
+                  }
+                }
+              }
+            },
+            "yes": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 17.031473
+                },
+                "hp": {
+                  "value": -19.050474
+                },
+                "nc": {
+                  "value": -1.0095
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 0,
+    "alpha": {
+      "name": "AttActive",
+      "value": {
+        "no": {
+          "name": "ExfilDone",
+          "value": {
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.5425367
+                    },
+                    "hp": {
+                      "value": -2.8250403
+                    },
+                    "nc": {
+                      "value": -3.6837883
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.0018067
+                    },
+                    "hp": {
+                      "value": -1.1131188
+                    },
+                    "nc": {
+                      "value": -2.0574627
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.5425367
+                    },
+                    "hp": {
+                      "value": -2.8250403
+                    },
+                    "nc": {
+                      "value": -3.6837883
+                    }
+                  }
+                }
+              }
+            },
+            "yes": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": -2.9086313
+                },
+                "hp": {
+                  "value": -1.0095903
+                },
+                "nc": {
+                  "value": -1.9591107
+                }
+              }
+            }
+          }
+        },
+        "yes": {
+          "name": "ExfilDone",
+          "value": {
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.6837883
+                    },
+                    "hp": {
+                      "value": -1.9662924
+                    },
+                    "nc": {
+                      "value": -2.8250403
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 16.77353
+                    },
+                    "hp": {
+                      "value": -18.999765
+                    },
+                    "nc": {
+                      "value": -1.1131188
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.6837883
+                    },
+                    "hp": {
+                      "value": -1.9662924
+                    },
+                    "nc": {
+                      "value": -2.8250403
+                    }
+                  }
+                }
+              }
+            },
+            "yes": {
+              "name": "HostType",
+              "value": {
+                "c": {
+                  "value": 17.031298
+                },
+                "hp": {
+                  "value": -19.050478
+                },
+                "nc": {
+                  "value": -1.0095903
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "actId": 4,
+    "alpha": {
+      "name": "AttActive",
+      "value": {
+        "no": {
+          "name": "ExfilDone",
+          "value": {
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.251065
+                    },
+                    "hp": {
+                      "value": -1.2814718
+                    },
+                    "nc": {
+                      "value": -2.1282654
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.3066072
+                    },
+                    "hp": {
+                      "value": -1.2930433
+                    },
+                    "nc": {
+                      "value": -2.1355941
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.3066072
+                    },
+                    "hp": {
+                      "value": -1.2930433
+                    },
+                    "nc": {
+                      "value": -2.1355941
+                    }
+                  }
+                }
+              }
+            },
+            "yes": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.2338624
+                    },
+                    "hp": {
+                      "value": -1.277888
+                    },
+                    "nc": {
+                      "value": -2.1259956
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.2398486
+                    },
+                    "hp": {
+                      "value": -1.2791351
+                    },
+                    "nc": {
+                      "value": -2.1267855
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -4.2398486
+                    },
+                    "hp": {
+                      "value": -1.2791351
+                    },
+                    "nc": {
+                      "value": -2.1267855
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "yes": {
+          "name": "ExfilDone",
+          "value": {
+            "no": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": -3.3761244
+                    },
+                    "hp": {
+                      "value": -0.34554547
+                    },
+                    "nc": {
+                      "value": -1.1876479
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 9.888026
+                    },
+                    "hp": {
+                      "value": -2.8557167
+                    },
+                    "nc": {
+                      "value": -1.1953621
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 9.888026
+                    },
+                    "hp": {
+                      "value": -2.8557167
+                    },
+                    "nc": {
+                      "value": -1.1953621
+                    }
+                  }
+                }
+              }
+            },
+            "yes": {
+              "name": "AccessLevel",
+              "value": {
+                "restricted": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 14.159965
+                    },
+                    "hp": {
+                      "value": -19.063894
+                    },
+                    "nc": {
+                      "value": -1.1852586
+                    }
+                  }
+                },
+                "root": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 14.146993
+                    },
+                    "hp": {
+                      "value": -19.063955
+                    },
+                    "nc": {
+                      "value": -1.18609
+                    }
+                  }
+                },
+                "user": {
+                  "name": "HostType",
+                  "value": {
+                    "c": {
+                      "value": 14.146993
+                    },
+                    "hp": {
+                      "value": -19.063955
+                    },
+                    "nc": {
+                      "value": -1.18609
+                    }
+                  }
+                }
+              }
             }
           }
         }

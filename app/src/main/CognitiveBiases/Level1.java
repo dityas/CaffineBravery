@@ -31,6 +31,8 @@ public class Level1 {
         var initBelDefLevel1 = defLevel1.getECDDFromMjDD(
                 runner.getDDs().get("initDefl1Actual"));
 
+        System.out.println(initBelDefLevel1);
+
         var policy = new SymbolicPerseusSolver<>()
             .solve(
                     List.of(initBelDefLevel1), 
@@ -42,5 +44,7 @@ public class Level1 {
                 defLevel1, policy);
 
         System.out.println(String.format("Graph is %s", G));
+
+        IPOMDPSim.run(initBelDefLevel1, defLevel1, policy);
     }
 }
