@@ -140,9 +140,9 @@
     (HostType'
         (c      
             (ReconObs' 
-                (protected_asset    (0.9))
-                (unprotected_asset  (0.05))
-                (none               (0.05))
+                (protected_asset    (0.45))
+                (unprotected_asset  (0.45))
+                (none               (0.1))
             )
         )
 
@@ -156,9 +156,9 @@
 
         (hp     
             (ReconObs' 
-                (protected_asset    (0.05))
-                (unprotected_asset  (0.9))
-                (none               (0.05))
+                (protected_asset    (0.45))
+                (unprotected_asset  (0.45))
+                (none               (0.1))
             )
         )
     )
@@ -226,7 +226,7 @@
             (HostType
                 (c
                     (ExfilDone
-                        (yes    (20.0))
+                        (yes    (10.0))
                         (no     (0.0))
                     )
                 )
@@ -238,7 +238,7 @@
                 )
                 (hp
                     (ExfilDone
-                        (yes    (-20.0))
+                        (yes    (10.0))
                         (no     (0.0))
                     )
                 )
