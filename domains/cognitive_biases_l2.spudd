@@ -48,16 +48,24 @@
     )
 )
 
+(defdd blockActionAccessLevel
+    (AccessLevel
+        (user           (AccessLevel' restricted))
+        (root           (AccessLevel' restricted))
+        (restricted     (AccessLevel' restricted))
+    )
+)
+
 (defdd privEscAccessLevel
     (DefActions
-        (BLOCK_ACTION   (AccessLevel' restricted))
+        (BLOCK_ACTION   (blockActionAccessLevel))
         (NOP            (privEscAtt))
     )
 )
 
 (defdd defaultAccessLevel
     (DefActions
-        (BLOCK_ACTION   (AccessLevel' restricted))
+        (BLOCK_ACTION   (blockActionAccessLevel))
         (NOP            (SAME AccessLevel))
     )
 )
@@ -132,33 +140,33 @@
     (HostType'
         (c      
             (ReconObs' 
-                (protected_asset    (0.8))
-                (unprotected_asset  (0.15))
+                (protected_asset    (0.9))
+                (unprotected_asset  (0.05))
                 (none               (0.05))
             )
         )
 
         (nc     
             (ReconObs' 
-                (protected_asset    (0.1))
-                (unprotected_asset  (0.1))
-                (none               (0.8))
+                (protected_asset    (0.05))
+                (unprotected_asset  (0.05))
+                (none               (0.9))
             )
         )
 
         (hp     
             (ReconObs' 
-                (protected_asset    (0.15))
-                (unprotected_asset  (0.8))
+                (protected_asset    (0.05))
+                (unprotected_asset  (0.9))
                 (none               (0.05))
             )
         )
-
-        (c_hp
+        
+        (c_hp     
             (ReconObs' 
-                (protected_asset    (0.4))
-                (unprotected_asset  (0.4))
-                (none               (0.2))
+                (protected_asset    (0.45))
+                (unprotected_asset  (0.45))
+                (none               (0.1))
             )
         )
     )
@@ -230,12 +238,14 @@
                         (no     (0.0))
                     )
                 )
+                
                 (nc     
                     (ExfilDone
-                        (yes    (-10.0))
+                        (yes    (-20.0))
                         (no     (0.0))
                     )
                 )
+                
                 (hp
                     (ExfilDone
                         (yes    (-20.0))
@@ -245,7 +255,7 @@
 
                 (c_hp
                     (ExfilDone
-                        (yes    (10.0))
+                        (yes    (20.0))
                         (no     (0.0))
                     )
                 )
@@ -308,10 +318,10 @@
 -- Initial belief of the attacker
 (defdd initAttl0
     (HostType
-        (nc     (0.5))
-        (c_hp   (0.5))
         (c      (0.0))
+        (nc     (0.5))
         (hp     (0.0))
+        (c_hp   (0.5))
     )
     * (AccessLevel  user)
     * (ExfilDone    no)
@@ -331,33 +341,34 @@
 -- Defender's DDs
 (defdd defObs
     (HostType'
-        (c
-            (HType'
+        (c      
+            (HType' 
                 (obs_c  (0.99))
-                (obs_nc (0.005))
                 (obs_hp (0.005))
+                (obs_nc (0.005))
             )
         )
-
-        (nc
+        (nc     
             (HType'
                 (obs_c  (0.005))
                 (obs_nc (0.99))
                 (obs_hp (0.005))
             )
-
         )
-
-        (hp
+        (hp     
             (HType'
                 (obs_c  (0.005))
                 (obs_nc (0.005))
                 (obs_hp (0.99))
             )
-
         )
-
-        (c_hp   (HType' UNIFORM))
+        (c_hp     
+            (HType'
+                (obs_c      (0.5))
+                (obs_hp     (0.5))
+                (obs_nc     (0.0))
+            )
+        )
     )
 )
 
@@ -401,9 +412,19 @@
     )
 )
 
+(defdd jointActionAccessLevel
+    (AttActions
+        (RECON      (blockActionAccessLevel))
+        (EXFIL      (blockActionAccessLevel))
+        (NOP        (blockActionAccessLevel))
+        (EXIT       (blockActionAccessLevel))
+        (PRIV_ESC   (privEscAtt))
+    )
+)
+
 (defdbn actionBlockAction
     (HostType       (attActHostType))
-    (AccessLevel    (AccessLevel' restricted))
+    (AccessLevel    (jointActionAccessLevel))
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (attActAttActive))
     (HType          (defObs))
@@ -426,10 +447,7 @@
             )
         )
         (nc     
-            (ExfilDone
-                (yes    (0.0))
-                (no     (10.0))
-            )
+            (0.0)
         )
         (hp
             (ExfilDone
@@ -441,7 +459,7 @@
     )
 )
 
--- defender l1 model
+---- defender L1 model
 (defipomdp defl1
     (S
         (HostType AccessLevel ExfilDone AttActive)
@@ -476,22 +494,22 @@
 )
 
 (defdd initDefl1Actual
-    (HostType c)
+    (HostType 
+        (c      (0.3334))
+        (nc     (0.3333))
+        (hp     (0.3333))
+        (c_hp   (0.0))
+    )
     * (AccessLevel user)
     * (ExfilDone no)
     * (AttActive yes)
     * (Defl1ModelsAttl0 m0)
 )
 
--- Initial beliefs of l1 defender
+---- Initial beliefs of l1 defender
 
 (defdd initDefl1c
-    (HostType
-        (c  (0.9))
-        (nc (0.05))
-        (hp (0.05))
-        (c_hp (0.0))
-    )
+    (HostType   c)
     * (ExfilDone no)
     * (AttActive yes)
     * (AccessLevel user)
@@ -499,12 +517,7 @@
 )
 
 (defdd initDefl1nc
-    (HostType
-        (c  (0.05))
-        (nc (0.9))
-        (hp (0.05))
-        (c_hp (0.0))
-    )
+    (HostType   nc)
     * (AccessLevel user)
     * (ExfilDone no)
     * (AttActive yes)
@@ -512,11 +525,19 @@
 )
 
 (defdd initDefl1hp
-    (HostType
-        (c  (0.05))
-        (nc (0.05))
-        (hp (0.9))
-        (c_hp (0.0))
+    (HostType   hp)
+    * (AccessLevel user)
+    * (ExfilDone no)
+    * (AttActive yes)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1Final
+    (HostType 
+        (c      (0.3334))
+        (nc     (0.3333))
+        (hp     (0.3333))
+        (c_hp   (0.0))
     )
     * (AccessLevel user)
     * (ExfilDone no)
@@ -568,12 +589,7 @@
 )
 
 (defdd initPassiveDefl1c
-    (HostType
-        (c  (0.9))
-        (nc (0.05))
-        (hp (0.05))
-        (c_hp (0.0))
-    )
+    (HostType   c)
     * (AccessLevel user)
     * (ExfilDone no)
     * (AttActive yes)
@@ -581,12 +597,7 @@
 )
 
 (defdd initPassiveDefl1nc
-    (HostType
-        (c  (0.05))
-        (nc (0.9))
-        (hp (0.05))
-        (c_hp (0.0))
-    )
+    (HostType   nc)
     * (AccessLevel user)
     * (ExfilDone no)
     * (AttActive yes)
@@ -594,11 +605,19 @@
 )
 
 (defdd initPassiveDefl1hp
-    (HostType
-        (c  (0.05))
-        (nc (0.05))
-        (hp (0.9))
-        (c_hp (0.0))
+    (HostType   hp)
+    * (AccessLevel user)
+    * (ExfilDone no)
+    * (AttActive yes)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+(defdd initPassiveDefl1Final
+    (HostType 
+        (c      (0.3334))
+        (nc     (0.3333))
+        (hp     (0.3333))
+        (c_hp   (0.0))
     )
     * (AccessLevel user)
     * (ExfilDone no)
@@ -606,7 +625,7 @@
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
--- Attacker l2
+---- Attacker l2
 
 (defdd defReactionDefault
     (DefActions
@@ -670,15 +689,23 @@
     (DefReaction    (defReactionDefault))
 )
 
+--(initmodelvar Attl2ModelsDefl1
+--    (frames DefFrame)
+--    (
+--        (lowCap     (m0 (initPassiveDefl1Final)))
+--        (highCap    (m1 (initDefl1Final)))
+--    )
+--)
+
 (initmodelvar Attl2ModelsDefl1
     (frames DefFrame)
     (
-        (lowCap    (m0     (initPassiveDefl1c)))
-        (lowCap    (m1     (initPassiveDefl1nc)))
-        (lowCap    (m2     (initPassiveDefl1hp)))
-        (highCap   (m3     (initDefl1c)))
-        (highCap   (m4     (initDefl1nc)))
-        (highCap   (m5     (initDefl1hp)))
+        (lowCap     (m0 (initPassiveDefl1c)))
+        (lowCap     (m1 (initPassiveDefl1nc)))
+        (lowCap     (m2 (initPassiveDefl1hp)))
+        (highCap    (m3 (initDefl1c)))
+        (highCap    (m4 (initDefl1nc)))
+        (highCap    (m5 (initDefl1hp)))
     )
 )
 
@@ -766,16 +793,15 @@
                 (m3     (0.25))
                 (m4     (0.0))
                 (m5     (0.25))
-            )
         )
     )
 )
 
 (defdd initAttl2
-    (HostType 
+    (HostType
         (c      (0.0))
-        (hp     (0.0))
         (nc     (0.5))
+        (hp     (0.0))
         (c_hp   (0.5))
     )
     * (AccessLevel user)
@@ -783,4 +809,5 @@
     * (AttActive    yes)
     * (dependentMj)
 )
+
 
