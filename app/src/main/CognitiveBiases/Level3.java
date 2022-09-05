@@ -27,7 +27,7 @@ public class Level3 {
                     return null;
                 });
 
-        var initBeldefl3 = defl3.getECDDFromMjDD(runner.getDDs().get("initDefl3Actual"));
+        var initBeldefl3 = defl3.getECDDFromMjDD(runner.getDD("initDefl3Actual"));
         var policy = new SymbolicPerseusSolver<>().solve(List.of(initBeldefl3), defl3, 100, defl3.H,
                 AlphaVectorPolicy.fromR(defl3.R()));
 

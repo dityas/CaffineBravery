@@ -7,7 +7,7 @@ import thinclab.models.datastructures.PolicyGraph;
 import thinclab.policy.AlphaVectorPolicy;
 import thinclab.solver.SymbolicPerseusSolver;
 import thinclab.spuddx_parser.SpuddXMainParser;
-import thinclab.utils.Utils;
+import thinclab.executables.SimulateBeliefUpdates;
 
 public class Level0 {
 
@@ -29,7 +29,7 @@ public class Level0 {
                     return null;
                 });
 
-        var b = runner.getDDs().get("initAttl0");
+        var b = runner.getDD("initAttl0");
 
         var policy = new SymbolicPerseusSolver<>()
             .solve(
@@ -37,14 +37,6 @@ public class Level0 {
                     attLevel0, 100, 
                     10, AlphaVectorPolicy.fromR(attLevel0.R()));
 
-        var G = PolicyGraph.makePolicyGraph(
-                List.of(b), 
-                attLevel0, 
-                policy);
-
-        System.out.println(String.format("Graph is %s", G));
-        System.out.println(String.format("Policy is %s", policy.toJson()));
-
-        Utils.writeJsonToFile(policy.toJson(), args[1]); 
+        SimulateBeliefUpdates.runSimulator(attLevel0, b, policy);
     }
 }

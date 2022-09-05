@@ -27,7 +27,6 @@
 
 -- Attacker observations
 (defvar ReconObs (protected_asset unprotected_asset none))
-(defvar ExecResult (success blocked))
 (defvar DefReaction (yes no))
 
 -- L0 Attacker's guess of L1 defender's action distribution
@@ -70,31 +69,6 @@
     )
 )
 
-(defdd execResultPrivEsc
-    (AccessLevel'
-        (user
-            (ExecResult'
-                (success    (0.01))
-                (blocked    (0.99))
-            )
-        )
-
-        (root
-            (ExecResult'
-                (success    (0.99))
-                (blocked    (0.01))
-            )
-        )
-
-        (restricted
-            (ExecResult'
-                (success    (0.01))
-                (blocked    (0.99))
-            )
-        )
-    )
-)
-
 ----------------------------------------------------------
 -- Attacker's Exfil action
 
@@ -113,24 +87,6 @@
             )
         )
         (restricted     (SAME ExfilDone))
-    )
-)
-
-(defdd execResultExfil
-    (ExfilDone'
-        (yes
-            (ExecResult'
-                (success    (0.99))
-                (blocked    (0.01))
-            )
-        )
-
-        (no
-            (ExecResult'
-                (success    (0.01))
-                (blocked    (0.99))
-            )
-        )
     )
 )
 
@@ -188,7 +144,6 @@
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (SAME AttActive))
     (ReconObs       (reconObs))
-    (ExecResult     (ExecResult' UNIFORM))
 )
 
 (defdbn attackerExfilDBN
@@ -197,7 +152,6 @@
     (ExfilDone      (# (DefActions) (distDefActions * exfilExfilDone)))
     (AttActive      (SAME AttActive))
     (ReconObs       (ReconObs' UNIFORM))
-    (ExecResult     (execResultExfil))
 )
 
 (defdbn attackerExitDBN
@@ -206,7 +160,6 @@
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (AttActive' no))
     (ReconObs       (ReconObs' UNIFORM))
-    (ExecResult     (ExecResult' UNIFORM))
 )
 
 (defdbn attackerNopDBN
@@ -215,7 +168,6 @@
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (SAME AttActive))
     (ReconObs       (ReconObs' UNIFORM))
-    (ExecResult     (ExecResult' UNIFORM))
 )
 
 (defdbn attackerPrivEscDBN
@@ -224,7 +176,6 @@
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (SAME AttActive))
     (ReconObs       (ReconObs' UNIFORM))
-    (ExecResult     (execResultPrivEsc))
 )
 -- multi agent reward DD for level 0
 
@@ -291,7 +242,7 @@
     )
 
     (O
-        (ReconObs ExecResult)
+        (ReconObs)
     )
 
     (A  AttActions)
@@ -645,7 +596,6 @@
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (SAME AttActive))
     (ReconObs       (reconObs))
-    (ExecResult     (ExecResult' UNIFORM))
     (DefReaction    (defReactionDefault))
 )
 
@@ -655,7 +605,6 @@
     (ExfilDone      (exfilExfilDone))
     (AttActive      (SAME AttActive))
     (ReconObs       (ReconObs' UNIFORM))
-    (ExecResult     (execResultExfil))
     (DefReaction    (defReactionDefault))
 )
 
@@ -665,7 +614,6 @@
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (AttActive' no))
     (ReconObs       (ReconObs' UNIFORM))
-    (ExecResult     (ExecResult' UNIFORM))
     (DefReaction    (defReactionDefault))
 )
 
@@ -675,7 +623,6 @@
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (SAME AttActive))
     (ReconObs       (ReconObs' UNIFORM))
-    (ExecResult     (ExecResult' UNIFORM))
     (DefReaction    (defReactionDefault))
 )
 
@@ -685,7 +632,6 @@
     (ExfilDone      (SAME ExfilDone))
     (AttActive      (SAME AttActive))
     (ReconObs       (ReconObs' UNIFORM))
-    (ExecResult     (execResultPrivEsc))
     (DefReaction    (defReactionDefault))
 )
 
@@ -716,7 +662,7 @@
     )
 
     (O
-        (ReconObs ExecResult DefReaction)
+        (ReconObs DefReaction)
     )
 
     (A  AttActions)

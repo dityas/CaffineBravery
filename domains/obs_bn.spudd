@@ -1,0 +1,89 @@
+-- [Mj] ------- [Mj']
+--   ^ \          ^
+--   |  v        _|_
+--   |   [Aj]---/   \
+--  [S]----=======>[S']
+
+(defvar State       (s1 s2 s1_s2))
+(defvar Actionj     (a1 a2))
+(defvar Modelsj     (mj1 mj2 mj3 mj4))
+
+(defdd pAjGivenMj
+    (Modelsj
+        (mj1
+            (Actionj
+                (a1     (1.0))
+                (a2     (0.0))
+            )
+        )
+
+        (mj2
+            (Actionj
+                (a1     (1.0))
+                (a2     (0.0))
+            )
+        )
+        
+        (mj3
+            (Actionj
+                (a1     (1.0))
+                (a2     (0.0))
+            )
+        )
+        
+        (mj4
+            (Actionj
+                (a1     (0.0))
+                (a2     (1.0))
+            )
+        )
+    )
+)
+
+(defdd pSpGivenS
+    (SAME State)
+)
+
+(defdd pMjGivenAjMjSp
+    (SAME Modelsj)
+)
+
+(defdd pS
+    (State
+        (s1     (0.0))
+        (s2     (0.0))
+        (s1_s2  (1.0))
+    )
+)
+
+(defdd pMjGivenS
+    (State
+        (s1
+            (Modelsj
+                (mj1    (0.5))
+                (mj2    (0.0))
+                (mj3    (0.5))
+                (mj4    (0.0))
+            )
+        )
+
+        (s2
+            (Modelsj
+                (mj1    (0.0))
+                (mj2    (0.5))
+                (mj3    (0.0))
+                (mj4    (0.5))
+            )
+        )
+
+        (s1_s2
+            (Modelsj
+                (mj1    (0.25))
+                (mj2    (0.25))
+                (mj3    (0.25))
+                (mj4    (0.25))
+            )
+        )
+    )
+)
+

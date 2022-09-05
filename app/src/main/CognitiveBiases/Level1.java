@@ -29,7 +29,7 @@ public class Level1 {
                 });
 
         var initBelDefLevel1 = defLevel1.getECDDFromMjDD(
-                runner.getDDs().get("initDefl1Actual"));
+                runner.getDD("initDefl1Actual"));
 
         System.out.println(initBelDefLevel1);
 
