@@ -1,4 +1,4 @@
-(defvar VulnType    (lure real lure_real))
+(defvar VulnType    (bait real bait_real))
 (defvar VulnFound   (yes no))
 (defvar AccessLevel (user root restricted))
 (defvar AttActive   (yes no))
@@ -23,7 +23,7 @@
 (defvar AttActions (RECON PRIV_ESC NOP EXIT))
 
 -- Defender observations
-(defvar LureInteraction (yes no))
+(defvar BaitInteraction (yes no))
 
 -- Attacker observations
 (defvar VulnFoundObs    (yes no))
@@ -203,7 +203,7 @@
 
 -- Initial belief of the attacker
 (defdd initAttl0
-    (VulnType   lure_real)
+    (VulnType   bait_real)
     * (VulnFound    no)
     * (AccessLevel  user)
     * (AttActive    yes)
@@ -220,22 +220,22 @@
 )
 
 -- Defender's DDs
-(defdd lureInteractionObs
+(defdd baitInteractionObs
     (AttActions
-        (RECON      (LureInteraction' UNIFORM))
-        (NOP        (LureInteraction' UNIFORM))
-        (EXIT       (LureInteraction' UNIFORM))
+        (RECON      (BaitInteraction' UNIFORM))
+        (NOP        (BaitInteraction' UNIFORM))
+        (EXIT       (BaitInteraction' UNIFORM))
         (PRIV_ESC   
             (VulnType'
-                (lure
-                    (LureInteraction'
+                (bait
+                    (BaitInteraction'
                         (yes    (0.9))
                         (no     (0.1))
                     )
                 )
 
-                (real       (LureInteraction' UNIFORM))
-                (lure_real  (LureInteraction' UNIFORM))
+                (real       (BaitInteraction' UNIFORM))
+                (bait_real  (BaitInteraction' UNIFORM))
             )
         )
     )
@@ -292,7 +292,7 @@
     (AccessLevel    (jointActionAccessLevel))
     (AttActive      (attActAttActive))
 
-    (LureInteraction    (lureInteractionObs))
+    (BaitInteraction    (baitInteractionObs))
 )
 
 (defdbn actionNOP
@@ -301,14 +301,35 @@
     (AccessLevel    (attActAccessLevel))
     (AttActive      (attActAttActive))
 
-    (LureInteraction    (lureInteractionObs))
+    (BaitInteraction    (baitInteractionObs))
 )
 
 (defdd defReward
-    (AccessLevel
-        (user           (0.0))
-        (root           -(1.0))
-        (restricted     (10.0))
+    (VulnType
+        (bait   
+            (AttActions
+                (RECON      (0.0))
+                (PRIV_ESC   (10.0))
+                (NOP        (0.0))
+                (EXIT       (0.0))
+            )
+        )
+
+        (real
+            (AccessLevel
+                (user           (0.0))
+                (root           -(1.0))
+                (restricted     (10.0))
+            )
+        )
+
+        (bait_real
+            (AccessLevel
+                (user           (0.0))
+                (root           -(1.0))
+                (restricted     (10.0))
+            )
+        )
     )
 )
 
@@ -319,7 +340,7 @@
     )
 
     (O
-        (LureInteraction)
+        (BaitInteraction)
     )
 
     (A  DefActions)
@@ -365,7 +386,7 @@
 )
 
 (defdd initDefl1hp
-    (VulnType       lure)
+    (VulnType       bait)
     * (VulnFound    no)
     * (AttActive yes)
     * (AccessLevel user)
@@ -400,7 +421,7 @@
     )
 
     (O
-        (LureInteraction)
+        (BaitInteraction)
     )
 
     (A  DefActions)
@@ -436,7 +457,7 @@
 )
 
 (defdd initPassiveDefl1hp
-    (VulnType       lure)
+    (VulnType       bait)
     * (VulnFound    no)
     * (AccessLevel user)
     * (AttActive yes)
@@ -566,7 +587,7 @@
             )      
         )
 
-        (lure
+        (bait
             (Attl2ModelsDefl1
                 (m0     (0.0))
                 (m1     (0.5))
@@ -575,7 +596,7 @@
             )
         )
 
-        (lure_real
+        (bait_real
             (Attl2ModelsDefl1
                 (m0     (0.25))
                 (m1     (0.25))
@@ -587,9 +608,9 @@
 
 (defdd initAttl2
     (VulnType
-        (real       (0.1))
-        (lure       (0.9))
-        (lure_real  (0.0))
+        (real       (0.0))
+        (bait       (0.0))
+        (bait_real  (1.0))
     )
     * (VulnFound    no)
     * (AccessLevel  user)
