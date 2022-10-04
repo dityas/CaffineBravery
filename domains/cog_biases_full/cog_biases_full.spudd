@@ -6,7 +6,7 @@
 (defvar ImpactCaused    (yes no))
 
 -- Defender modeling the attacker
-(defvar Defl1ModelsAttl0            (m0))
+(defvar Defl1ModelsAttl0            (m0 m1))
 (defvar Defl1ModelsAttl0EC          (ec0))
 (defvar PassiveDefl1ModelsAttl0     (m0))
 (defvar PassiveDefl1ModelsAttl0EC   (ec0))
@@ -21,7 +21,7 @@
 (defvar DefFrame        (highCap lowCap))
 
 -- Actions for both agents
-(defvar DefActions      (ApplyAppHardening DenyProcExec Nop))
+(defvar DefActions      (ApplyAppHardening DenyProcExec TerminateProcess Nop))
 (defvar AttActions      (SystemRecon PrivEsc Nop Exit Persist))
 
 -- Defender observations
@@ -35,8 +35,9 @@
 -- L0 Attacker's guess of L1 defender's action distribution
 (defdd distDefActions
     (DefActions
-        (ApplyAppHardening  (0.005))
-        (DenyProcExec       (0.005))
+        (ApplyAppHardening  (0.0034))
+        (DenyProcExec       (0.0033))
+        (TerminateProcess   (0.0033))
         (Nop                (0.99))
     )
 )
@@ -155,6 +156,7 @@
 (defdd jointActionHostApp
     (DefActions
         (ApplyAppHardening  (HostApps'  hardened))
+        (TerminateProcess   (SAME HostApps))
         (DenyProcExec       (SAME HostApps))
         (Nop                (SAME HostApps))
     )
@@ -163,8 +165,21 @@
 (defdd jointActionAccessLevel
     (DefActions
         (ApplyAppHardening  (privEscAtt))
+        (TerminateProcess   (privEscAtt))
         (DenyProcExec       (privEscBlocked))
         (Nop                (privEscAtt))
+    )
+)
+
+(defdd evictAttackerDD
+    (AttActive' UNIFORM)
+)
+(defdd jointActionAttActive
+    (DefActions
+        (ApplyAppHardening  (SAME AttActive))
+        (TerminateProcess   (evictAttackerDD))
+        (DenyProcExec       (SAME AttActive))
+        (Nop                (SAME AttActive))
     )
 )
 
@@ -174,8 +189,8 @@
     (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
     (VulnFound      (vulnFoundTransition))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (SAME AttActive))
     (ImpactCaused   (SAME ImpactCaused))
+    (AttActive      (# (DefActions) (distDefActions * jointActionAttActive)))
 
     (VulnFoundObs   (vulnFoundVulnFoundObs))
     (ActionResult   (ActionResult' UNIFORM))
@@ -198,7 +213,7 @@
     (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
     (VulnFound      (SAME VulnFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (SAME AttActive))
+    (AttActive      (# (DefActions) (distDefActions * jointActionAttActive)))
     (ImpactCaused   (SAME ImpactCaused))
 
     (VulnFoundObs   (vulnFoundObsDefault))
@@ -218,7 +233,7 @@
     (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
     (VulnFound      (SAME VulnFound))
     (AccessLevel    (# (DefActions) (distDefActions * jointActionAccessLevel)))
-    (AttActive      (SAME AttActive))
+    (AttActive      (# (DefActions) (distDefActions * jointActionAttActive)))
     (ImpactCaused   (SAME ImpactCaused))
 
     (VulnFoundObs   (vulnFoundObsDefault))
@@ -237,7 +252,7 @@
     (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
     (VulnFound      (SAME VulnFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (SAME AttActive))
+    (AttActive      (# (DefActions) (distDefActions * jointActionAttActive)))
     (ImpactCaused   (persistDD))
 
     (VulnFoundObs   (vulnFoundObsDefault))
@@ -252,19 +267,19 @@
             (HostType
                 (critical
                     (ImpactCaused
-                        (yes    (20.0))
+                        (yes    (10.0))
                         (no     (0.0))
                     )
                 )
                 (honeypot
                     (ImpactCaused
-                        (yes    (20.0))
+                        (yes    (10.0))
                         (no     (0.0))
                     )
                 )
                 (critical_honeypot
                     (ImpactCaused
-                        (yes    (20.0))
+                        (yes    (10.0))
                         (no     (0.0))
                     )
                 )
@@ -351,6 +366,18 @@
     * (ImpactCaused no)
 )
 
+(defdd initAttl0Inactive
+    (HostType   
+        (critical           (0.0))
+        (honeypot           (0.0))
+        (critical_honeypot  (1.0))
+    )
+    * (dependentHostApps)
+    * (VulnFound    UNIFORM)
+    * (AccessLevel  UNIFORM)
+    * (AttActive    no)
+    * (ImpactCaused no)
+)
 ---------------------------------------------------------------
 -- Defender l1 models
 
@@ -358,6 +385,7 @@
     (frames AttackerFrame)
     (
         (att    (m0     (initAttl0)))
+        (att    (m1     (initAttl0Inactive)))
     )
 )
 
@@ -479,7 +507,7 @@
 
         (honeypot
             (AttActive
-                (yes    (10.0))
+                (yes    (2.0))
                 (no     (0.0))
             )
         )
@@ -523,8 +551,8 @@
 )
 
 (defdd initDefl1Actual
-    (HostType           honeypot)
-    * (HostApps         vulnerable)
+    (HostType           critical)
+    * (HostApps         hardened)
     * (VulnFound        no)
     * (AccessLevel      user)
     * (AttActive        yes)
