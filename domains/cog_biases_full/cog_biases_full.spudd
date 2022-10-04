@@ -258,7 +258,7 @@
                 )
                 (honeypot
                     (ImpactCaused
-                        (yes    (0.0))
+                        (yes    (20.0))
                         (no     (0.0))
                     )
                 )
@@ -468,10 +468,21 @@
     (EndPtInference (obsEndPtInference))
 )
 
-(defdd passiveDefReward
-    (ImpactCaused
-        (yes    (0.0))
-        (no     (2.0))
+(defdd activeDefReward
+    (HostType
+        (critical
+            (AttActive
+                (yes    (-10.0))
+                (no     (0.0))
+            )
+        )
+
+        (honeypot
+            (AttActive
+                (yes    (10.0))
+                (no     (0.0))
+            )
+        )
     )
 )
 
@@ -502,9 +513,9 @@
     )
     
     (R
-        (ApplyAppHardening  (passiveDefReward - (1.0)))
-        (DenyProcExec       (passiveDefReward - (1.0)))
-        (Nop                (passiveDefReward))
+        (ApplyAppHardening  (activeDefReward - (1.0)))
+        (DenyProcExec       (activeDefReward - (1.0)))
+        (Nop                (activeDefReward))
     )
 
     (discount 0.95)
