@@ -1,12 +1,13 @@
 (defvar HostType        (critical honeypot critical_honeypot))
-(defvar HostApps        (vulnerable hardened))
-(defvar VulnFound       (yes no))
+(defvar HostHasData     (yes no))
+(defvar DataProtection  (active off))
+(defvar AccessPolicy    (permissive restrictive))
 (defvar AccessLevel     (user root restricted))
 (defvar AttActive       (yes no))
 (defvar ImpactCaused    (yes no))
 
 -- Defender modeling the attacker
-(defvar Defl1ModelsAttl0            (m0 m1))
+(defvar Defl1ModelsAttl0            (m0 m1 m2))
 (defvar Defl1ModelsAttl0EC          (ec0))
 (defvar PassiveDefl1ModelsAttl0     (m0))
 (defvar PassiveDefl1ModelsAttl0EC   (ec0))
@@ -22,13 +23,14 @@
 
 -- Actions for both agents
 (defvar DefActions      (ApplyAppHardening DenyProcExec TerminateProcess Nop))
-(defvar AttActions      (SystemRecon PrivEsc Nop Exit Persist))
+(defvar AttActions      (HostRecon PrivEsc0Day PrivEscValidAcc Nop Exit ManipulateData))
 
 -- Defender observations
 (defvar EndPtInference  (process_spawn f_access_pattern none))
 
 -- Attacker observations
 (defvar VulnFoundObs    (easy_exploit adv_exploit none))
+(defvar AccessPerm      (auth denied))
 (defvar ActionResult    (success failure))
 (defvar DefReaction     (yes no))
 
@@ -38,7 +40,7 @@
         (ApplyAppHardening  (0.0034))
         (DenyProcExec       (0.0033))
         (TerminateProcess   (0.0033))
-        (Nop                (0.99))
+        (Nop                (0.99)
     )
 )
 
@@ -50,7 +52,7 @@
             (AccessLevel
                 (user           (AccessLevel' root))
                 (root           (AccessLevel' root))
-                (restricted     (AccessLevel' user))
+                (restricted     (AccessLevel' root))
             )
         )
 
@@ -64,8 +66,8 @@
             (AccessLevel
                 (user
                     (AccessLevel'
-                        (user           (0.5))
-                        (root           (0.5))
+                        (user           (0.6))
+                        (root           (0.4))
                         (restricted     (0.0))
                     )
                 )
@@ -78,12 +80,20 @@
     )
 )
 
+(defdd privEscValidAccDD
+    (AccessLevel
+        (user           (AccessLevel'   root))
+        (root           (AccessLevel'   root))
+        (restricted     (AccessLevel'   restricted))
+    )
+)
+
 (defdd persistDD
-    (AttActive
+    (AttActive'
         (yes
             (AccessLevel
-                (user           (ImpactCaused'  no))
-                (restricted     (ImpactCaused'  no))
+                (user           (SAME ImpactCaused))
+                (restricted     (SAME ImpactCaused))
                 (root           (ImpactCaused'  yes))
             )
         )
@@ -109,51 +119,57 @@
 
         (hardened
             (VulnFound'
-                (yes    (0.5))
-                (no     (0.5))
+                (yes    (0.2))
+                (no     (0.8))
             )
         )
     )
 )
 
 (defdd vulnFoundVulnFoundObs
-    (VulnFound'
+    (AttActive'
         (yes
-            (HostApps'
-                (hardened
-                    (VulnFoundObs'
-                        (easy_exploit   (0.09))
-                        (adv_exploit    (0.9))
-                        (none           (0.01))
+            (VulnFound'
+                (yes
+                    (HostApps'
+                        (hardened
+                            (VulnFoundObs'
+                                (easy_exploit   (0.09))
+                                (adv_exploit    (0.9))
+                                (none           (0.01))
+                            )
+                        )
+                        (vulnerable
+                            (VulnFoundObs'
+                                (easy_exploit   (0.9))
+                                (adv_exploit    (0.09))
+                                (none           (0.01))
+                            )
+                        )
                     )
                 )
-                (vulnerable
+
+                (no
                     (VulnFoundObs'
-                        (easy_exploit   (0.9))
-                        (adv_exploit    (0.09))
-                        (none           (0.01))
+                        (easy_exploit   (0.1))
+                        (adv_exploit    (0.1))
+                        (none           (0.8))
                     )
                 )
             )
         )
 
-        (no
-            (VulnFoundObs'
-                (easy_exploit   (0.1))
-                (adv_exploit    (0.1))
-                (none           (0.8))
-            )
-        )
+        (no     (VulnFoundObs' UNIFORM))
     )
 )
 
 -- recon observation for other actions
 (defdd vulnFoundObsDefault
-    (VulnFoundObs' UNIFORM)
+    (VulnFoundObs'  UNIFORM)
 )
 
 -- joint action transitions for Multi-agent interaction
-(defdd jointActionHostApp
+(defdd defActionHostApp
     (DefActions
         (ApplyAppHardening  (HostApps'  hardened))
         (TerminateProcess   (SAME HostApps))
@@ -162,7 +178,7 @@
     )
 )
 
-(defdd jointActionAccessLevel
+(defdd defActionAccessLevel
     (DefActions
         (ApplyAppHardening  (privEscAtt))
         (TerminateProcess   (privEscAtt))
@@ -174,7 +190,7 @@
 (defdd evictAttackerDD
     (AttActive' UNIFORM)
 )
-(defdd jointActionAttActive
+(defdd defActionAttActive
     (DefActions
         (ApplyAppHardening  (SAME AttActive))
         (TerminateProcess   (evictAttackerDD))
@@ -186,11 +202,11 @@
 
 (defdbn attackerReconDBN
     (HostType       (SAME HostType))
-    (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
+    (HostApps       (# (DefActions) (distDefActions * defActionHostApp)))
     (VulnFound      (vulnFoundTransition))
     (AccessLevel    (SAME AccessLevel))
     (ImpactCaused   (SAME ImpactCaused))
-    (AttActive      (# (DefActions) (distDefActions * jointActionAttActive)))
+    (AttActive      (# (DefActions) (distDefActions * defActionAttActive)))
 
     (VulnFoundObs   (vulnFoundVulnFoundObs))
     (ActionResult   (ActionResult' UNIFORM))
@@ -198,7 +214,7 @@
 
 (defdbn attackerExitDBN
     (HostType       (SAME HostType))
-    (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
+    (HostApps       (# (DefActions) (distDefActions * defActionHostApp)))
     (VulnFound      (SAME VulnFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
@@ -210,10 +226,10 @@
 
 (defdbn attackerNopDBN
     (HostType       (SAME HostType))
-    (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
+    (HostApps       (# (DefActions) (distDefActions * defActionHostApp)))
     (VulnFound      (SAME VulnFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (# (DefActions) (distDefActions * jointActionAttActive)))
+    (AttActive      (# (DefActions) (distDefActions * defActionAttActive)))
     (ImpactCaused   (SAME ImpactCaused))
 
     (VulnFoundObs   (vulnFoundObsDefault))
@@ -230,10 +246,22 @@
 
 (defdbn attackerPrivEscDBN
     (HostType       (SAME HostType))
-    (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
+    (HostApps       (# (DefActions) (distDefActions * defActionHostApp)))
     (VulnFound      (SAME VulnFound))
-    (AccessLevel    (# (DefActions) (distDefActions * jointActionAccessLevel)))
-    (AttActive      (# (DefActions) (distDefActions * jointActionAttActive)))
+    (AccessLevel    (# (DefActions) (distDefActions * defActionAccessLevel)))
+    (AttActive      (# (DefActions) (distDefActions * defActionAttActive)))
+    (ImpactCaused   (SAME ImpactCaused))
+
+    (VulnFoundObs   (vulnFoundObsDefault))
+    (ActionResult   (privEscActionResult))
+)
+
+(defdbn attackerPrivEscValidAccDBN
+    (HostType       (SAME HostType))
+    (HostApps       (# (DefActions) (distDefActions * defActionHostApp)))
+    (VulnFound      (SAME VulnFound))
+    (AccessLevel    (privEscValidAccDD))
+    (AttActive      (# (DefActions) (distDefActions * defActionAttActive)))
     (ImpactCaused   (SAME ImpactCaused))
 
     (VulnFoundObs   (vulnFoundObsDefault))
@@ -249,10 +277,10 @@
 
 (defdbn attackerPersistDBN
     (HostType       (SAME HostType))
-    (HostApps       (# (DefActions) (distDefActions * jointActionHostApp)))
+    (HostApps       (# (DefActions) (distDefActions * defActionHostApp)))
     (VulnFound      (SAME VulnFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (# (DefActions) (distDefActions * jointActionAttActive)))
+    (AttActive      (# (DefActions) (distDefActions * defActionAttActive)))
     (ImpactCaused   (persistDD))
 
     (VulnFoundObs   (vulnFoundObsDefault))
@@ -264,25 +292,15 @@
 (defdd attackerReward
     (AttActive
         (yes
-            (HostType
-                (critical
+            (HostApps
+                (vulnerable
                     (ImpactCaused
                         (yes    (10.0))
-                        (no     (0.0))
+                        (no     (-1.0))
                     )
                 )
-                (honeypot
-                    (ImpactCaused
-                        (yes    (10.0))
-                        (no     (0.0))
-                    )
-                )
-                (critical_honeypot
-                    (ImpactCaused
-                        (yes    (10.0))
-                        (no     (0.0))
-                    )
-                )
+
+                (hardened   (-1.0))
             )
         )
 
@@ -318,19 +336,21 @@
     (A  AttActions)
 
     (dynamics
-        (SystemRecon    (attackerReconDBN))
-        (Nop            (attackerNopDBN))
-        (Exit           (attackerExitDBN))
-        (PrivEsc        (attackerPrivEscDBN))
-        (Persist        (attackerPersistDBN))
+        (SystemRecon        (attackerReconDBN))
+        (Nop                (attackerNopDBN))
+        (Exit               (attackerExitDBN))
+        (PrivEsc            (attackerPrivEscDBN))
+        (PrivEscValidAcc    (attackerPrivEscValidAccDBN))
+        (Persist            (attackerPersistDBN))
     )
     
     (R
-        (SystemRecon    (-1.0))
-        (PrivEsc        (-1.0))
-        (Persist        (-2.0))
-        (Nop            (nopCost))
-        (Exit           (attackerReward))
+        (SystemRecon        (-1.0))
+        (PrivEsc            (-1.0))
+        (PrivEscValidAcc    (-1.0))
+        (Persist            (-2.0))
+        (Nop                (nopCost))
+        (Exit               (attackerReward))
     )
 
     (discount 0.95)
@@ -366,199 +386,273 @@
     * (ImpactCaused no)
 )
 
-(defdd initAttl0Inactive
-    (HostType   
-        (critical           (0.0))
-        (honeypot           (0.0))
-        (critical_honeypot  (1.0))
-    )
-    * (dependentHostApps)
-    * (VulnFound    UNIFORM)
-    * (AccessLevel  UNIFORM)
-    * (AttActive    no)
-    * (ImpactCaused no)
-)
+--(defdd initAttl0Inactive
+--    (HostType   
+--        (critical           (0.0))
+--        (honeypot           (0.0))
+--        (critical_honeypot  (1.0))
+--    )
+--    * (dependentHostApps)
+--    * (VulnFound    no)
+--    * (AccessLevel  user)
+--    * (AttActive    no)
+--    * (ImpactCaused no)
+--)
+--
+--(defdd initAttl0Root
+--    (HostType   
+--        (critical           (0.0))
+--        (honeypot           (0.0))
+--        (critical_honeypot  (1.0))
+--    )
+--    * (dependentHostApps)
+--    * (VulnFound    no)
+--    * (AccessLevel  root)
+--    * (AttActive    yes)
+--    * (ImpactCaused no)
+--)
+-----------------------------------------------------------------
+---- Defender l1 models
+--
+--(initmodelvar Defl1ModelsAttl0
+--    (frames AttackerFrame)
+--    (
+--        (att    (m0     (initAttl0)))
+--        (att    (m1     (initAttl0Inactive)))
+--        (att    (m2     (initAttl0Root)))
+--    )
+--)
+--
+---- Defender's DDs
+--(defdd jointActionAttActive
+--    (AttActions
+--        (SystemRecon    (SAME AttActive))
+--        (PrivEsc        (SAME AttActive))
+--        (Persist        (SAME AttActive))
+--        (Exit           (AttActive' no))
+--        (Nop            (SAME AttActive))
+--    )
+--)
+--
+--(defdd jointActionAttActiveTerminated
+--    (AttActions
+--        (SystemRecon    (evictAttackerDD))
+--        (PrivEsc        (evictAttackerDD))
+--        (Persist        (evictAttackerDD))
+--        (Exit           (AttActive' no))
+--        (Nop            (evictAttackerDD))
+--    )
+--)
+--
+--(defdd jointActionAccessLevel
+--    (AttActions
+--        (SystemRecon    (SAME AccessLevel))
+--        (PrivEsc        (privEscAtt))
+--        (Persist        (SAME AccessLevel))
+--        (Exit           (SAME AccessLevel))
+--        (Nop            (SAME AccessLevel))
+--    )
+--)
+--
+--(defdd jointActionVulnFound
+--    (AttActions
+--        (SystemRecon    (vulnFoundTransition))
+--        (PrivEsc        (SAME VulnFound))
+--        (Persist        (SAME VulnFound))
+--        (Exit           (SAME VulnFound))
+--        (Nop            (SAME VulnFound))
+--    )
+--)
+--
+--(defdd jointActionImpactCaused
+--    (AttActions
+--        (SystemRecon    (SAME ImpactCaused))
+--        (PrivEsc        (SAME ImpactCaused))
+--        (Persist        (persistDD))
+--        (Exit           (SAME ImpactCaused))
+--        (Nop            (SAME ImpactCaused))
+--    )
+--)
+--
 ---------------------------------------------------------------
--- Defender l1 models
-
-(initmodelvar Defl1ModelsAttl0
-    (frames AttackerFrame)
-    (
-        (att    (m0     (initAttl0)))
-        (att    (m1     (initAttl0Inactive)))
-    )
-)
-
--- Defender's DDs
-
-(defdd jointActionAttActive
-    (AttActions
-        (SystemRecon    (SAME AttActive))
-        (PrivEsc        (SAME AttActive))
-        (Persist        (SAME AttActive))
-        (Exit           (AttActive' no))
-        (Nop            (SAME AttActive))
-    )
-)
-
-(defdd jointActionAccessLevel
-    (AttActions
-        (SystemRecon    (SAME AccessLevel))
-        (PrivEsc        (privEscAtt))
-        (Persist        (SAME AccessLevel))
-        (Exit           (SAME AccessLevel))
-        (Nop            (SAME AccessLevel))
-    )
-)
-
-(defdd jointActionVulnFound
-    (AttActions
-        (SystemRecon    (vulnFoundTransition))
-        (PrivEsc        (SAME VulnFound))
-        (Persist        (SAME VulnFound))
-        (Exit           (SAME VulnFound))
-        (Nop            (SAME VulnFound))
-    )
-)
-
-(defdd jointActionImpactCaused
-    (AttActions
-        (SystemRecon    (SAME ImpactCaused))
-        (PrivEsc        (SAME ImpactCaused))
-        (Persist        (persistDD))
-        (Exit           (SAME ImpactCaused))
-        (Nop            (SAME ImpactCaused))
-    )
-)
-
--------------------------------------------------------------
--- Observations
-(defdd defaultEndPtInference
-    (EndPtInference'    UNIFORM)
-)
-
-(defdd systemReconEndPtInference
-    (EndPtInference'
-        (process_spawn      (0.15))
-        (f_access_pattern   (0.8))
-        (none               (0.05))
-    )
-)
-
-(defdd privEscEndPtInference
-    (EndPtInference'
-        (process_spawn      (0.7))
-        (f_access_pattern   (0.05))
-        (none               (0.25))
-    )
-)
-
-(defdd obsEndPtInference
-    (AttActions
-        (SystemRecon    (systemReconEndPtInference))
-        (PrivEsc        (privEscEndPtInference))
-        (Nop            (defaultEndPtInference))
-        (Exit           (defaultEndPtInference))
-        (Persist        (defaultEndPtInference))
-    )
-)
-
-(defdbn actionApplyAppHardening
-    (HostType       (SAME HostType))
-    (HostApps       (HostApps'  hardened))
-    (VulnFound      (jointActionVulnFound))
-    (AccessLevel    (jointActionAccessLevel))
-    (AttActive      (jointActionAttActive))
-    (ImpactCaused   (jointActionImpactCaused))
-
-    (EndPtInference (obsEndPtInference))
-)
-
-(defdbn actionDenyProcExec
-    (HostType       (SAME HostType))
-    (HostApps       (SAME HostApps))
-    (VulnFound      (jointActionVulnFound))
-    (AccessLevel    (privEscBlocked))
-    (AttActive      (jointActionAttActive))
-    (ImpactCaused   (jointActionImpactCaused))
-
-    (EndPtInference (obsEndPtInference))
-)
-
-(defdbn actionNop
-    (HostType       (SAME HostType))
-    (HostApps       (SAME HostApps))
-    (VulnFound      (jointActionVulnFound))
-    (AccessLevel    (jointActionAccessLevel))
-    (AttActive      (jointActionAttActive))
-    (ImpactCaused   (jointActionImpactCaused))
-
-    (EndPtInference (obsEndPtInference))
-)
-
-(defdd activeDefReward
-    (HostType
-        (critical
-            (AttActive
-                (yes    (-10.0))
-                (no     (0.0))
-            )
-        )
-
-        (honeypot
-            (AttActive
-                (yes    (2.0))
-                (no     (0.0))
-            )
-        )
-    )
-)
-
----- defender L1 model
-(defipomdp defl1
-    (S
-        (HostType HostApps VulnFound AccessLevel AttActive ImpactCaused)
-    )
-
-    (O
-        (EndPtInference)
-    )
-
-    (A  DefActions)
-    (Aj AttActions)
-
-    (Mj Defl1ModelsAttl0)
-    (EC Defl1ModelsAttl0EC)
-
-    (Thetaj AttackerFrame
-        (att    attl0)
-    )
-
-    (dynamics
-        (ApplyAppHardening  (actionApplyAppHardening))
-        (DenyProcExec       (actionDenyProcExec))
-        (Nop                (actionNop))
-    )
-    
-    (R
-        (ApplyAppHardening  (activeDefReward - (1.0)))
-        (DenyProcExec       (activeDefReward - (1.0)))
-        (Nop                (activeDefReward))
-    )
-
-    (discount 0.95)
-    (H 7)
-)
-
-(defdd initDefl1Actual
-    (HostType           critical)
-    * (HostApps         hardened)
-    * (VulnFound        no)
-    * (AccessLevel      user)
-    * (AttActive        yes)
-    * (ImpactCaused     no)
-    * (Defl1ModelsAttl0 m0)
-)
+---- Observations
+--(defdd defaultEndPtInference
+--    (EndPtInference'    UNIFORM)
+--)
+--
+--(defdd systemReconEndPtInference
+--    (EndPtInference'
+--        (process_spawn      (0.15))
+--        (f_access_pattern   (0.8))
+--        (none               (0.05))
+--    )
+--)
+--
+--(defdd privEscEndPtInference
+--    (EndPtInference'
+--        (process_spawn      (0.7))
+--        (f_access_pattern   (0.05))
+--        (none               (0.25))
+--    )
+--)
+--
+--(defdd obsEndPtInference
+--    (AttActive'
+--        (yes
+--            (AttActions
+--                (SystemRecon    (systemReconEndPtInference))
+--                (PrivEsc        (privEscEndPtInference))
+--                (Nop            (defaultEndPtInference))
+--                (Exit           (defaultEndPtInference))
+--                (Persist        (defaultEndPtInference))
+--            )
+--        )
+--
+--        (no (defaultEndPtInference))
+--    )
+--)
+--
+--(defdbn actionApplyAppHardening
+--    (HostType       (SAME HostType))
+--    (HostApps       (HostApps'  hardened))
+--    (VulnFound      (jointActionVulnFound))
+--    (AccessLevel    (jointActionAccessLevel))
+--    (AttActive      (jointActionAttActive))
+--    (ImpactCaused   (jointActionImpactCaused))
+--
+--    (EndPtInference (obsEndPtInference))
+--)
+--
+--(defdbn actionDenyProcExec
+--    (HostType       (SAME HostType))
+--    (HostApps       (SAME HostApps))
+--    (VulnFound      (jointActionVulnFound))
+--    (AccessLevel    (privEscBlocked))
+--    (AttActive      (jointActionAttActive))
+--    (ImpactCaused   (jointActionImpactCaused))
+--
+--    (EndPtInference (obsEndPtInference))
+--)
+--
+--(defdbn actionNop
+--    (HostType       (SAME HostType))
+--    (HostApps       (SAME HostApps))
+--    (VulnFound      (jointActionVulnFound))
+--    (AccessLevel    (jointActionAccessLevel))
+--    (AttActive      (jointActionAttActive))
+--    (ImpactCaused   (jointActionImpactCaused))
+--
+--    (EndPtInference (obsEndPtInference))
+--)
+--
+--(defdbn actionTerminateProcess
+--    (HostType       (SAME HostType))
+--    (HostApps       (SAME HostApps))
+--    (VulnFound      (jointActionVulnFound))
+--    (AccessLevel    (jointActionAccessLevel))
+--    (AttActive      (jointActionAttActiveTerminated))
+--    (ImpactCaused   (jointActionImpactCaused))
+--
+--    (EndPtInference (obsEndPtInference))
+--)
+--
+--(defdd activeDefReward
+--    (HostType
+--        (critical   
+--            (
+--                (AttActive
+--                    (yes    (0.0))
+--                    (no     (2.0))
+--                )
+--                + (ImpactCaused
+--                    (yes    (0.0))
+--                    (no     (2.0))
+--                )
+--            )
+--        )
+--        (honeypot
+--            (AttActive
+--                (yes    (2.0))
+--                (no     (0.0))
+--            )
+--        )
+--    )
+--)
+--
+------ defender L1 model
+--(defipomdp defl1
+--    (S
+--        (HostType HostApps VulnFound AccessLevel AttActive ImpactCaused)
+--    )
+--
+--    (O
+--        (EndPtInference)
+--    )
+--
+--    (A  DefActions)
+--    (Aj AttActions)
+--
+--    (Mj Defl1ModelsAttl0)
+--    (EC Defl1ModelsAttl0EC)
+--
+--    (Thetaj AttackerFrame
+--        (att    attl0)
+--    )
+--
+--    (dynamics
+--        (ApplyAppHardening  (actionApplyAppHardening))
+--        (DenyProcExec       (actionDenyProcExec))
+--        (TerminateProcess   (actionTerminateProcess))
+--        (Nop                (actionNop))
+--    )
+--    
+--    (R
+--        (ApplyAppHardening  (activeDefReward - 0.5))
+--        (DenyProcExec       (activeDefReward - 0.5))
+--        (TerminateProcess   (activeDefReward - 0.5))
+--        (Nop                (activeDefReward))
+--    )
+--
+--    (discount 0.95)
+--    (H 7)
+--)
+--
+--(defdd dependentMjDefl1
+--    (AccessLevel
+--        (user
+--            (AttActive
+--                (yes    (Defl1ModelsAttl0   m0))
+--                (no     (Defl1ModelsAttl0   m1))
+--            )
+--        )
+--
+--        (root
+--            (Defl1ModelsAttl0
+--                (m0     (0.0))
+--                (m1     (0.0))
+--                (m2     (1.0))
+--            )
+--        )
+--
+--        (restricted
+--            (Defl1ModelsAttl0   UNIFORM)
+--        )
+--    )    
+--)
+--
+--(defdd initDefl1Actual
+--    (HostType           critical)
+--    * (HostApps         vulnerable)
+--    * (VulnFound        no)
+--    * (AccessLevel      
+--        (user       (0.95))
+--        (root       (0.05))
+--        (restricted (0.0))
+--    )
+--    * (AttActive        UNIFORM)
+--    * (ImpactCaused     no)
+--    * (dependentMjDefl1)
+--)
 
 ------ Initial beliefs of l1 defender
 --

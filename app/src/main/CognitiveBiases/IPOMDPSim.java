@@ -67,10 +67,17 @@ public class IPOMDPSim {
                         allObsLabels));
             int oIndex = in.nextInt();
 
+            var reward = DDOP.dotProduct(b, m.R().get(aIndex), m.i_S());
             System.out.println(
                     String.format(
-                        "Action: %s, obs: %s", 
-                        m.A().get(aIndex), allObsLabels.get(oIndex)));
+                        "Action: %s, obs: %s, R: %s", 
+                        m.A().get(aIndex), allObsLabels.get(oIndex),
+                        reward));
+            
+            System.out.println("Vn:");
+            policy.printPolicyValuationAtBelief(b, m.A(), m.i_S());
+            System.out.println();
+
             b = m.beliefUpdate(b, aIndex, allObs.get(oIndex));
         }
     }

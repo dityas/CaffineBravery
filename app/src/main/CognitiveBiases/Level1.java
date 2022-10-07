@@ -20,7 +20,7 @@ public class Level1 {
 
         System.out.println(String.format("[=] Parsed %s", args[0]));
 
-        var defLevel1 = (IPOMDP) runner.getModel("defl1").orElseGet(() ->
+        var defl1 = (IPOMDP) runner.getModel("defl1").orElseGet(() ->
                 {
 
                     System.err.println("No model found");
@@ -28,23 +28,23 @@ public class Level1 {
                     return null;
                 });
 
-        var initBelDefLevel1 = defLevel1.getECDDFromMjDD(
+        var initBeldefl1 = defl1.getECDDFromMjDD(
                 runner.getDD("initDefl1Actual"));
 
-        System.out.println(initBelDefLevel1);
+        System.out.println(initBeldefl1);
 
         var policy = new SymbolicPerseusSolver<>()
             .solve(
-                    List.of(initBelDefLevel1), 
-                    defLevel1, 100, 10, 
-                    AlphaVectorPolicy.fromR(defLevel1.R()));
+                    List.of(initBeldefl1), 
+                    defl1, 100, 10, 
+                    AlphaVectorPolicy.fromR(defl1.R()));
 
         var G = PolicyGraph.makePolicyGraph(
-                List.of(initBelDefLevel1), 
-                defLevel1, policy);
+                List.of(initBeldefl1), 
+                defl1, policy);
 
         System.out.println(String.format("Graph is %s", G));
 
-        IPOMDPSim.run(initBelDefLevel1, defLevel1, policy);
+        IPOMDPSim.run(initBeldefl1, defl1, policy);
     }
 }
