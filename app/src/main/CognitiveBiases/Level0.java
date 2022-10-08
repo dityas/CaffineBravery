@@ -21,7 +21,7 @@ public class Level0 {
 
         System.out.println(String.format("[=] Parsed %s", args[0]));
 
-        var attLevel0 = (POMDP) runner.getModel("attl0").orElseGet(() ->
+        var attl0 = (POMDP) runner.getModel("attl0").orElseGet(() ->
                 {
 
                     System.err.println("No model found");
@@ -34,9 +34,12 @@ public class Level0 {
         var policy = new SymbolicPerseusSolver<>()
             .solve(
                     List.of(b), 
-                    attLevel0, 100, 
-                    10, AlphaVectorPolicy.fromR(attLevel0.R()));
+                    attl0, 100, 
+                    10, AlphaVectorPolicy.fromR(attl0.R()));
 
-        SimulateBeliefUpdates.runSimulator(attLevel0, b, policy);
+        var G = PolicyGraph.makePolicyGraph(List.of(b), attl0, policy);
+        System.out.println(String.format("G: %s", G));
+
+        SimulateBeliefUpdates.runSimulator(attl0, b, policy);
     }
 }

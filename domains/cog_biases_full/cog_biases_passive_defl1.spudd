@@ -488,6 +488,24 @@
     )
 )
 
+(defdd accessRestrictDD
+    (AccessLevel
+        (user           (AccessLevel' restricted))
+        (restricted     (AccessLevel' restricted))
+        (root           (AccessLevel' root))
+    )
+)
+(defdd attActionsAccessLevelRestrict
+    (AttActions
+        (HostRecon          (accessRestrictDD))
+        (ManipulateData     (accessRestrictDD))
+        (PrivEsc0Day        (privEsc0DayDD))
+        (PrivEscValidAcc    (accessRestrictDD))
+        (Nop                (accessRestrictDD))
+        (Exit               (accessRestrictDD))
+    )
+)
+
 (defdbn actionLockAccount
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
@@ -514,7 +532,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
     (DataFound      (attActionsDataFound))
-    (AccessLevel    (AccessLevel' restricted))
+    (AccessLevel    (attActionsAccessLevelRestrict))
     (AttActive      (attActionsAttActive))
     (ImpactCaused   (attActionsImpactCaused))
 
@@ -522,26 +540,23 @@
 )
 
 (defdd activeDefReward
-    (HostType
-        (critical   
-            (AttActive
-                (yes    (0.0))
-                (no     (2.0))
+    (AttActive
+        (yes
+            (AccessLevel
+                (user       (10.0))
+                (root       (0.0))
+                (restricted (0.0))
             )
         )
-        (honeypot
-            (AttActive
-                (yes    (2.0))
-                (no     (0.0))
-            )
-        )
+
+        (no     (0.0))
     )
 )
 
-(defdd lockAccountCost
+(defdd defActionCost
     (AttActive
-        (yes    (1.0))
-        (no     (2.0))
+        (yes    (0.0))
+        (no     (10.0))
     )
 )
 
@@ -572,9 +587,9 @@
     )
     
     (R
-        (LockAccount        (activeDefReward - lockAccountCost))
+        (LockAccount        (-100.0))
         (RestrictAccPrivs   (activeDefReward - 1.0))
-        (Nop                (activeDefReward))
+        (Nop                (0.0))
     )
 
     (discount 0.95)
@@ -598,241 +613,3 @@
     * (dependentMjDefl1)
 )
 
------- Initial beliefs of l1 defender
---
---(defdd initDefl1c
---    (VulnType       real)
---    * (VulnFound    no)
---    * (AttActive yes)
---    * (AccessLevel user)
---    * (Defl1ModelsAttl0 m0)
---)
---
---(defdd initDefl1hp
---    (VulnType       bait)
---    * (VulnFound    no)
---    * (AttActive yes)
---    * (AccessLevel user)
---    * (Defl1ModelsAttl0 m0)
---)
---
-----(defdd initDefl1Final
-----    (HostType 
-----        (c      (0.5))
-----        (hp     (0.5))
-----        (c_hp   (0.0))
-----    )
-----    * (AccessLevel user)
-----    * (ExfilDone no)
-----    * (AttActive yes)
-----    * (Defl1ModelsAttl0 m0)
-----)
-
----- Make passive defender model
-
---(initmodelvar PassiveDefl1ModelsAttl0
---    (frames AttackerFrame)
---    (
---        (att    (m0     (initAttl0)))
---    )
---)
---
----- passive defender l1 model
---(defipomdp defl1Passive
---    (S
---    )
---
---    (O
---    )
---
---    (A  DefActions)
---    (Aj AttActions)
---
---    (Mj PassiveDefl1ModelsAttl0)
---    (EC PassiveDefl1ModelsAttl0EC)
---
---    (Thetaj AttackerFrame
---        (att    attl0)
---    )
---
---    (dynamics
---    )
---    
---    (R
---    )
---
---    (discount 0.95)
---    (H 7)
---)
---
---(defdd initPassiveDefl1c
---    (VulnType       real)
---    * (VulnFound    no)
---    * (AccessLevel user)
---    * (AttActive yes)
---    * (PassiveDefl1ModelsAttl0 m0)
---)
---
---(defdd initPassiveDefl1hp
---    (VulnType       bait)
---    * (VulnFound    no)
---    * (AccessLevel user)
---    * (AttActive yes)
---    * (PassiveDefl1ModelsAttl0 m0)
---)
-----
-----(defdd initPassiveDefl1Final
-----    (HostType 
-----        (c      (0.5))
-----        (hp     (0.5))
-----        (c_hp   (0.0))
-----    )
-----    * (AccessLevel user)
-----    * (ExfilDone no)
-----    * (AttActive yes)
-----    * (PassiveDefl1ModelsAttl0 m0)
-----)
-----
------- Attacker l2
---
---(defdd defReactionDefault
---    (DefActions
---        (BLOCK_ACTION
---            (DefReaction' yes)
---        )
---
---        (NOP
---            (DefReaction' no)
---        )
---    )
---)
---
---(defdbn attackerReconlNDBN
---    (VulnType       (SAME VulnType))
---    (VulnFound      (vulnFoundTransition))
---    (AccessLevel    (defaultAccessLevel))
---    (AttActive      (SAME AttActive))
---    (VulnFoundObs   (vulnFoundVulnFoundObs))
---    (DefReaction    (defReactionDefault))
---)
---
---(defdbn attackerExitlNDBN
---    (VulnType       (SAME VulnType))
---    (VulnFound      (SAME VulnFound))
---    (AccessLevel    (defaultAccessLevel))
---    (AttActive      (AttActive' no))
---    (VulnFoundObs   (vulnFoundObsDefault))
---    (DefReaction    (defReactionDefault))
---)
---
---(defdbn attackerNoplNDBN
---    (VulnType       (SAME VulnType))
---    (VulnFound      (SAME VulnFound))
---    (AccessLevel    (defaultAccessLevel))
---    (AttActive      (SAME AttActive))
---    (VulnFoundObs   (vulnFoundObsDefault))
---    (DefReaction    (defReactionDefault))
---)
---
---(defdbn attackerPrivEsclNDBN
---    (VulnType       (SAME VulnType))
---    (VulnFound      (SAME VulnFound))
---    (AccessLevel    (privEscAccessLevel))
---    (AttActive      (SAME AttActive))
---    (VulnFoundObs   (vulnFoundObsDefault))
---    (DefReaction    (defReactionDefault))
---)
---
---(initmodelvar Attl2ModelsDefl1
---    (frames DefFrame)
---    (
---        (lowCap     (m0 (initPassiveDefl1c)))
---        (lowCap     (m1 (initPassiveDefl1hp)))
---        (highCap    (m2 (initDefl1c)))
---        (highCap    (m3 (initDefl1hp)))
---    )
---)
---
----- Level 2 Attacker model
---(defipomdp attl2
---    (S
---        (VulnType VulnFound AccessLevel AttActive)
---    )
---
---    (O
---        (VulnFoundObs DefReaction)
---    )
---
---    (A  AttActions)
---    (Aj DefActions)
---
---    (Mj Attl2ModelsDefl1)
---    (EC Attl2ModelsDefl1EC)
---
---    (Thetaj DefFrame
---        (lowCap    defl1Passive)
---        (highCap   defl1)
---    )
---
---    (dynamics
---        (RECON      (attackerReconlNDBN))
---        (NOP        (attackerNoplNDBN))
---        (EXIT       (attackerExitlNDBN))
---        (PRIV_ESC   (attackerPrivEsclNDBN))
---    )
---
---    (R
---        (RECON      (-1.0))
---        (PRIV_ESC   (-1.0))
---        (NOP        (-0.5))
---        (EXFIL      (-1.0))
---        (EXIT       (attackerReward - 1.0))
---    )
---
---    (discount 0.9)
---    (H 7)
---)
---
---(defdd dependentMj
---    (VulnType
---        (real
---            (Attl2ModelsDefl1
---                (m0     (0.5))
---                (m1     (0.0))
---                (m2     (0.5))
---                (m3     (0.0))
---            )      
---        )
---
---        (bait
---            (Attl2ModelsDefl1
---                (m0     (0.0))
---                (m1     (0.5))
---                (m2     (0.0))
---                (m3     (0.5))
---            )
---        )
---
---        (bait_real
---            (Attl2ModelsDefl1
---                (m0     (0.25))
---                (m1     (0.25))
---                (m2     (0.25))
---                (m3     (0.25))
---        )
---    )
---)
---
---(defdd initAttl2
---    (VulnType
---        (real       (0.0))
---        (bait       (0.0))
---        (bait_real  (1.0))
---    )
---    * (VulnFound    no)
---    * (AccessLevel  user)
---    * (AttActive    yes)
---    * (dependentMj)
---)
---
---
