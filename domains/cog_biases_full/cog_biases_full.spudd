@@ -6,9 +6,9 @@
 (defvar ImpactCaused    (yes no))
 
 -- Defender modeling the attacker
-(defvar Defl1ModelsAttl0            (m0))
+(defvar Defl1ModelsAttl0            (m0 m1))
 (defvar Defl1ModelsAttl0EC          (ec0))
-(defvar PassiveDefl1ModelsAttl0     (m0))
+(defvar PassiveDefl1ModelsAttl0     (m0 m1))
 (defvar PassiveDefl1ModelsAttl0EC   (ec0))
 
 (defvar Attl2ModelsDefl1    (m0 m1 m2 m3))
@@ -23,23 +23,23 @@
 -- Actions for both agents
 (defvar DefActions      (LockAccount RestrictAccPrivs Nop))
 (defvar AttActions      
-    (HostRecon PrivEsc0Day PrivEscValidAcc Nop Exit ManipulateData))
+    (HostRecon PrivEsc0Day Nop Exit ManipulateData))
 
 -- Defender observations
-(defvar EndPtAlerts  (file_access_pattern process_creation login_activity none))
+(defvar EndPtAlerts  (file_enum file_write process_creation login_activity none))
 
 -- Attacker observations
 (defvar SensData        (yes no))
 (defvar AccessPerm      (auth denied))
 (defvar ActionResult    (success failure))
-(defvar DefReaction     (yes no))
+(defvar ConnStatus      (active terminated))
 
 -- L0 Attacker's guess of L1 defender's action distribution
 (defdd distDefActions
     (DefActions
-        (LockAccount        (0.005))
-        (RestrictAccPrivs   (0.005))
-        (Nop                (0.99)
+        (LockAccount        (0.01))
+        (RestrictAccPrivs   (0.09))
+        (Nop                (0.9))
     )
 )
 
@@ -52,16 +52,10 @@
     )
 )
 
-(defdd privEscValidAccDD
-    (AttActive
-        (yes
-            (AccessLevel
-                (user           (AccessLevel'   user))
-                (root           (AccessLevel'   root))
-                (restricted     (AccessLevel'   user))
-            )
-        )
-        (no     (SAME AccessLevel))
+(defdd connStatusObs
+    (AttActive'
+        (yes    (ConnStatus' active))
+        (no     (ConnStatus' terminated))
     )
 )
 
@@ -77,15 +71,15 @@
                     (AccessLevel
                         (user
                             (DataFound'
-                                (yes    (0.7))
-                                (no     (0.3))
+                                (yes    (0.9))
+                                (no     (0.1))
                             )
                         )
 
                         (root
                             (DataFound'
-                                (yes    (0.7))
-                                (no     (0.3))
+                                (yes    (0.9))
+                                (no     (0.1))
                             )
                         )
 
@@ -107,15 +101,15 @@
             (DataFound'
                 (yes
                     (SensData'
-                        (yes    (0.8))
-                        (no     (0.2))
+                        (yes    (0.9))
+                        (no     (0.1))
                     )
                 )
 
                 (no
                     (SensData'
-                        (yes    (0.2))
-                        (no     (0.8))
+                        (yes    (0.1))
+                        (no     (0.9))
                     )
                 )
             )
@@ -128,15 +122,27 @@
 --------------------------------------------------------
 -- Impact causing action DDs
 
+(defdd impactCausedDD
+    (ImpactCaused
+        (yes    (ImpactCaused' yes))
+        (no
+            (ImpactCaused'
+                (yes    (1.0))
+                (no     (0.0))
+            )
+        )
+    )
+)
+
 (defdd manipulateDataDD
     (AttActive
         (yes
             (DataFound
                 (yes
                     (AccessLevel
-                        (user           (ImpactCaused' yes))
+                        (user           (impactCausedDD))
                         (restricted     (SAME ImpactCaused))
-                        (root           (ImpactCaused' yes))
+                        (root           (impactCausedDD))
                     )
                 )
 
@@ -195,6 +201,7 @@
     (SensData       (hostReconSensDataObs))
     (AccessPerm     (accessPermsObs))
     (ActionResult   (ActionResult' UNIFORM))
+    (ConnStatus     (connStatusObs))
 )
 
 (defdbn attackerExitDBN
@@ -208,6 +215,7 @@
     (SensData       (SensData'      UNIFORM))
     (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
+    (ConnStatus     (connStatusObs))
 )
 
 (defdbn attackerNopDBN
@@ -221,6 +229,7 @@
     (SensData       (SensData'      UNIFORM))
     (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
+    (ConnStatus     (connStatusObs))
 )
 
 (defdd privEscObs
@@ -250,27 +259,7 @@
     (SensData       (SensData'      UNIFORM))
     (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (privEscObs))
-)
-
-(defdd defActionsAccessLevelValidAcc
-    (DefActions
-        (LockAccount        (AccessLevel' restricted))
-        (RestrictAccPrivs   (AccessLevel' restricted))
-        (Nop                (privEscValidAccDD))
-    )
-)
-
-(defdbn attackerPrivEscValidAccDBN
-    (HostType       (SAME HostType))
-    (HostHasData    (SAME HostHasData))
-    (DataFound      (SAME DataFound))
-    (AccessLevel    (# (DefActions) (distDefActions * defActionsAccessLevelValidAcc)))
-    (ImpactCaused   (SAME ImpactCaused))
-    (AttActive      (# (DefActions) (distDefActions * defActionsAttActive)))
-
-    (SensData       (SensData'      UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
-    (ActionResult   (privEscObs))
+    (ConnStatus     (connStatusObs))
 )
 
 (defdd impactCausedObs
@@ -290,6 +279,7 @@
     (SensData       (SensData'      UNIFORM))
     (AccessPerm     (accessPermsObs))
     (ActionResult   (impactCausedObs))
+    (ConnStatus     (connStatusObs))
 )
 
 -- multi agent reward DD for level 0
@@ -300,13 +290,13 @@
             (HostHasData
                 (yes
                     (ImpactCaused
-                        (yes    (10.0))
+                        (yes    (15.0))
                         (no     (0.0))
                     )
                 )
                 (no     
                     (ImpactCaused
-                        (yes    (-5.0))
+                        (yes    (0.0))
                         (no     (0.0))
                     )
                 )
@@ -339,7 +329,7 @@
     )
 
     (O
-        (SensData AccessPerm ActionResult)
+        (SensData AccessPerm ActionResult ConnStatus)
     )
 
     (A  AttActions)
@@ -349,14 +339,12 @@
         (Nop                (attackerNopDBN))
         (Exit               (attackerExitDBN))
         (PrivEsc0Day        (attackerPrivEsc0DayDBN))
-        (PrivEscValidAcc    (attackerPrivEscValidAccDBN))
         (ManipulateData     (attackerManipulateDataDBN))
     )
     
     (R
         (HostRecon          (-1.0))
         (PrivEsc0Day        (-1.0))
-        (PrivEscValidAcc    (-1.0))
         (ManipulateData     (-1.0))
         (Nop                (nopCost))
         (Exit               (attackerReward))
@@ -368,9 +356,9 @@
 -- Initial belief of the attacker
 (defdd initAttl0
     (HostType   
-        (critical           (0.0))
-        (honeypot           (0.0))
-        (critical_honeypot  (1.0))
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
     )
     * (HostHasData      UNIFORM)
     * (DataFound        no)
@@ -381,9 +369,9 @@
 
 (defdd initAttl0Inactive
     (HostType   
-        (critical           (0.0))
-        (honeypot           (0.0))
-        (critical_honeypot  (1.0))
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
     )
     * (HostHasData      UNIFORM)
     * (DataFound        no)
@@ -399,35 +387,48 @@
     (frames AttackerFrame)
     (
         (att    (m0     (initAttl0)))
---        (att    (m1     (initAttl0Inactive)))
+        (att    (m1     (initAttl0Inactive)))
     )
 )
 ---------------------------------------------------------------
 ---- Observations
 (defdd defaultEndPtAlerts
     (EndPtAlerts'
-        (file_access_pattern    (0.1))
-        (process_creation       (0.1))
-        (login_activity         (0.1))
-        (none                   (0.7))
+        (file_enum              (0.05))
+        (file_write             (0.05))
+        (process_creation       (0.05))
+        (login_activity         (0.05))
+        (none                   (0.8))
     )
 )
 
 (defdd hostReconEndPtAlerts
     (EndPtAlerts'
-        (process_creation       (0.1))
-        (file_access_pattern    (0.7))
-        (login_activity         (0.1))
-        (none                   (0.1))
+        (process_creation       (0.05))
+        (file_enum              (0.8))
+        (file_write             (0.05))
+        (login_activity         (0.05))
+        (none                   (0.05))
+    )
+)
+
+(defdd manipulateDataEndPtAlerts
+    (EndPtAlerts'
+        (process_creation       (0.05))
+        (file_enum              (0.05))
+        (file_write             (0.8))
+        (login_activity         (0.05))
+        (none                   (0.05))
     )
 )
 
 (defdd privEscEndPtAlert
     (EndPtAlerts'
-        (process_creation       (0.1))
-        (file_access_pattern    (0.1))
-        (login_activity         (0.7))
-        (none                   (0.1))
+        (process_creation       (0.05))
+        (file_enum              (0.05))
+        (file_write             (0.05))
+        (login_activity         (0.8))
+        (none                   (0.05))
     )
 )
 
@@ -436,9 +437,8 @@
         (yes
             (AttActions
                 (HostRecon          (hostReconEndPtAlerts))
-                (ManipulateData     (hostReconEndPtAlerts))
+                (ManipulateData     (manipulateDataEndPtAlerts))
                 (PrivEsc0Day        (privEscEndPtAlert))
-                (PrivEscValidAcc    (privEscEndPtAlert))
                 (Nop                (defaultEndPtAlerts))
                 (Exit               (defaultEndPtAlerts))
             )
@@ -453,7 +453,6 @@
         (HostRecon          (hostReconDataFoundDD))
         (ManipulateData     (SAME DataFound))
         (PrivEsc0Day        (SAME DataFound))
-        (PrivEscValidAcc    (SAME DataFound))
         (Nop                (SAME DataFound))
         (Exit               (SAME DataFound))
     )
@@ -464,7 +463,6 @@
         (HostRecon          (SAME ImpactCaused))
         (ManipulateData     (manipulateDataDD))
         (PrivEsc0Day        (SAME ImpactCaused))
-        (PrivEscValidAcc    (SAME ImpactCaused))
         (Nop                (SAME ImpactCaused))
         (Exit               (SAME ImpactCaused))
     )
@@ -475,7 +473,6 @@
         (HostRecon          (SAME AttActive))
         (ManipulateData     (SAME AttActive))
         (PrivEsc0Day        (SAME AttActive))
-        (PrivEscValidAcc    (SAME AttActive))
         (Nop                (SAME AttActive))
         (Exit               (AttActive' no))
     )
@@ -490,7 +487,6 @@
         (HostRecon          (SAME AccessLevel))
         (ManipulateData     (SAME AccessLevel))
         (PrivEsc0Day        (privEsc0DayDD))
-        (PrivEscValidAcc    (privEscValidAccDD))
         (Nop                (SAME AccessLevel))
         (Exit               (SAME AccessLevel))
     )
@@ -509,7 +505,6 @@
         (HostRecon          (accessRestrictDD))
         (ManipulateData     (accessRestrictDD))
         (PrivEsc0Day        (privEsc0DayDD))
-        (PrivEscValidAcc    (accessRestrictDD))
         (Nop                (accessRestrictDD))
         (Exit               (accessRestrictDD))
     )
@@ -619,13 +614,13 @@
 (defdd dependentMjDefl1
     (AttActive
         (yes    (Defl1ModelsAttl0   m0))
-        (no     (Defl1ModelsAttl0   m0))
+        (no     (Defl1ModelsAttl0   m1))
     )
 )
 
 (defdd initDefl1_active
-    (HostType           honeypot)
-    * (HostHasData      yes)
+    (HostType           critical)
+    * (HostHasData      UNIFORM)
     * (DataFound        no)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -658,269 +653,260 @@
 
 -- Make passive defender model
 
-(initmodelvar PassiveDefl1ModelsAttl0
-    (frames AttackerFrame)
-    (
-        (att    (m0     (initAttl0)))
-    )
-)
-
-(defdd passiveStateReward
-    (ImpactCaused
-        (yes    (-10.0))
-        (no     (2.0))
-    )
-)
-
--- passive defender l1 model
-(defipomdp defl1_passive
-    (S
-        (HostType HostHasData DataFound AccessLevel AttActive ImpactCaused)
-    )
-
-    (O
-        (EndPtAlerts)
-    )
-
-    (A  DefActions)
-    (Aj AttActions)
-
-    (Mj PassiveDefl1ModelsAttl0)
-    (EC PassiveDefl1ModelsAttl0EC)
-
-    (Thetaj AttackerFrame
-        (att    attl0)
-    )
-
-    (dynamics
-        (LockAccount        (actionLockAccount))
-        (RestrictAccPrivs   (actionRestrictAccPrivs))
-        (Nop                (actionNop))
-    )
-    
-    (R
-        (LockAccount        (passiveStateReward - 100.0))
-        (RestrictAccPrivs   (passiveStateReward - 1.0))
-        (Nop                (passiveStateReward - 0.9))
-    )
-
-    (discount 0.95)
-    (H 7)
-)
-
-(defdd dependentMjDefl1_passive
-    (AttActive
-        (yes    (PassiveDefl1ModelsAttl0   m0))
-        (no     (PassiveDefl1ModelsAttl0   m0))
-    )
-)
-
-(defdd initDefl1_passive
-    (HostType           critical)
-    * (HostHasData      yes)
-    * (DataFound        no)
-    * (AccessLevel      user)
-    * (AttActive        yes)
-    * (ImpactCaused     no)
-    * (dependentMjDefl1_passive)
-)
-
-(defdd initDefl1c_passive
-    (HostType           critical)
-    * (HostHasData      yes)
-    * (DataFound        no)
-    * (AccessLevel      user)
-    * (AttActive        yes)
-    * (ImpactCaused     no)
-    * (dependentMjDefl1_passive)
-)
-
-(defdd initDefl1hp_passive
-    (HostType           honeypot)
-    * (HostHasData      yes)
-    * (DataFound        no)
-    * (AccessLevel      user)
-    * (AttActive        yes)
-    * (ImpactCaused     no)
-    * (dependentMjDefl1_passive)
-)
-
------- Attacker l2
-
-(defdbn attackerHostReconlNDBN
-    (HostType       (SAME HostType))
-    (HostHasData    (SAME HostHasData))
-    (DataFound      (hostReconDataFoundDD))
-    (AccessLevel    (defActionsAccessLevelGeneral))
-    (ImpactCaused   (SAME ImpactCaused))
-    (AttActive      (defActionsAttActive))
-
-    (SensData       (hostReconSensDataObs))
-    (AccessPerm     (accessPermsObs))
-    (ActionResult   (ActionResult' UNIFORM))
-)
-
-(defdbn attackerExitlNDBN
-    (HostType       (SAME HostType))
-    (HostHasData    (SAME HostHasData))
-    (DataFound      (SAME DataFound))
-    (AccessLevel    (defActionsAccessLevelGeneral))
-    (ImpactCaused   (SAME ImpactCaused))
-    (AttActive      (AttActive' no))
-
-    (SensData       (SensData'      UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
-    (ActionResult   (ActionResult'  UNIFORM))
-)
-
-(defdbn attackerNoplNDBN
-    (HostType       (SAME HostType))
-    (HostHasData    (SAME HostHasData))
-    (DataFound      (SAME DataFound))
-    (AccessLevel    (defActionsAccessLevelGeneral))
-    (ImpactCaused   (SAME ImpactCaused))
-    (AttActive      (defActionsAttActive))
-
-    (SensData       (SensData'      UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
-    (ActionResult   (ActionResult'  UNIFORM))
-)
-
-(defdbn attackerPrivEsc0DaylNDBN
-    (HostType       (SAME HostType))
-    (HostHasData    (SAME HostHasData))
-    (DataFound      (SAME DataFound))
-    (AccessLevel    (defActionsAccessLevel0Day))
-    (ImpactCaused   (SAME ImpactCaused))
-    (AttActive      (defActionsAttActive))
-
-    (SensData       (SensData'      UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
-    (ActionResult   (privEscObs))
-)
-
-(defdbn attackerPrivEscValidAcclNDBN
-    (HostType       (SAME HostType))
-    (HostHasData    (SAME HostHasData))
-    (DataFound      (SAME DataFound))
-    (AccessLevel    (defActionsAccessLevelValidAcc))
-    (ImpactCaused   (SAME ImpactCaused))
-    (AttActive      (defActionsAttActive))
-
-    (SensData       (SensData'      UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
-    (ActionResult   (privEscObs))
-)
-
-(defdbn attackerManipulateDatalNDBN
-    (HostType       (SAME HostType))
-    (HostHasData    (SAME HostHasData))
-    (DataFound      (SAME DataFound))
-    (AccessLevel    (defActionsAccessLevelGeneral))
-    (ImpactCaused   (manipulateDataDD))
-    (AttActive      (defActionsAttActive))
-
-    (SensData       (SensData'      UNIFORM))
-    (AccessPerm     (accessPermsObs))
-    (ActionResult   (impactCausedObs))
-)
-
-
-(initmodelvar Attl2ModelsDefl1
-    (frames DefFrame)
-    (
-        (lowCap     (m0 (initDefl1c_passive)))
-        (lowCap     (m1 (initDefl1hp_passive)))
-        (highCap    (m2 (initDefl1c_active)))
-        (highCap    (m3 (initDefl1hp_active)))
-    )
-)
-
----- Level 2 Attacker model
-(defipomdp attl2
-    (S
-        (HostType HostHasData DataFound AccessLevel AttActive ImpactCaused)
-    )
-
-    (O
-        (SensData AccessPerm ActionResult)
-    )
-
-    (A  AttActions)
-    (Aj DefActions)
-
-    (Mj Attl2ModelsDefl1)
-    (EC Attl2ModelsDefl1EC)
-
-    (Thetaj DefFrame
-        (lowCap    defl1_passive)
-        (highCap   defl1_active)
-    )
-
-    (dynamics
-        (HostRecon          (attackerHostReconlNDBN))
-        (Nop                (attackerNoplNDBN))
-        (Exit               (attackerExitlNDBN))
-        (PrivEsc0Day        (attackerPrivEsc0DaylNDBN))
-        (PrivEscValidAcc    (attackerPrivEscValidAcclNDBN))
-        (ManipulateData     (attackerManipulateDatalNDBN))
-    )
-
-    (R
-        (HostRecon          (-1.0))
-        (PrivEsc0Day        (-1.0))
-        (PrivEscValidAcc    (-1.0))
-        (ManipulateData     (-1.0))
-        (Nop                (nopCost))
-        (Exit               (attackerReward))
-    )
-
-    (discount 0.95)
-    (H 10)
-)
-
-(defdd dependentMjAttl2
-    (HostType
-        (critical
-            (Attl2ModelsDefl1
-                (m0     (0.5))
-                (m1     (0.0))
-                (m2     (0.5))
-                (m3     (0.0))
-            )      
-        )
-
-        (honeypot
-            (Attl2ModelsDefl1
-                (m0     (0.0))
-                (m1     (0.5))
-                (m2     (0.0))
-                (m3     (0.5))
-            )
-        )
-
-        (critical_honeypot
-            (Attl2ModelsDefl1
-                (m0     (0.25))
-                (m1     (0.25))
-                (m2     (0.25))
-                (m3     (0.25))
-        )
-    )
-)
-
-(defdd initAttl2
-    (HostType   
-        (critical           (0.0))
-        (honeypot           (0.0))
-        (critical_honeypot  (1.0))
-    )
-    * (HostHasData      UNIFORM)
-    * (DataFound        no)
-    * (AccessLevel      user)
-    * (AttActive        yes)
-    * (ImpactCaused     no)
-    * (dependentMjAttl2)
-)
-
-
+--(initmodelvar PassiveDefl1ModelsAttl0
+--    (frames AttackerFrame)
+--    (
+--        (att    (m0     (initAttl0)))
+--        (att    (m1     (initAttl0Inactive)))
+--    )
+--)
+--
+--(defdd passiveStateReward
+--    (ImpactCaused
+--        (yes    (-10.0))
+--        (no     (2.0))
+--    )
+--)
+--
+---- passive defender l1 model
+--(defipomdp defl1_passive
+--    (S
+--        (HostType HostHasData DataFound AccessLevel AttActive ImpactCaused)
+--    )
+--
+--    (O
+--        (EndPtAlerts)
+--    )
+--
+--    (A  DefActions)
+--    (Aj AttActions)
+--
+--    (Mj PassiveDefl1ModelsAttl0)
+--    (EC PassiveDefl1ModelsAttl0EC)
+--
+--    (Thetaj AttackerFrame
+--        (att    attl0)
+--    )
+--
+--    (dynamics
+--        (LockAccount        (actionLockAccount))
+--        (RestrictAccPrivs   (actionRestrictAccPrivs))
+--        (Nop                (actionNop))
+--    )
+--    
+--    (R
+--        (LockAccount        (passiveStateReward - 100.0))
+--        (RestrictAccPrivs   (passiveStateReward - 1.0))
+--        (Nop                (passiveStateReward - 0.9))
+--    )
+--
+--    (discount 0.95)
+--    (H 7)
+--)
+--
+--(defdd dependentMjDefl1_passive
+--    (AttActive
+--        (yes    (PassiveDefl1ModelsAttl0   m0))
+--        (no     (PassiveDefl1ModelsAttl0   m1))
+--    )
+--)
+--
+--(defdd initDefl1_passive
+--    (HostType           critical)
+--    * (HostHasData      yes)
+--    * (DataFound        no)
+--    * (AccessLevel      user)
+--    * (AttActive        yes)
+--    * (ImpactCaused     no)
+--    * (dependentMjDefl1_passive)
+--)
+--
+--(defdd initDefl1c_passive
+--    (HostType           critical)
+--    * (HostHasData      yes)
+--    * (DataFound        no)
+--    * (AccessLevel      user)
+--    * (AttActive        yes)
+--    * (ImpactCaused     no)
+--    * (dependentMjDefl1_passive)
+--)
+--
+--(defdd initDefl1hp_passive
+--    (HostType           honeypot)
+--    * (HostHasData      yes)
+--    * (DataFound        no)
+--    * (AccessLevel      user)
+--    * (AttActive        yes)
+--    * (ImpactCaused     no)
+--    * (dependentMjDefl1_passive)
+--)
+--
+-------- Attacker l2
+--
+--(defdbn attackerHostReconlNDBN
+--    (HostType       (SAME HostType))
+--    (HostHasData    (SAME HostHasData))
+--    (DataFound      (hostReconDataFoundDD))
+--    (AccessLevel    (defActionsAccessLevelGeneral))
+--    (ImpactCaused   (SAME ImpactCaused))
+--    (AttActive      (defActionsAttActive))
+--
+--    (SensData       (hostReconSensDataObs))
+--    (AccessPerm     (accessPermsObs))
+--    (ActionResult   (ActionResult' UNIFORM))
+--    (ConnStatus     (connStatusObs))
+--)
+--
+--(defdbn attackerExitlNDBN
+--    (HostType       (SAME HostType))
+--    (HostHasData    (SAME HostHasData))
+--    (DataFound      (SAME DataFound))
+--    (AccessLevel    (defActionsAccessLevelGeneral))
+--    (ImpactCaused   (SAME ImpactCaused))
+--    (AttActive      (AttActive' no))
+--
+--    (SensData       (SensData'      UNIFORM))
+--    (AccessPerm     (AccessPerm'    UNIFORM))
+--    (ActionResult   (ActionResult'  UNIFORM))
+--    (ConnStatus     (connStatusObs))
+--)
+--
+--(defdbn attackerNoplNDBN
+--    (HostType       (SAME HostType))
+--    (HostHasData    (SAME HostHasData))
+--    (DataFound      (SAME DataFound))
+--    (AccessLevel    (defActionsAccessLevelGeneral))
+--    (ImpactCaused   (SAME ImpactCaused))
+--    (AttActive      (defActionsAttActive))
+--
+--    (SensData       (SensData'      UNIFORM))
+--    (AccessPerm     (AccessPerm'    UNIFORM))
+--    (ActionResult   (ActionResult'  UNIFORM))
+--    (ConnStatus     (connStatusObs))
+--)
+--
+--(defdbn attackerPrivEsc0DaylNDBN
+--    (HostType       (SAME HostType))
+--    (HostHasData    (SAME HostHasData))
+--    (DataFound      (SAME DataFound))
+--    (AccessLevel    (defActionsAccessLevel0Day))
+--    (ImpactCaused   (SAME ImpactCaused))
+--    (AttActive      (defActionsAttActive))
+--
+--    (SensData       (SensData'      UNIFORM))
+--    (AccessPerm     (AccessPerm'    UNIFORM))
+--    (ActionResult   (privEscObs))
+--    (ConnStatus     (connStatusObs))
+--)
+--
+--(defdbn attackerManipulateDatalNDBN
+--    (HostType       (SAME HostType))
+--    (HostHasData    (SAME HostHasData))
+--    (DataFound      (SAME DataFound))
+--    (AccessLevel    (defActionsAccessLevelGeneral))
+--    (ImpactCaused   (manipulateDataDD))
+--    (AttActive      (defActionsAttActive))
+--
+--    (SensData       (SensData'      UNIFORM))
+--    (AccessPerm     (accessPermsObs))
+--    (ActionResult   (impactCausedObs))
+--    (ConnStatus     (connStatusObs))
+--)
+--
+--
+--(initmodelvar Attl2ModelsDefl1
+--    (frames DefFrame)
+--    (
+--        (lowCap     (m0 (initDefl1c_passive)))
+--        (lowCap     (m1 (initDefl1hp_passive)))
+--        (highCap    (m2 (initDefl1c_active)))
+--        (highCap    (m3 (initDefl1hp_active)))
+--    )
+--)
+--
+------ Level 2 Attacker model
+--(defipomdp attl2
+--    (S
+--        (HostType HostHasData DataFound AccessLevel AttActive ImpactCaused)
+--    )
+--
+--    (O
+--        (SensData AccessPerm ActionResult ConnStatus)
+--    )
+--
+--    (A  AttActions)
+--    (Aj DefActions)
+--
+--    (Mj Attl2ModelsDefl1)
+--    (EC Attl2ModelsDefl1EC)
+--
+--    (Thetaj DefFrame
+--        (lowCap    defl1_passive)
+--        (highCap   defl1_active)
+--    )
+--
+--    (dynamics
+--        (HostRecon          (attackerHostReconlNDBN))
+--        (Nop                (attackerNoplNDBN))
+--        (Exit               (attackerExitlNDBN))
+--        (PrivEsc0Day        (attackerPrivEsc0DaylNDBN))
+--        (ManipulateData     (attackerManipulateDatalNDBN))
+--    )
+--
+--    (R
+--        (HostRecon          (-1.0))
+--        (PrivEsc0Day        (-1.0))
+--        (ManipulateData     (-1.0))
+--        (Nop                (nopCost))
+--        (Exit               (attackerReward))
+--    )
+--
+--    (discount 0.95)
+--    (H 10)
+--)
+--
+--(defdd dependentMjAttl2
+--    (HostType
+--        (critical
+--            (Attl2ModelsDefl1
+--                (m0     (0.5))
+--                (m1     (0.0))
+--                (m2     (0.5))
+--                (m3     (0.0))
+--            )      
+--        )
+--
+--        (honeypot
+--            (Attl2ModelsDefl1
+--                (m0     (0.0))
+--                (m1     (0.5))
+--                (m2     (0.0))
+--                (m3     (0.5))
+--            )
+--        )
+--
+--        (critical_honeypot
+--            (Attl2ModelsDefl1
+--                (m0     (0.25))
+--                (m1     (0.25))
+--                (m2     (0.25))
+--                (m3     (0.25))
+--        )
+--    )
+--)
+--
+--(defdd initAttl2
+--    (HostType   
+--        (critical           (0.5))
+--        (honeypot           (0.5))
+--        (critical_honeypot  (0.0))
+--    )
+--    * (HostHasData      UNIFORM)
+--    * (DataFound        no)
+--    * (AccessLevel      user)
+--    * (AttActive        yes)
+--    * (ImpactCaused     no)
+--    * (dependentMjAttl2)
+--)
+--
+--

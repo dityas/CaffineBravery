@@ -1,0 +1,364 @@
+(defvar HostType        (critical honeypot critical_honeypot))
+(defvar HasVuln         (yes no))
+
+(defvar Attl1ModelsDefl0    (m0 m1))
+(defvar Attl1ModelsDefl0EC  (ec0))
+
+(defvar AttackerFrame   (att))
+(defvar DefFrame        (highCap lowCap))
+
+-- Actions for both agents
+(defvar DefActions      (Defend Observe Nop))
+(defvar AttActions      (Attack Exit Nop))
+
+(defvar HpObs           (yes no))
+(defvar VulnObsAtt      (yes no))
+(defvar VulnObsDef      (yes no))
+(defvar HostTypeObs     (c hp))
+(defvar DefenderAction  (defend none))
+
+--------------------------------------------------------------------
+
+(defdd vulnObsAtt
+    (HasVuln'
+        (yes
+            (VulnObsAtt'
+                (yes    (0.999))
+                (no     (0.001))
+            )
+        )
+
+        (no
+            (VulnObsAtt'
+                (yes    (0.001))
+                (no     (0.999))
+            )
+        )
+    )
+)
+
+(defdd vulnObsDef
+    (HasVuln'
+        (yes
+            (VulnObsDef'
+                (yes    (0.999))
+                (no     (0.001))
+            )
+        )
+
+        (no
+            (VulnObsDef'
+                (yes    (0.001))
+                (no     (0.999))
+            )
+        )
+    )
+)
+
+(defdd defenderActionObs
+    (DefActions
+        (Defend
+            (DefenderAction'
+                (defend     (0.99))
+                (none       (0.01))
+            )
+        )
+
+        (Observe
+            (DefenderAction'
+                (defend     (0.01))
+                (none       (0.99))
+            )
+        )
+
+        (Nop
+            (DefenderAction'
+                (defend     (0.01))
+                (none       (0.99))
+            )
+        )
+    )
+)
+
+(defdd hostTypeObs
+    (HostType'
+        (critical           
+            (HostTypeObs'
+                (c      (0.99))
+                (hp     (0.01))
+            )
+        )
+        
+        (honeypot           
+            (HostTypeObs'
+                (c      (0.01))
+                (hp     (0.99))
+            )
+        )
+
+        (critical_honeypot  
+            (HostTypeObs' UNIFORM)
+        )
+    )
+)
+
+(defdd hpObs
+    (HostType'
+        (critical   
+            (HpObs'
+                (yes    (0.01))
+                (no     (0.99))
+            )
+        )
+        (honeypot
+            (HpObs'
+                (yes    (0.99))
+                (no     (0.01))
+            )
+        )
+        (critical_honeypot  (HpObs' UNIFORM))
+    )
+)
+
+(defdbn actionDefender
+    (HostType   (SAME HostType))
+    (HasVuln    (SAME HasVuln))
+
+    (HpObs      (hpObs)) 
+    (VulnObsDef (vulnObsDef))
+)
+
+(defdd cReward
+    (HostType
+        (critical           (1.0))
+        (honeypot           (-1.0))
+        (critical_honeypot  (0.0))
+    )
+)
+
+(defdd hpReward
+    (HostType
+        (critical           (0.0))
+        (honeypot           (1.0))
+        (critical_honeypot  (0.0))
+    )
+)
+
+-- defender L1 model
+(defpomdp defl0_active
+    (S
+        (HostType HasVuln)
+    )
+
+    (O
+        (HpObs VulnObsDef)
+    )
+
+    (A  DefActions)
+
+    (dynamics
+        (Defend     (actionDefender))
+        (Observe    (actionDefender))
+        (Nop        (actionDefender))
+    )
+    
+    (R
+        (Defend     (cReward))
+        (Observe    (hpReward))
+        (Nop        (0.0))
+    )
+
+    (discount 0.95)
+)
+
+(defdd initDefl0_active
+    (HostType           
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
+    )
+    * (HasVuln 
+        (yes    (0.5))
+        (no     (0.5))
+    )
+)
+
+------ Initial beliefs of l1 defender
+
+(defdd initDefl0c_active
+    (HostType
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
+    )
+    * (HasVuln UNIFORM)
+)
+
+(defdd initDefl0hp_active
+    (HostType
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
+    )
+)
+
+
+-- Make passive defender model
+(defdd passiveVulnReward
+    (HasVuln
+        (yes    (1.0))
+        (no     (-1.0))
+    )
+)
+
+(defdd passiveNotVulnReward
+    (HasVuln
+        (yes    (-1.0))
+        (no     (1.0))
+    )
+)
+
+-- passive defender l1 model
+(defpomdp defl0_passive
+    (S
+        (HostType HasVuln)
+    )
+
+    (O
+        (HpObs VulnObsDef)
+    )
+
+    (A  DefActions)
+
+    (dynamics
+        (Defend     (actionDefender))
+        (Observe    (actionDefender))
+        (Nop        (actionDefender))
+    )
+    
+    (R
+        (Defend     (passiveVulnReward))
+        (Observe    (passiveNotVulnReward))
+        (Nop        (0.0))
+    )
+
+    (discount 0.95)
+)
+
+(defdd initDefl0_passive
+    (HostType           
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
+    )
+    * (HasVuln UNIFORM)
+)
+
+(defdd initDefl0c_passive
+    (HostType
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
+    )
+    * (HasVuln UNIFORM)
+)
+
+(defdd initDefl0hp_passive
+    (HostType
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
+    )
+)
+
+-- Attacker l2
+(initmodelvar Attl1ModelsDefl0
+    (frames DefFrame)
+    (
+        (lowCap     (m0 (initDefl0c_passive)))
+        (highCap    (m1 (initDefl0c_active)))
+    )
+)
+
+(defdbn actionAttacker
+    (HostType       (SAME HostType))
+    (HasVuln        (SAME HasVuln))
+
+    --(HostTypeObs    (hostTypeObs))
+    (VulnObsAtt     (vulnObsAtt))
+    (DefenderAction (defenderActionObs))
+)
+
+-- Level 1 Attacker model
+(defipomdp attl1
+    (S
+        (HostType HasVuln)
+    )
+
+    (O
+        --(HostTypeObs DefenderAction)
+        (VulnObsAtt DefenderAction)
+    )
+
+    (A  AttActions)
+    (Aj DefActions)
+
+    (Mj Attl1ModelsDefl0)
+    (EC Attl1ModelsDefl0EC)
+
+    (Thetaj DefFrame
+        (lowCap    defl0_passive)
+        (highCap   defl0_active)
+    )
+
+    (dynamics
+        (Attack     (actionAttacker))
+        (Exit       (actionAttacker))
+        (Nop        (actionAttacker))
+    )
+
+    (R
+        (Attack     (cReward))
+        (Exit       (0.0))
+        (Nop        (hpReward))
+    )
+
+    (discount 0.95)
+    (H 10)
+)
+
+(defdd dependentMjAttl1
+    (HostType
+        (critical
+            (Attl1ModelsDefl0
+                (m0     (0.5))
+                (m1     (0.5))
+            )      
+        )
+
+        (honeypot
+            (Attl1ModelsDefl0
+                (m0     (0.5))
+                (m1     (0.5))
+            )
+        )
+
+        (critical_honeypot
+            (Attl1ModelsDefl0
+                (m0     (0.5))
+                (m1     (0.5))
+        )
+    )
+)
+
+(defdd initAttl1
+    (HostType   
+        (critical           (0.5))
+        (honeypot           (0.5))
+        (critical_honeypot  (0.0))
+    )
+    * (HasVuln UNIFORM)
+    * (dependentMjAttl1)
+)
+
+
