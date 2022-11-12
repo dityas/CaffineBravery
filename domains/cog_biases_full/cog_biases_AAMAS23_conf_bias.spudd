@@ -8,36 +8,37 @@
 (defvar DefFrame        (highCap lowCap))
 
 -- Actions for both agents
-(defvar DefActions      (Defend Observe Nop))
+(defvar DefActions      (Deceive Observe Nop))
 (defvar AttActions      (Attack Exit Nop))
 
 (defvar HpObs           (yes no))
 (defvar HostTypeObs     (c hp))
-(defvar DefenderAction  (defend none))
+(defvar DefenderAction  (deceive none))
 
 --------------------------------------------------------------------
 
 
 (defdd defenderActionObs
     (DefActions
-        (Defend
+
+        (Deceive
             (DefenderAction'
-                (defend     (0.99))
-                (none       (0.01))
+                (deceive    (0.85))
+                (none       (0.15))
             )
         )
 
         (Observe
             (DefenderAction'
-                (defend     (0.01))
-                (none       (0.99))
+                (deceive    (0.15))
+                (none       (0.85))
             )
         )
 
         (Nop
             (DefenderAction'
-                (defend     (0.01))
-                (none       (0.99))
+                (deceive    (0.15))
+                (none       (0.85))
             )
         )
     )
@@ -125,14 +126,14 @@
     (A  DefActions)
 
     (dynamics
-        (Defend     (actionDefender))
+        (Deceive    (actionDefender))
         (Observe    (actionDefender))
         (Nop        (actionDefender))
     )
     
     (R
-        (Defend     (cReward))
-        (Observe    (hpReward))
+        (Deceive    (hpReward))
+        (Observe    (cReward))
         (Nop        (0.0))
     )
 
@@ -184,13 +185,13 @@
     (A  DefActions)
 
     (dynamics
-        (Defend     (actionDefender))
+        (Deceive    (actionDefender))
         (Observe    (actionDefender))
         (Nop        (actionDefender))
     )
     
     (R
-        (Defend     (0.0))
+        (Deceive    (0.0))
         (Observe    (1.0))
         (Nop        (0.0))
     )
@@ -304,10 +305,10 @@
 
         (critical_honeypot
             (Attl1ModelsDefl0
-                (m0     (0.25))
-                (m1     (0.25))
-                (m2     (0.25))
-                (m3     (0.25))
+                (m0     (0.3333))
+                (m1     (0.3333))
+                (m2     (0.0))
+                (m3     (0.3334))
         )
     )
 )
