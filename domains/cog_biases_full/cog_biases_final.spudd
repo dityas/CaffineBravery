@@ -710,7 +710,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
-    (AccessLevel    (defActionsAccessLevelGeneral))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
@@ -724,7 +724,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
-    (AccessLevel    (defActionsAccessLevelGeneral))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
@@ -738,7 +738,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
-    (AccessLevel    (defActionsAccessLevelGeneral))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
 
@@ -752,7 +752,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
-    (AccessLevel    (defActionsAccessLevelGeneral))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
@@ -780,7 +780,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
-    (AccessLevel    (defActionsAccessLevelGeneral))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (manipulateDataDD))
 
