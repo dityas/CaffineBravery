@@ -1,7 +1,7 @@
 (defvar HostType        (critical honeypot critical_honeypot))
 (defvar HostHasData     (yes no))
 (defvar EscAccounts     (yes no))
-(defvar AccessLevel     (user root restricted))
+(defvar AccessLevel     (user root))
 (defvar AttActive       (yes no))
 (defvar DataInjected    (yes no))
 
@@ -140,22 +140,6 @@
     )
 )
 
-(defdd defActionsAccessLevelGeneral
-    (DefActions
-        (LockAccounts   (SAME AccessLevel))
-        (RestrictAccPrivs
-            (AccessLevel
-                (user           (AccessLevel' restricted))
-                (root           (AccessLevel' root))
-                (restricted     (AccessLevel' restricted))    
-            )
-        )
-        (DeployData     (SAME AccessLevel))
-        (DecoyAccount   (SAME AccessLevel))
-        (Nop            (SAME AccessLevel))
-    )
-)
-
 (defdd defActionsEscAccounts
     (DefActions
         (LockAccounts       (EscAccounts' no))
@@ -180,7 +164,6 @@
     (AccessLevel'
         (user           (AccessPerm'    denied))
         (root           (AccessPerm'    auth))
-        (restricted     (AccessPerm'    denied))
     )
 )
 
@@ -189,7 +172,6 @@
         (yes
             (AccessLevel
                 (user       (SAME DataInjected))
-                (restricted (SAME DataInjected))
                 (root       (DataInjected' yes))
             )
         )
@@ -204,8 +186,7 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (AccessLevel    (# (DefActions) 
-        (distDefActions * defActionsAccessLevelGeneral)))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive)
     (DataInjected   (SAME DataInjected))
 
@@ -221,8 +202,7 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (AccessLevel    (# (DefActions) 
-        (distDefActions * defActionsAccessLevelGeneral)))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive)
     (DataInjected   (SAME DataInjected))
 
@@ -238,8 +218,7 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (AccessLevel    (# (DefActions) 
-        (distDefActions * defActionsAccessLevelGeneral)))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
 
@@ -255,8 +234,7 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (AccessLevel    (# (DefActions) 
-        (distDefActions * defActionsAccessLevelGeneral)))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
@@ -264,14 +242,6 @@
     (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
     (ConnStatus     (connStatusObs))
-)
-
-(defdd privEscObs
-    (AccessLevel'
-        (user           (ActionResult'  failure))
-        (restricted     (ActionResult'  failure))
-        (root           (ActionResult'  success))
-    )
 )
 
 (defdbn attackerPrivEscAccDBN
@@ -295,8 +265,7 @@
     (HostHasData    (SAME HostHasData))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (AccessLevel    (# (DefActions) 
-        (distDefActions * defActionsAccessLevelGeneral)))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (manipulateDataDD))
 
@@ -509,25 +478,6 @@
     )
 )
 
-(defdd accessRestrictDD
-    (AccessLevel
-        (user           (AccessLevel' restricted))
-        (restricted     (AccessLevel' restricted))
-        (root           (AccessLevel' root))
-    )
-)
-
-(defdd attActionsAccessLevelRestrict
-    (AttActions
-        (FileRecon          (accessRestrictDD))
-        (EnumAccounts       (accessRestrictDD))
-        (ManipulateData     (accessRestrictDD))
-        (PrivEscAcc         (privEscAccDD))
-        (Nop                (accessRestrictDD))
-        (Exit               (accessRestrictDD))
-    )
-)
-
 (defdbn actionLockAccounts
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
@@ -554,7 +504,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
     (EscAccounts    (SAME EscAccounts))
-    (AccessLevel    (AccessLevel' restricted))
+    (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
 
@@ -937,3 +887,11 @@
     * (dependentMjAttl2)
 )
 
+(def initState
+    (HostType           honeypot)
+    * (HostHasData      yes)
+    * (EscAccounts      yes)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+)
