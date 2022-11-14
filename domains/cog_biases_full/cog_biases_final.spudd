@@ -1,5 +1,6 @@
 (defvar HostType        (critical honeypot critical_honeypot))
 (defvar HostHasData     (yes no))
+(defvar DataPrivs       (user root))
 (defvar EscAccounts     (yes no))
 (defvar AccFound        (yes no))
 (defvar AccessLevel     (user root))
@@ -122,27 +123,56 @@
     )
 )
 
+(defdd fileObs
+    (HostHasData'
+        (yes
+            (ActionResult'
+                (success    (0.8))
+                (failure    (0.2))
+            )
+        )
+        (no
+            (ActionResult'
+                (success    (0.2))
+                (failure    (0.8))
+            )
+        )
+    )
+)
+
 (defdd fileReconObs
     (AttActive'
         (yes    
-            (HostHasData'
-                (yes
-                    (ActionResult'
-                        (success    (0.8))
-                        (failure    (0.2))
-                    )
-                )
-
-                (no
-                    (ActionResult'
-                        (success    (0.2))
-                        (failure    (0.8))
+            (AccessLevel'
+                (root   (fileObs))
+                (user   
+                    (DataPrivs'
+                        (user   (fileObs))
+                        (root   (ActionResult' UNIFORM))
                     )
                 )
             )
         )
 
         (no     (ActionResult' UNIFORM))
+    )
+)
+
+(defdd fileReconAuthObs
+    (AttActive'
+        (yes    
+            (AccessLevel'
+                (user
+                    (DataPrivs'
+                        (user   (AccessPerm' auth))
+                        (root   (AccessPerm' denied))
+                    )
+                )
+                (root   (AccessPerm' auth))
+            )
+        )
+
+        (no     (AccessPerm'    UNIFORM))
     )
 )
 
@@ -163,6 +193,16 @@
         (DeployData         (HostHasData' yes))
         (DecoyAccount       (SAME HostHasData))
         (Nop                (SAME HostHasData))
+    )
+)
+
+(defdd defActionsDataPrivs
+    (DefActions
+        (LockAccounts       (SAME DataPrivs))
+        (RestrictAccPrivs   (DataPrivs' root))
+        (DeployData         (SAME DataPrivs))
+        (DecoyAccount       (SAME DataPrivs))
+        (Nop                (SAME DataPrivs))
     )
 )
 
@@ -223,6 +263,8 @@
     (HostType       (SAME HostType))
     (HostHasData    (# (DefActions) 
         (distDefActions * defActionsHostHasData)))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
     (AccFound       (# (DefActions) 
@@ -232,7 +274,7 @@
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (hostObsDD))
-    (AccessPerm     (accessPermsObs))
+    (AccessPerm     (fileReconAuthObs))
     (ActionResult   (fileReconObs))
     (ConnStatus     (connStatusObs))
 )
@@ -241,6 +283,8 @@
     (HostType       (SAME HostType))
     (HostHasData    (# (DefActions) 
         (distDefActions * defActionsHostHasData)))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
     (AccFound       (# (DefActions) 
@@ -259,6 +303,8 @@
     (HostType       (SAME HostType))
     (HostHasData    (# (DefActions) 
         (distDefActions * defActionsHostHasData)))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
     (AccFound       (# (DefActions) 
@@ -277,6 +323,8 @@
     (HostType       (SAME HostType))
     (HostHasData    (# (DefActions) 
         (distDefActions * defActionsHostHasData)))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
     (AccFound       (# (DefActions) 
@@ -295,6 +343,8 @@
     (HostType       (SAME HostType))
     (HostHasData    (# (DefActions) 
         (distDefActions * defActionsHostHasData)))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
     (AccFound       (# (DefActions) 
@@ -312,6 +362,8 @@
 (defdbn attackerManipulateDataDBN
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
     (AccFound       (# (DefActions) 
@@ -388,7 +440,8 @@
 -- Attacker model
 (defpomdp attl0
     (S
-        (HostType HostHasData EscAccounts AccFound AccessLevel AttActive DataInjected)
+        (HostType HostHasData DataPrivs EscAccounts 
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -426,6 +479,7 @@
         (critical_honeypot  (0.0))
     )
     * (HostHasData      UNIFORM)
+    * (DataPrivs        UNIFORM)
     * (EscAccounts      UNIFORM)
     * (AccFound         no)
     * (AccessLevel      user)
@@ -544,6 +598,7 @@
 (defdbn actionLockAccounts
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
+    (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (EscAccounts' no))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
@@ -556,6 +611,7 @@
 (defdbn actionNop
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
+    (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
@@ -568,6 +624,7 @@
 (defdbn actionRestrictAccPrivs
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
+    (DataPrivs      (DataPrivs' root))
     (EscAccounts    (SAME EscAccounts))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
@@ -580,6 +637,7 @@
 (defdbn actionDeployData
     (HostType       (SAME HostType))
     (HostHasData    (HostHasData' yes))
+    (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
@@ -592,6 +650,7 @@
 (defdbn actionDecoyAccount
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
+    (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (EscAccounts' yes))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
@@ -622,7 +681,8 @@
 -- defender L1 model
 (defipomdp defl1_active
     (S
-        (HostType HostHasData EscAccounts AccFound AccessLevel AttActive DataInjected)
+        (HostType HostHasData DataPrivs EscAccounts 
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -664,6 +724,7 @@
     * (EscAccounts      yes)
     * (AccFound         no)
     * (HostHasData      yes)
+    * (DataPrivs        user)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
