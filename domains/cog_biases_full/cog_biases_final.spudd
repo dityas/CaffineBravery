@@ -530,10 +530,22 @@
     )
 )
 
+(defdd attActionsAccFound
+    (AttActions
+        (FileRecon          (SAME AccFound))
+        (EnumAccounts       (accFoundDD))
+        (ManipulateData     (SAME AccFound))
+        (PrivEscAcc         (SAME AccFound))
+        (Nop                (SAME AccFound))
+        (Exit               (SAME AccFound))
+    )
+)
+
 (defdbn actionLockAccounts
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
     (EscAccounts    (EscAccounts' no))
+    (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
@@ -545,6 +557,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
     (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
@@ -556,6 +569,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
     (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
@@ -567,6 +581,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (HostHasData' yes))
     (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
@@ -578,6 +593,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
     (EscAccounts    (EscAccounts' yes))
+    (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
@@ -606,7 +622,7 @@
 -- defender L1 model
 (defipomdp defl1_active
     (S
-        (HostType HostHasData EscAccounts AccessLevel AttActive DataInjected)
+        (HostType HostHasData EscAccounts AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -691,7 +707,7 @@
 -- passive defender l1 model
 (defipomdp defl1_passive
     (S
-        (HostType HostHasData EscAccounts AccessLevel AttActive DataInjected)
+        (HostType HostHasData EscAccounts AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -768,6 +784,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (defActionsAccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -782,6 +799,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (defActionsAccFoundEnumAcc))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -796,6 +814,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (defActionsAccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
@@ -810,6 +829,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (defActionsAccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -824,6 +844,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (defActionsAccFound))
     (AccessLevel    (privEscAccDD))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -838,6 +859,7 @@
     (HostType       (SAME HostType))
     (HostHasData    (defActionsHostHasData))
     (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (defActionsAccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (manipulateDataDD))
@@ -861,7 +883,7 @@
 ---- Level 2 Attacker model
 (defipomdp attl2
     (S
-        (HostType EscAccounts HostHasData AccessLevel AttActive DataInjected)
+        (HostType EscAccounts AccFound HostHasData AccessLevel AttActive DataInjected)
     )
 
     (O
