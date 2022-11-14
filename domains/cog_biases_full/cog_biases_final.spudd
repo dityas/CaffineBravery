@@ -433,243 +433,243 @@
     * (DataInjected     no)
 )
 
------------------------------------------------------------------
----- Defender l1 models
---
---(initmodelvar Defl1ModelsAttl0
---    (frames AttackerFrame)
---    (
---        (att    (m0     (initAttl0)))
---    )
---)
------------------------------------------------------------------
------- Observations
---(defdd defaultEndPtAlerts
---    (EndPtAlerts'
---        (file_enum              (0.05))
---        (file_write             (0.05))
---        (login_activity         (0.05))
---        (none                   (0.85))
---    )
---)
---
---(defdd hostReconEndPtAlerts
---    (EndPtAlerts'
---        (file_enum              (0.85))
---        (file_write             (0.05))
---        (login_activity         (0.05))
---        (none                   (0.05))
---    )
---)
---
---(defdd manipulateDataEndPtAlerts
---    (EndPtAlerts'
---        (file_enum              (0.05))
---        (file_write             (0.85))
---        (login_activity         (0.05))
---        (none                   (0.05))
---    )
---)
---
---(defdd privEscEndPtAlert
---    (EndPtAlerts'
---        (file_enum              (0.05))
---        (file_write             (0.05))
---        (login_activity         (0.85))
---        (none                   (0.05))
---    )
---)
---
---(defdd endPtAlertsObs
---    (AttActive'
---        (yes
---            (AttActions
---                (FileRecon          (hostReconEndPtAlerts))
---                (EnumAccounts       (hostReconEndPtAlerts))
---                (ManipulateData     (manipulateDataEndPtAlerts))
---                (PrivEscAcc         (privEscEndPtAlert))
---                (Nop                (defaultEndPtAlerts))
---                (Exit               (defaultEndPtAlerts))
---            )
---        )
---
---        (no     (defaultEndPtAlerts))
---    )
---)
---
---(defdd attActionsAccessLevel
---    (AttActions
---        (FileRecon          (SAME AccessLevel))
---        (EnumAccounts       (SAME AccessLevel))
---        (ManipulateData     (SAME AccessLevel))
---        (PrivEscAcc         (privEscAccDD))
---        (Nop                (SAME AccessLevel))
---        (Exit               (SAME AccessLevel))
---    )
---)
---
---(defdd attActionsAttActive
---    (AttActions
---        (FileRecon          (SAME AttActive))
---        (EnumAccounts       (SAME AttActive))
---        (ManipulateData     (SAME AttActive))
---        (PrivEscAcc         (SAME AttActive))
---        (Nop                (SAME AttActive))
---        (Exit               (AttActive' no))
---    )
---)
---
---(defdd attActionsDataInjected
---    (AttActions
---        (FileRecon          (SAME DataInjected))
---        (EnumAccounts       (SAME DataInjected))
---        (ManipulateData     (manipulateDataDD))
---        (PrivEscAcc         (SAME DataInjected))
---        (Nop                (SAME DataInjected))
---        (Exit               (SAME DataInjected))
---    )
---)
---
---(defdd attActionsAccFound
---    (AttActions
---        (FileRecon          (SAME AccFound))
---        (EnumAccounts       (accFoundDD))
---        (ManipulateData     (SAME AccFound))
---        (PrivEscAcc         (SAME AccFound))
---        (Nop                (SAME AccFound))
---        (Exit               (SAME AccFound))
---    )
---)
---
---(defdbn actionLockAccounts
---    (HostType       (SAME HostType))
---    (HostHasData    (SAME HostHasData))
---    (EscAccounts    (EscAccounts' no))
---    (AccFound       (attActionsAccFound))
---    (AccessLevel    (attActionsAccessLevel))
---    (AttActive      (attActionsAttActive))
---    (DataInjected   (attActionsDataInjected))
---
---    (EndPtAlerts    (endPtAlertsObs))
---)
---
---(defdbn actionNop
---    (HostType       (SAME HostType))
---    (HostHasData    (SAME HostHasData))
---    (EscAccounts    (SAME EscAccounts))
---    (AccFound       (attActionsAccFound))
---    (AccessLevel    (attActionsAccessLevel))
---    (AttActive      (attActionsAttActive))
---    (DataInjected   (attActionsDataInjected))
---
---    (EndPtAlerts    (endPtAlertsObs))
---)
---
---(defdbn actionRestrictAccPrivs
---    (HostType       (SAME HostType))
---    (HostHasData    (SAME HostHasData))
---    (EscAccounts    (SAME EscAccounts))
---    (AccFound       (attActionsAccFound))
---    (AccessLevel    (attActionsAccessLevel))
---    (AttActive      (attActionsAttActive))
---    (DataInjected   (attActionsDataInjected))
---
---    (EndPtAlerts    (endPtAlertsObs))
---)
---
---(defdbn actionDeployData
---    (HostType       (SAME HostType))
---    (HostHasData    (HostHasData' yes))
---    (EscAccounts    (SAME EscAccounts))
---    (AccFound       (attActionsAccFound))
---    (AccessLevel    (attActionsAccessLevel))
---    (AttActive      (attActionsAttActive))
---    (DataInjected   (attActionsDataInjected))
---
---    (EndPtAlerts    (endPtAlertsObs))
---)
---
---(defdbn actionDecoyAccount
---    (HostType       (SAME HostType))
---    (HostHasData    (SAME HostHasData))
---    (EscAccounts    (EscAccounts' yes))
---    (AccFound       (attActionsAccFound))
---    (AccessLevel    (attActionsAccessLevel))
---    (AttActive      (attActionsAttActive))
---    (DataInjected   (attActionsDataInjected))
---
---    (EndPtAlerts    (endPtAlertsObs))
---)
---
---(defdd stateReward
---    (HostType
---        (critical
---            (DataInjected
---                (yes    (-10.0))
---                (no     (1.0))
---            )
---        )
---        (honeypot   
---            (AttActive
---                (yes    (5.0))
---                (no     (0.0))
---            )
---        )
---        (critical_honeypot  (0.0))
---    )
---)
---
----- defender L1 model
---(defipomdp defl1_active
---    (S
---        (HostType HostHasData EscAccounts AccFound AccessLevel AttActive DataInjected)
---    )
---
---    (O
---        (EndPtAlerts)
---    )
---
---    (A  DefActions)
---    (Aj AttActions)
---
---    (Mj Defl1ModelsAttl0)
---    (EC Defl1ModelsAttl0EC)
---
---    (Thetaj AttackerFrame
---        (att    attl0)
---    )
---
---    (dynamics
---        (LockAccounts       (actionLockAccounts))
---        (RestrictAccPrivs   (actionRestrictAccPrivs))
---        (Nop                (actionNop))
---        (DeployData         (actionDeployData))
---        (DecoyAccount       (actionDecoyAccount))
---    )
---    
---    (R
---        (LockAccounts       (stateReward - 1.0))
---        (RestrictAccPrivs   (stateReward - 1.0))
---        (Nop                (stateReward - 0.5))
---        (DeployData         (stateReward - 1.0))
---        (DecoyAccount       (stateReward - 1.0))
---    )
---
---    (discount 0.95)
---    (H 7)
---)
---
---(defdd initDefl1_active
---    (HostType           critical)
---    * (EscAccounts      yes)
---    * (AccFound         no)
---    * (HostHasData      yes)
---    * (AccessLevel      user)
---    * (AttActive        yes)
---    * (DataInjected     no)
---    * (Defl1ModelsAttl0 m0)
---)
---
+---------------------------------------------------------------
+-- Defender l1 models
+
+(initmodelvar Defl1ModelsAttl0
+    (frames AttackerFrame)
+    (
+        (att    (m0     (initAttl0)))
+    )
+)
+---------------------------------------------------------------
+---- Observations
+(defdd defaultEndPtAlerts
+    (EndPtAlerts'
+        (file_enum              (0.05))
+        (file_write             (0.05))
+        (login_activity         (0.05))
+        (none                   (0.85))
+    )
+)
+
+(defdd hostReconEndPtAlerts
+    (EndPtAlerts'
+        (file_enum              (0.85))
+        (file_write             (0.05))
+        (login_activity         (0.05))
+        (none                   (0.05))
+    )
+)
+
+(defdd manipulateDataEndPtAlerts
+    (EndPtAlerts'
+        (file_enum              (0.05))
+        (file_write             (0.85))
+        (login_activity         (0.05))
+        (none                   (0.05))
+    )
+)
+
+(defdd privEscEndPtAlert
+    (EndPtAlerts'
+        (file_enum              (0.05))
+        (file_write             (0.05))
+        (login_activity         (0.85))
+        (none                   (0.05))
+    )
+)
+
+(defdd endPtAlertsObs
+    (AttActive'
+        (yes
+            (AttActions
+                (FileRecon          (hostReconEndPtAlerts))
+                (EnumAccounts       (hostReconEndPtAlerts))
+                (ManipulateData     (manipulateDataEndPtAlerts))
+                (PrivEscAcc         (privEscEndPtAlert))
+                (Nop                (defaultEndPtAlerts))
+                (Exit               (defaultEndPtAlerts))
+            )
+        )
+
+        (no     (defaultEndPtAlerts))
+    )
+)
+
+(defdd attActionsAccessLevel
+    (AttActions
+        (FileRecon          (SAME AccessLevel))
+        (EnumAccounts       (SAME AccessLevel))
+        (ManipulateData     (SAME AccessLevel))
+        (PrivEscAcc         (privEscAccDD))
+        (Nop                (SAME AccessLevel))
+        (Exit               (SAME AccessLevel))
+    )
+)
+
+(defdd attActionsAttActive
+    (AttActions
+        (FileRecon          (SAME AttActive))
+        (EnumAccounts       (SAME AttActive))
+        (ManipulateData     (SAME AttActive))
+        (PrivEscAcc         (SAME AttActive))
+        (Nop                (SAME AttActive))
+        (Exit               (AttActive' no))
+    )
+)
+
+(defdd attActionsDataInjected
+    (AttActions
+        (FileRecon          (SAME DataInjected))
+        (EnumAccounts       (SAME DataInjected))
+        (ManipulateData     (manipulateDataDD))
+        (PrivEscAcc         (SAME DataInjected))
+        (Nop                (SAME DataInjected))
+        (Exit               (SAME DataInjected))
+    )
+)
+
+(defdd attActionsAccFound
+    (AttActions
+        (FileRecon          (SAME AccFound))
+        (EnumAccounts       (accFoundDD))
+        (ManipulateData     (SAME AccFound))
+        (PrivEscAcc         (SAME AccFound))
+        (Nop                (SAME AccFound))
+        (Exit               (SAME AccFound))
+    )
+)
+
+(defdbn actionLockAccounts
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (EscAccounts    (EscAccounts' no))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+)
+
+(defdbn actionNop
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+)
+
+(defdbn actionRestrictAccPrivs
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+)
+
+(defdbn actionDeployData
+    (HostType       (SAME HostType))
+    (HostHasData    (HostHasData' yes))
+    (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+)
+
+(defdbn actionDecoyAccount
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (EscAccounts    (EscAccounts' yes))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+)
+
+(defdd stateReward
+    (HostType
+        (critical
+            (DataInjected
+                (yes    (-10.0))
+                (no     (1.0))
+            )
+        )
+        (honeypot   
+            (AttActive
+                (yes    (5.0))
+                (no     (0.0))
+            )
+        )
+        (critical_honeypot  (0.0))
+    )
+)
+
+-- defender L1 model
+(defipomdp defl1_active
+    (S
+        (HostType HostHasData EscAccounts AccFound AccessLevel AttActive DataInjected)
+    )
+
+    (O
+        (EndPtAlerts)
+    )
+
+    (A  DefActions)
+    (Aj AttActions)
+
+    (Mj Defl1ModelsAttl0)
+    (EC Defl1ModelsAttl0EC)
+
+    (Thetaj AttackerFrame
+        (att    attl0)
+    )
+
+    (dynamics
+        (LockAccounts       (actionLockAccounts))
+        (RestrictAccPrivs   (actionRestrictAccPrivs))
+        (Nop                (actionNop))
+        (DeployData         (actionDeployData))
+        (DecoyAccount       (actionDecoyAccount))
+    )
+    
+    (R
+        (LockAccounts       (stateReward - 1.0))
+        (RestrictAccPrivs   (stateReward - 1.0))
+        (Nop                (stateReward - 0.5))
+        (DeployData         (stateReward - 1.0))
+        (DecoyAccount       (stateReward - 1.0))
+    )
+
+    (discount 0.95)
+    (H 7)
+)
+
+(defdd initDefl1_active
+    (HostType           critical)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      yes)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+    * (Defl1ModelsAttl0 m0)
+)
+
 -------- Initial beliefs of l1 defender
 --
 --(defdd initDefl1c_active
