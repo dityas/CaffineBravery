@@ -409,7 +409,7 @@
     (R
         (FileRecon          (-1.0))
         (EnumAccounts       (-1.0))
-        (PrivEscAcc         (privEscAccReward))
+        (PrivEscAcc         (-1.0))
         (ManipulateData     (-2.0))
         (Nop                (nopCost))
         (Exit               (exitReward))
