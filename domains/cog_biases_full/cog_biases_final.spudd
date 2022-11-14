@@ -1,6 +1,7 @@
 (defvar HostType        (critical honeypot critical_honeypot))
 (defvar HostHasData     (yes no))
 (defvar EscAccounts     (yes no))
+(defvar AccFound        (yes no))
 (defvar AccessLevel     (user root))
 (defvar AttActive       (yes no))
 (defvar DataInjected    (yes no))
@@ -52,8 +53,13 @@
 (defdd privEscAccDD
     (AttActive
         (yes
-            (EscAccounts
-                (yes    (AccessLevel' root))
+            (EscAccounts'
+                (yes
+                    (AccFound'
+                        (yes    (AccessLevel' root))
+                        (no     (SAME AccessLevel))
+                    )
+                )
                 (no     (SAME AccessLevel))
             )
         )
@@ -167,6 +173,39 @@
     )
 )
 
+(defdd accFoundDD
+    (EscAccounts'
+        (yes
+            (AccFound'
+                (yes    (0.8))
+                (no     (0.2))
+            )
+        )
+
+        (no (AccFound'  no))
+    )
+)
+
+(defdd defActionsAccFound
+    (DefActions
+        (LockAccounts       (AccFound' no))
+        (RestrictAccPrivs   (SAME AccFound))
+        (DeployData         (SAME AccFound))
+        (DecoyAccount       (SAME AccFound))
+        (Nop                (SAME AccFound))
+    )
+)
+
+(defdd defActionsAccFoundEnumAcc
+    (DefActions
+        (LockAccounts       (AccFound' no))
+        (RestrictAccPrivs   (accFoundDD))
+        (DeployData         (accFoundDD))
+        (DecoyAccount       (accFoundDD))
+        (Nop                (accFoundDD))
+    )
+)
+
 (defdd manipulateDataDD
     (HostHasData
         (yes
@@ -186,6 +225,8 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (AccFound       (# (DefActions) 
+        (distDefActions * defActionsAccFound)))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive)
     (DataInjected   (SAME DataInjected))
@@ -202,6 +243,8 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (AccFound       (# (DefActions) 
+        (distDefActions * defActionsAccFoundEnumAcc)))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive)
     (DataInjected   (SAME DataInjected))
@@ -218,6 +261,8 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (AccFound       (# (DefActions) 
+        (distDefActions * defActionsAccFound)))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
@@ -234,6 +279,8 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (AccFound       (# (DefActions) 
+        (distDefActions * defActionsAccFound)))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -250,6 +297,8 @@
         (distDefActions * defActionsHostHasData)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (AccFound       (# (DefActions) 
+        (distDefActions * defActionsAccFound)))
     (AccessLevel    (privEscAccDD))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -265,6 +314,8 @@
     (HostHasData    (SAME HostHasData))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (AccFound       (# (DefActions) 
+        (distDefActions * defActionsAccFound)))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (manipulateDataDD))
@@ -337,7 +388,7 @@
 -- Attacker model
 (defpomdp attl0
     (S
-        (HostType HostHasData EscAccounts AccessLevel AttActive DataInjected)
+        (HostType HostHasData EscAccounts AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -376,6 +427,7 @@
     )
     * (HostHasData      UNIFORM)
     * (EscAccounts      UNIFORM)
+    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
@@ -594,6 +646,7 @@
 (defdd initDefl1_active
     (HostType           critical)
     * (EscAccounts      yes)
+    * (AccFound         no)
     * (HostHasData      yes)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -606,6 +659,7 @@
 (defdd initDefl1c_active
     (HostType           critical)
     * (EscAccounts      yes)
+    * (AccFound         no)
     * (HostHasData      yes)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -616,6 +670,7 @@
 (defdd initDefl1hp_active
     (HostType           honeypot)
     * (EscAccounts      no)
+    * (AccFound         no)
     * (HostHasData      no)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -677,6 +732,7 @@
 (defdd initDefl1_passive
     (HostType           critical)
     * (EscAccounts      yes)
+    * (AccFound         no)
     * (HostHasData      yes)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -687,6 +743,7 @@
 (defdd initDefl1c_passive
     (HostType           critical)
     * (EscAccounts      yes)
+    * (AccFound         no)
     * (HostHasData      yes)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -697,6 +754,7 @@
 (defdd initDefl1hp_passive
     (HostType           honeypot)
     * (EscAccounts      no)
+    * (AccFound         no)
     * (HostHasData      no)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -881,16 +939,18 @@
     )
     * (HostHasData      UNIFORM)
     * (EscAccounts      UNIFORM)
+    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
     * (dependentMjAttl2)
 )
 
-(def initState
+(defdd initState
     (HostType           honeypot)
     * (HostHasData      yes)
     * (EscAccounts      yes)
+    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
