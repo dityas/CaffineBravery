@@ -396,32 +396,39 @@
                         (yes
                             (DataInjected
                                 (yes    (30.0))
-                                (no     (-5.0))
+                                (no     (-1.0))
                             )
                         )
 
-                        (no     (1.0))
+                        (no     (0.0))
                     )
                 )
 
-                (honeypot   (1.0))
+                (honeypot   (0.0))
 
                 (critical_honeypot
                     (HostHasData
                         (yes
                             (DataInjected
                                 (yes    (30.0))
-                                (no     (-5.0))
+                                (no     (-1.0))
                             )
                         )
 
-                        (no     (1.0))
+                        (no     (0.0))
                     )
                 )
             )
         )
 
         (no     (-1.0))
+    )
+)
+
+(defdd manipulateDataCost
+    (HostHasData
+        (yes    (-1.0))
+        (no     (-5.0))
     )
 )
 
@@ -458,7 +465,7 @@
         (FileRecon          (-1.0))
         (EnumAccounts       (-1.0))
         (PrivEscAcc         (-1.0))
-        (ManipulateData     (-2.0))
+        (ManipulateData     (manipulateDataCost))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -722,114 +729,120 @@
     * (Defl1ModelsAttl0 m0)
 )
 
--------- Initial beliefs of l1 defender
---
---(defdd initDefl1c_active
---    (HostType           critical)
---    * (EscAccounts      yes)
---    * (AccFound         no)
---    * (HostHasData      yes)
---    * (AccessLevel      user)
---    * (AttActive        yes)
---    * (DataInjected     no)
---    * (Defl1ModelsAttl0 m0)
---)
---
---(defdd initDefl1hp_active
---    (HostType           honeypot)
---    * (EscAccounts      no)
---    * (AccFound         no)
---    * (HostHasData      no)
---    * (AccessLevel      user)
---    * (AttActive        yes)
---    * (DataInjected     no)
---    * (Defl1ModelsAttl0 m0)
---)
---
---
----- Make passive defender model
---
---(initmodelvar PassiveDefl1ModelsAttl0
---    (frames AttackerFrame)
---    (
---        (att    (m0     (initAttl0)))
---    )
---)
---
----- passive defender l1 model
---(defipomdp defl1_passive
---    (S
---        (HostType HostHasData EscAccounts AccFound AccessLevel AttActive DataInjected)
---    )
---
---    (O
---        (EndPtAlerts)
---    )
---
---    (A  DefActions)
---    (Aj AttActions)
---
---    (Mj PassiveDefl1ModelsAttl0)
---    (EC PassiveDefl1ModelsAttl0EC)
---
---    (Thetaj AttackerFrame
---        (att    attl0)
---    )
---
---    (dynamics
---        (LockAccounts       (actionLockAccounts))
---        (RestrictAccPrivs   (actionRestrictAccPrivs))
---        (Nop                (actionNop))
---        (DeployData         (actionDeployData))
---        (DecoyAccount       (actionDecoyAccount))
---    )
---    
---    (R
---        (LockAccounts       (stateReward - 10.0))
---        (RestrictAccPrivs   (stateReward - 1.0))
---        (Nop                (stateReward - 0.5))
---        (DeployData         (stateReward - 10.0))
---        (DecoyAccount       (stateReward - 10.0))
---    )
---
---    (discount 0.95)
---    (H 7)
---)
---
---
---(defdd initDefl1_passive
---    (HostType           critical)
---    * (EscAccounts      yes)
---    * (AccFound         no)
---    * (HostHasData      yes)
---    * (AccessLevel      user)
---    * (AttActive        yes)
---    * (DataInjected     no)
---    * (PassiveDefl1ModelsAttl0 m0)
---)
---
---(defdd initDefl1c_passive
---    (HostType           critical)
---    * (EscAccounts      yes)
---    * (AccFound         no)
---    * (HostHasData      yes)
---    * (AccessLevel      user)
---    * (AttActive        yes)
---    * (DataInjected     no)
---    * (PassiveDefl1ModelsAttl0 m0)
---)
---
---(defdd initDefl1hp_passive
---    (HostType           honeypot)
---    * (EscAccounts      no)
---    * (AccFound         no)
---    * (HostHasData      no)
---    * (AccessLevel      user)
---    * (AttActive        yes)
---    * (DataInjected     no)
---    * (PassiveDefl1ModelsAttl0 m0)
---)
---
+------ Initial beliefs of l1 defender
+
+(defdd initDefl1c_active
+    (HostType           critical)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      yes)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1hp_active
+    (HostType           honeypot)
+    * (EscAccounts      no)
+    * (AccFound         no)
+    * (HostHasData      no)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+    * (Defl1ModelsAttl0 m0)
+)
+
+
+-- Make passive defender model
+
+(initmodelvar PassiveDefl1ModelsAttl0
+    (frames AttackerFrame)
+    (
+        (att    (m0     (initAttl0)))
+    )
+)
+
+-- passive defender l1 model
+(defipomdp defl1_passive
+    (S
+        (HostType HostHasData DataPrivs EscAccounts AccFound 
+        AccessLevel AttActive DataInjected)
+    )
+
+    (O
+        (EndPtAlerts)
+    )
+
+    (A  DefActions)
+    (Aj AttActions)
+
+    (Mj PassiveDefl1ModelsAttl0)
+    (EC PassiveDefl1ModelsAttl0EC)
+
+    (Thetaj AttackerFrame
+        (att    attl0)
+    )
+
+    (dynamics
+        (LockAccounts       (actionLockAccounts))
+        (RestrictAccPrivs   (actionRestrictAccPrivs))
+        (Nop                (actionNop))
+        (DeployData         (actionDeployData))
+        (DecoyAccount       (actionDecoyAccount))
+    )
+    
+    (R
+        (LockAccounts       (stateReward - 10.0))
+        (RestrictAccPrivs   (stateReward - 1.0))
+        (Nop                (stateReward - 0.5))
+        (DeployData         (stateReward - 10.0))
+        (DecoyAccount       (stateReward - 10.0))
+    )
+
+    (discount 0.95)
+    (H 7)
+)
+
+
+(defdd initDefl1_passive
+    (HostType           critical)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      yes)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1c_passive
+    (HostType           critical)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      yes)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+(defdd initDefl1hp_passive
+    (HostType           honeypot)
+    * (EscAccounts      no)
+    * (AccFound         no)
+    * (HostHasData      no)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
 ------ Attacker l2
 --
 --(defdbn actionAttFileReconDBN
