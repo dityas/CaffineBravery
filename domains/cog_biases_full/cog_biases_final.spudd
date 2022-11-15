@@ -715,7 +715,7 @@
     * (EscAccounts      yes)
     * (AccFound         no)
     * (HostHasData      yes)
-    * (DataPrivs        user)
+    * (DataPrivs        root)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
