@@ -473,11 +473,7 @@
 
 -- Initial belief of the attacker
 (defdd initAttl0
-    (HostType   
-        (critical           (0.5))
-        (honeypot           (0.5))
-        (critical_honeypot  (0.0))
-    )
+    (HostType           critical_honeypot)
     * (HostHasData      UNIFORM)
     * (DataPrivs        UNIFORM)
     * (EscAccounts      UNIFORM)
