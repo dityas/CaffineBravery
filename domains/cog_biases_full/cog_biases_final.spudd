@@ -1025,12 +1025,14 @@
 --    * (dependentMjAttl2)
 --)
 --
---(defdd initState
---    (HostType           honeypot)
---    * (HostHasData      yes)
---    * (EscAccounts      yes)
---    * (AccFound         no)
---    * (AccessLevel      user)
---    * (AttActive        yes)
---    * (DataInjected     no)
---)
+
+(defdd initState
+    (HostType           honeypot)
+    * (HostHasData      yes)
+    * (DataPrivs        root)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+)
