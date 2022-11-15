@@ -246,15 +246,22 @@
     )
 )
 
-(defdd manipulateDataDD
-    (HostHasData
-        (yes
-            (AccessLevel
-                (user       (SAME DataInjected))
-                (root       (DataInjected' yes))
+(defdd dataInjectionPrivs
+    (AccessLevel
+        (user
+            (DataPrivs
+                (user   (DataInjected' yes))
+                (root   (SAME DataInjected))
             )
         )
 
+        (root   (DataInjected' yes))
+    )
+)
+
+(defdd manipulateDataDD
+    (HostHasData
+        (yes    (dataInjectionPrivs))
         (no     (SAME DataInjected))
     )
 )
@@ -373,7 +380,7 @@
     (DataInjected   (manipulateDataDD))
 
     (HostObs        (HostObs' UNIFORM))
-    (AccessPerm     (accessPermsObs))
+    (AccessPerm     (fileReconAuthObs))
     (ActionResult   (ActionResult'  UNIFORM))
     (ConnStatus     (connStatusObs))
 )
@@ -414,18 +421,6 @@
             )
         )
 
-        (no     (-1.0))
-    )
-)
-
-(defdd privEscAccReward
-    (AttActive
-        (yes
-            (EscAccounts
-                (yes    (-1.0))
-                (no     (-10.0))
-            )
-        )
         (no     (-1.0))
     )
 )
