@@ -468,7 +468,7 @@
                         (yes
                             (DataInjected
                                 (yes    (30.0))
-                                (no     (-1.0))
+                                (no     (0.0))
                             )
                         )
 
@@ -483,7 +483,7 @@
                         (yes
                             (DataInjected
                                 (yes    (30.0))
-                                (no     (-1.0))
+                                (no     (0.0))
                             )
                         )
 
@@ -537,7 +537,7 @@
         (FileRecon          (-1.0))
         (EnumAccounts       (-1.0))
         (PrivEscAcc         (-1.0))
-        (ManipulateData     (manipulateCost))
+        (ManipulateData     (-1.0))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
