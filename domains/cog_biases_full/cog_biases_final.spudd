@@ -56,14 +56,9 @@
 (defdd privEscAccDD
     (AttActive
         (yes
-            (EscAccounts'
-                (yes
-                    (AccFound'
-                        (yes    (AccessLevel' root))
-                        (no     (SAME AccessLevel))
-                    )
-                )
-                (no     (SAME AccessLevel))
+            (AccFound
+                (yes    (AccessLevel' root))
+                (no     (AccessLevel' user))
             )
         )
         (no     (SAME AccessLevel))
@@ -109,14 +104,14 @@
             (EscAccounts'
                 (yes
                     (ActionResult'
-                        (success    (0.8))
-                        (failure    (0.2))
+                        (success    (0.9))
+                        (failure    (0.1))
                     )
                 )
                 (no
                     (ActionResult'
-                        (success    (0.2))
-                        (failure    (0.8))
+                        (success    (0.1))
+                        (failure    (0.9))
                     )
                 )
             )
@@ -160,14 +155,14 @@
     (HostHasData'
         (yes
             (ActionResult'
-                (success    (0.8))
-                (failure    (0.2))
+                (success    (0.9))
+                (failure    (0.1))
             )
         )
         (no
             (ActionResult'
-                (success    (0.2))
-                (failure    (0.8))
+                (success    (0.1))
+                (failure    (0.9))
             )
         )
     )
@@ -274,7 +269,7 @@
 )
 
 (defdd accFoundDD
-    (EscAccounts'
+    (EscAccounts
         (yes
             (AccFound'
                 (yes    (0.8))
@@ -467,8 +462,8 @@
                     (HostHasData
                         (yes
                             (DataInjected
-                                (yes    (30.0))
-                                (no     (0.0))
+                                (yes    (20.0))
+                                (no     (-1.0))
                             )
                         )
 
@@ -482,8 +477,8 @@
                     (HostHasData
                         (yes
                             (DataInjected
-                                (yes    (30.0))
-                                (no     (0.0))
+                                (yes    (20.0))
+                                (no     (-1.0))
                             )
                         )
 
@@ -497,10 +492,17 @@
     )
 )
 
+(defdd privEscAccCost
+    (AccFound
+        (yes    (0.0))
+        (no     (-5.0))
+    )
+)
+
 (defdd manipulateCost
     (DataFound
         (yes    (0.0))
-        (no     (-2.0))
+        (no     (-5.0))
     )
 )
 
@@ -536,8 +538,8 @@
     (R
         (FileRecon          (-1.0))
         (EnumAccounts       (-1.0))
-        (PrivEscAcc         (-1.0))
-        (ManipulateData     (-1.0))
+        (PrivEscAcc         (privEscAccCost))
+        (ManipulateData     (manipulateCost))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -757,7 +759,7 @@
         )
         (honeypot   
             (AttActive
-                (yes    (5.0))
+                (yes    (2.0))
                 (no     (0.0))
             )
         )
@@ -1088,92 +1090,92 @@
     )
 )
 
----- Level 2 Attacker model
-(defipomdp attl2
-    (S
-        (HostType EscAccounts AccFound HostHasData DataFound DataPrivs 
-        AccessLevel AttActive DataInjected)
-    )
-
-    (O
-        (AccessPerm ActionResult ConnStatus HostObs DefenseObs)
-    )
-
-    (A  AttActions)
-    (Aj DefActions)
-
-    (Mj Attl2ModelsDefl1)
-    (EC Attl2ModelsDefl1EC)
-
-    (Thetaj DefFrame
-        (lowCap    defl1_passive)
-        (highCap   defl1_active)
-    )
-
-    (dynamics
-        (FileRecon          (actionAttFileReconDBN))
-        (Nop                (actionAttNopDBN))
-        (Exit               (actionAttExitDBN))
-        (ManipulateData     (actionAttManipulateDataDBN))
-        (EnumAccounts       (actionAttEnumAccountsDBN))
-        (PrivEscAcc         (actionAttPrivEscAccDBN))
-    )
-
-    (R
-        (FileRecon          (-1.0))
-        (EnumAccounts       (-1.0))
-        (PrivEscAcc         (-1.0))
-        (ManipulateData     (manipulateCost))
-        (Nop                (nopCost))
-        (Exit               (exitReward))
-    )
-
-    (discount 0.95)
-    (H 10)
-)
-
-(defdd dependentMjAttl2
-    (HostType
-        (critical
-            (Attl2ModelsDefl1
-                (m0     (0.5))
-                (m1     (0.0))
-                (m2     (0.5))
-                (m3     (0.0))
-            )      
-        )
-
-        (honeypot
-            (Attl2ModelsDefl1
-                (m0     (0.0))
-                (m1     (0.5))
-                (m2     (0.0))
-                (m3     (0.5))
-            )
-        )
-
-        (critical_honeypot
-            (Attl2ModelsDefl1
-                (m0     (0.25))
-                (m1     (0.25))
-                (m2     (0.25))
-                (m3     (0.25))
-        )
-    )
-)
-
-(defdd initAttl2
-    (HostType           critical_honeypot)
-    * (DataPrivs        UNIFORM)
-    * (HostHasData      UNIFORM)
-    * (EscAccounts      UNIFORM)
-    * (DataFound        no)
-    * (AccFound         no)
-    * (AccessLevel      user)
-    * (AttActive        yes)
-    * (DataInjected     no)
-    * (dependentMjAttl2)
-)
+-- Level 2 Attacker model
+--(defipomdp attl2
+--    (S
+--        (HostType EscAccounts AccFound HostHasData DataFound DataPrivs 
+--        AccessLevel AttActive DataInjected)
+--    )
+--
+--    (O
+--        (AccessPerm ActionResult ConnStatus HostObs DefenseObs)
+--    )
+--
+--    (A  AttActions)
+--    (Aj DefActions)
+--
+--    (Mj Attl2ModelsDefl1)
+--    (EC Attl2ModelsDefl1EC)
+--
+--    (Thetaj DefFrame
+--        (lowCap    defl1_passive)
+--        (highCap   defl1_active)
+--    )
+--
+--    (dynamics
+--        (FileRecon          (actionAttFileReconDBN))
+--        (Nop                (actionAttNopDBN))
+--        (Exit               (actionAttExitDBN))
+--        (ManipulateData     (actionAttManipulateDataDBN))
+--        (EnumAccounts       (actionAttEnumAccountsDBN))
+--        (PrivEscAcc         (actionAttPrivEscAccDBN))
+--    )
+--
+--    (R
+--        (FileRecon          (-1.0))
+--        (EnumAccounts       (-1.0))
+--        (PrivEscAcc         (-1.0))
+--        (ManipulateData     (-2.0))
+--        (Nop                (nopCost))
+--        (Exit               (exitReward))
+--    )
+--
+--    (discount 0.95)
+--    (H 10)
+--)
+--
+--(defdd dependentMjAttl2
+--    (HostType
+--        (critical
+--            (Attl2ModelsDefl1
+--                (m0     (0.5))
+--                (m1     (0.0))
+--                (m2     (0.5))
+--                (m3     (0.0))
+--            )      
+--        )
+--
+--        (honeypot
+--            (Attl2ModelsDefl1
+--                (m0     (0.0))
+--                (m1     (0.5))
+--                (m2     (0.0))
+--                (m3     (0.5))
+--            )
+--        )
+--
+--        (critical_honeypot
+--            (Attl2ModelsDefl1
+--                (m0     (0.25))
+--                (m1     (0.25))
+--                (m2     (0.25))
+--                (m3     (0.25))
+--        )
+--    )
+--)
+--
+--(defdd initAttl2
+--    (HostType           critical_honeypot)
+--    * (DataPrivs        UNIFORM)
+--    * (HostHasData      UNIFORM)
+--    * (EscAccounts      UNIFORM)
+--    * (DataFound        no)
+--    * (AccFound         no)
+--    * (AccessLevel      user)
+--    * (AttActive        yes)
+--    * (DataInjected     no)
+--    * (dependentMjAttl2)
+--)
 
 --
 ------ defender L3 model
@@ -1235,6 +1237,18 @@
     * (DataFound        no)
     * (DataPrivs        user)
     * (EscAccounts      no)
+    * (AccFound         no)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+)
+
+(defdd initStateCritical
+    (HostType           critical)
+    * (HostHasData      yes)
+    * (DataFound        no)
+    * (DataPrivs        root)
+    * (EscAccounts      yes)
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
