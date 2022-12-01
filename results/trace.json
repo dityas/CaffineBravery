@@ -1,0 +1,6262 @@
+[
+  [
+    {
+      "time step": 0,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.5,
+            "user": 0.5
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 1,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.77585,
+            "yes": 0.22414994
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9310355,
+            "yes": 0.068964444
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 2,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9366163,
+            "yes": 0.063383624
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9740968,
+            "yes": 0.025903152
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.9996999,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 3,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855673,
+            "yes": 0.014432659
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346566,
+            "yes": 0.0065342686
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.014428329,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Exit"
+    },
+    {
+      "time step": 4,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98555744,
+            "yes": 0.014442513
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 1.00006E-5,
+            "user": 0.99999
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934658,
+            "yes": 0.0065342025
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 5,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98554766,
+            "yes": 0.014452367
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 2.0001102E-5,
+            "user": 0.99998
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346584,
+            "yes": 0.006534137
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 6,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855378,
+            "yes": 0.014462221
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 3.0001504E-5,
+            "user": 0.99997
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346596,
+            "yes": 0.0065340707
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 7,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.9999999,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855278,
+            "yes": 0.014472075
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 4.0001796E-5,
+            "user": 0.9999599
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999994,
+            "yes": 0.49999994
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934659,
+            "yes": 0.0065340037
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.9999999
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 8,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855181,
+            "yes": 0.014481932
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 5.0002003E-5,
+            "user": 0.99995005
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934661,
+            "yes": 0.006533939
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 9,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855082,
+            "yes": 0.014491786
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 6.0002112E-5,
+            "user": 0.99994004
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346614,
+            "yes": 0.0065338733
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    }
+  ],
+  [
+    {
+      "time step": 0,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.5,
+            "user": 0.5
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 1,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.77585,
+            "yes": 0.22414994
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9310355,
+            "yes": 0.068964444
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 2,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9366163,
+            "yes": 0.063383624
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9740968,
+            "yes": 0.025903152
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.9996999,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 3,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855673,
+            "yes": 0.014432659
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346566,
+            "yes": 0.0065342686
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.014428329,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Exit"
+    },
+    {
+      "time step": 4,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98555744,
+            "yes": 0.014442513
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 1.00006E-5,
+            "user": 0.99999
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934658,
+            "yes": 0.0065342025
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 5,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98554766,
+            "yes": 0.014452367
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 2.0001102E-5,
+            "user": 0.99998
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346584,
+            "yes": 0.006534137
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 6,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855378,
+            "yes": 0.014462221
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 3.0001504E-5,
+            "user": 0.99997
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346596,
+            "yes": 0.0065340707
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 7,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.9999999,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855278,
+            "yes": 0.014472075
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 4.0001796E-5,
+            "user": 0.9999599
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999994,
+            "yes": 0.49999994
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934659,
+            "yes": 0.0065340037
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.9999999
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 8,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855181,
+            "yes": 0.014481932
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 5.0002003E-5,
+            "user": 0.99995005
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934661,
+            "yes": 0.006533939
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 9,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855082,
+            "yes": 0.014491786
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 6.0002112E-5,
+            "user": 0.99994004
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346614,
+            "yes": 0.0065338733
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    }
+  ],
+  [
+    {
+      "time step": 0,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.5,
+            "user": 0.5
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 1,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.77585,
+            "yes": 0.22414994
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9310355,
+            "yes": 0.068964444
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 2,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9366163,
+            "yes": 0.063383624
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9740968,
+            "yes": 0.025903152
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.9996999,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 3,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855673,
+            "yes": 0.014432659
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346566,
+            "yes": 0.0065342686
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.014428329,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Exit"
+    },
+    {
+      "time step": 4,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98555744,
+            "yes": 0.014442513
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 1.00006E-5,
+            "user": 0.99999
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934658,
+            "yes": 0.0065342025
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 5,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98554766,
+            "yes": 0.014452367
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 2.0001102E-5,
+            "user": 0.99998
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346584,
+            "yes": 0.006534137
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 6,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855378,
+            "yes": 0.014462221
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 3.0001504E-5,
+            "user": 0.99997
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346596,
+            "yes": 0.0065340707
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 7,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.9999999,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855278,
+            "yes": 0.014472075
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 4.0001796E-5,
+            "user": 0.9999599
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999994,
+            "yes": 0.49999994
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934659,
+            "yes": 0.0065340037
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.9999999
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 8,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855181,
+            "yes": 0.014481932
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 5.0002003E-5,
+            "user": 0.99995005
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934661,
+            "yes": 0.006533939
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 9,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855082,
+            "yes": 0.014491786
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 6.0002112E-5,
+            "user": 0.99994004
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346614,
+            "yes": 0.0065338733
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    }
+  ],
+  [
+    {
+      "time step": 0,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.5,
+            "user": 0.5
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 1,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.77585,
+            "yes": 0.22414994
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9310355,
+            "yes": 0.068964444
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 2,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9366163,
+            "yes": 0.063383624
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9740968,
+            "yes": 0.025903152
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.9996999,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 3,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855673,
+            "yes": 0.014432659
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346566,
+            "yes": 0.0065342686
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.014428329,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Exit"
+    },
+    {
+      "time step": 4,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98555744,
+            "yes": 0.014442513
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 1.00006E-5,
+            "user": 0.99999
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934658,
+            "yes": 0.0065342025
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 5,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98554766,
+            "yes": 0.014452367
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 2.0001102E-5,
+            "user": 0.99998
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346584,
+            "yes": 0.006534137
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 6,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855378,
+            "yes": 0.014462221
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 3.0001504E-5,
+            "user": 0.99997
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346596,
+            "yes": 0.0065340707
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 7,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.9999999,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855278,
+            "yes": 0.014472075
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 4.0001796E-5,
+            "user": 0.9999599
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999994,
+            "yes": 0.49999994
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934659,
+            "yes": 0.0065340037
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.9999999
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 8,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855181,
+            "yes": 0.014481932
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 5.0002003E-5,
+            "user": 0.99995005
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934661,
+            "yes": 0.006533939
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 9,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855082,
+            "yes": 0.014491786
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 6.0002112E-5,
+            "user": 0.99994004
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346614,
+            "yes": 0.0065338733
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    }
+  ],
+  [
+    {
+      "time step": 0,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.5,
+            "user": 0.5
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 1,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.77585,
+            "yes": 0.22414994
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9310355,
+            "yes": 0.068964444
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.99969995,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 2,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9366163,
+            "yes": 0.063383624
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9740968,
+            "yes": 0.025903152
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.9996999,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "FileRecon"
+    },
+    {
+      "time step": 3,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.99999994,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855673,
+            "yes": 0.014432659
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999997,
+            "yes": 0.49999997
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346566,
+            "yes": 0.0065342686
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.99999994
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 0.99999994
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.99999994,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": -0.014428329,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.0,
+            "yes": 1.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Exit"
+    },
+    {
+      "time step": 4,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98555744,
+            "yes": 0.014442513
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 1.00006E-5,
+            "user": 0.99999
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934658,
+            "yes": 0.0065342025
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 5,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.98554766,
+            "yes": 0.014452367
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 2.0001102E-5,
+            "user": 0.99998
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346584,
+            "yes": 0.006534137
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 6,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855378,
+            "yes": 0.014462221
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 3.0001504E-5,
+            "user": 0.99997
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346596,
+            "yes": 0.0065340707
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 7,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.9999999,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855278,
+            "yes": 0.014472075
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 4.0001796E-5,
+            "user": 0.9999599
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.49999994,
+            "yes": 0.49999994
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934659,
+            "yes": 0.0065340037
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 0.9999999
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 0.9999999,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 8,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855181,
+            "yes": 0.014481932
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 5.0002003E-5,
+            "user": 0.99995005
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.9934661,
+            "yes": 0.006533939
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    },
+    {
+      "time step": 9,
+      "iBel": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 1.0,
+            "honeypot": 0.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 0.9855082,
+            "yes": 0.014491786
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 6.0002112E-5,
+            "user": 0.99994004
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 0.5,
+            "yes": 0.5
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 0.99346614,
+            "yes": 0.0065338733
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iR": 0.0,
+      "iObs": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated"
+      },
+      "state": {
+        "HostType": {
+          "HostType": {
+            "critical": 0.0,
+            "critical_honeypot": 0.0,
+            "honeypot": 1.0
+          }
+        },
+        "HostHasData": {
+          "HostHasData": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataPrivs": {
+          "DataPrivs": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "EscAccounts": {
+          "EscAccounts": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccFound": {
+          "AccFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataFound": {
+          "DataFound": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "AccessLevel": {
+          "AccessLevel": {
+            "root": 0.0,
+            "user": 1.0
+          }
+        },
+        "AttActive": {
+          "AttActive": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        },
+        "DataInjected": {
+          "DataInjected": {
+            "no": 1.0,
+            "yes": 0.0
+          }
+        }
+      },
+      "iAct": "Nop"
+    }
+  ]
+]
