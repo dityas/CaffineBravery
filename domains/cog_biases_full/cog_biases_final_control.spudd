@@ -246,7 +246,12 @@
 (defdd defActionsDataPrivs
     (DefActions
         (LockAccounts       (SAME DataPrivs))
-        (RestrictAccPrivs   (DataPrivs' root))
+        (RestrictAccPrivs   
+            (DataPrivs
+                (root   (DataPrivs' root))
+                (user   (DataPrivs' UNIFORM))
+            )
+        )
         (DeployData         (SAME DataPrivs))
         (DecoyAccount       (SAME DataPrivs))
         (Nop                (SAME DataPrivs))
@@ -340,15 +345,12 @@
 
 (defdbn attackerExitDBN
     (HostType       (SAME HostType))
-    (HostHasData    (# (DefActions) 
-        (distDefActions * defActionsHostHasData)))
-    (DataFound      (SAME DataFound))
-    (DataPrivs      (# (DefActions) 
-        (distDefActions * defActionsDataPrivs)))
-    (EscAccounts    (# (DefActions) 
-        (distDefActions * defActionsEscAccounts)))
-    (AccFound       (SAME AccFound))
-    (AccessLevel    (SAME AccessLevel))
+    (HostHasData    (HostHasData' no))
+    (DataFound      (DataFound' no))
+    (DataPrivs      (DataPrivs' root))
+    (EscAccounts    (EscAccounts' no))
+    (AccFound       (AccFound' no))
+    (AccessLevel    (AccessLevel' user))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
 
@@ -656,7 +658,7 @@
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
     (AccFound       (attActionsAccFound))
-    (AccessLevel    (SAME AccessLevel))
+    (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
 
@@ -681,7 +683,12 @@
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
     (DataFound      (attActionsDataFound))
-    (DataPrivs      (DataPrivs' root))
+    (DataPrivs      
+        (DataPrivs
+            (root   (DataPrivs' root))
+            (user   (DataPrivs' UNIFORM))
+        )
+    )
     (EscAccounts    (SAME EscAccounts))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
@@ -1143,9 +1150,9 @@
     (HostType
         (critical
             (Attl2ModelsDefl1
-                (m0     (0.5))
+                (m0     (1.0))
                 (m1     (0.0))
-                (m2     (0.5))
+                (m2     (0.0))
                 (m3     (0.0))
             )      
         )
@@ -1153,9 +1160,9 @@
         (honeypot
             (Attl2ModelsDefl1
                 (m0     (0.0))
-                (m1     (0.5))
+                (m1     (1.0))
                 (m2     (0.0))
-                (m3     (0.5))
+                (m3     (0.0))
             )
         )
 
@@ -1266,7 +1273,7 @@
     (HostType           critical)
     * (HostHasData      yes)
     * (DataFound        no)
-    * (DataPrivs        user)
+    * (DataPrivs        root)
     * (EscAccounts      yes)
     * (AccFound         no)
     * (AccessLevel      user)
