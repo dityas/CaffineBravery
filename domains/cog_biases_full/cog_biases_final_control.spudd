@@ -225,14 +225,19 @@
 (defdd fileReconAuthObs
     (AttActive'
         (yes    
-            (AccessLevel'
-                (user
-                    (DataPrivs'
-                        (user   (AccessPerm' auth))
-                        (root   (AccessPerm' denied))
+            (DataFound'
+                (yes
+                    (AccessLevel'
+                        (user
+                            (DataPrivs'
+                                (user   (AccessPerm' auth))
+                                (root   (AccessPerm' denied))
+                            )
+                        )
+                        (root   (AccessPerm' auth))
                     )
                 )
-                (root   (AccessPerm' auth))
+                (no     (AccessLevel' UNIFORM))
             )
         )
 
@@ -337,7 +342,7 @@
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (hostObsDD))
-    (AccessPerm     (accessPermsObs))
+    (AccessPerm     (fileReconAuthObs))
     (ActionResult   (fileReconObs))
     (ConnStatus     (connStatusObs))
 )
@@ -357,23 +362,26 @@
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs' UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
+    (AccessPerm     (accessPermsObs))
     (ActionResult   (escAccountObs))
     (ConnStatus     (connStatusObs))
 )
 
 (defdbn attackerExitDBN
     (HostType       (SAME HostType))
-    (HostHasData    (HostHasData' no))
-    (DataFound      (DataFound' no))
-    (DataPrivs      (DataPrivs' root))
-    (EscAccounts    (EscAccounts' no))
-    (AccFound       (AccFound' no))
-    (AccessLevel    (AccessLevel' user))
+    (HostHasData    (# (DefActions) 
+        (distDefActions * defActionsHostHasData)))
+    (DataFound      (SAME DataFound))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
+    (EscAccounts    (# (DefActions) 
+        (distDefActions * defActionsEscAccounts)))
+    (AccFound       (SAME AccFound))
+    (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (HostObs' UNIFORM))
+    (HostObs        (HostObs'       UNIFORM))
     (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
     (ConnStatus     (connStatusObs))
@@ -393,7 +401,7 @@
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (HostObs' UNIFORM))
+    (HostObs        (HostObs'       UNIFORM))
     (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
     (ConnStatus     (connStatusObs))
@@ -414,7 +422,7 @@
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (HostObs' UNIFORM))
+    (HostObs        (HostObs'       UNIFORM))
     (AccessPerm     (accessPermsObs))
     (ActionResult   (ActionResult'  UNIFORM))
     (ConnStatus     (connStatusObs))
@@ -746,14 +754,24 @@
 (defdd stateReward
     (HostType
         (critical
-            (DataInjected
-                (yes    (-100.0))
-                (no
-                    (AttActive
-                        (yes    (0.0))
-                        (no     (2.0))
+            (AttActive
+                (yes    
+                    (DataInjected
+                        (yes    (-100.0))
+                        (no
+                            (AttActions
+                                (FileRecon      (0.0))
+                                (EnumAccounts   (0.0))
+                                (PrivEscAcc     (0.0))
+                                (Nop            (0.0))
+                                (Exit           (100.0))
+                                (ManipulateData (0.0))
+                            )
+                        )
                     )
                 )
+
+                (no     (0.0))
             )
         )
         (honeypot   
@@ -762,30 +780,6 @@
                 (no     (0.0))
             )
         )
-        (critical_honeypot  (0.0))
-    )
-)
-
-(defdd multiAgentReward
-    (HostType
-        (critical
-            (AttActions
-                (FileRecon      (0.0))
-                (EnumAccounts   (0.0))
-                (PrivEscAcc     (0.0))
-                (Nop            (0.0))
-                (Exit           (0.0))
-                (ManipulateData (-10.0))
-            )
-        )
-
-        (honeypot
-            (AttActive
-                (yes    (2.0))
-                (no     (0.0))
-            )
-        )
-
         (critical_honeypot  (0.0))
     )
 )
@@ -1018,7 +1012,7 @@
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (hostObsDD))
-    (AccessPerm     (accessPermsObs))
+    (AccessPerm     (fileReconAuthObs))
     (ActionResult   (fileReconObs))
     (ConnStatus     (connStatusObs))
     (DefenseObs     (defenseObs))
@@ -1036,7 +1030,7 @@
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
+    (AccessPerm     (accessPermsObs))
     (ActionResult   (escAccountObs))
     (ConnStatus     (connStatusObs))
     (DefenseObs     (defenseObs))
