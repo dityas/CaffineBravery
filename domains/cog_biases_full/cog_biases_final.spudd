@@ -1253,53 +1253,53 @@
 
 -- defender L3 model
 
---(initmodelvar Defl3ModelsAttl2
---    (frames AttackerFrame)
---    (
---        (att    (m0     (initAttl2)))
---    )
---)
---
---
---(defipomdp defl3
---    (S
---        (HostType HostHasData DataFound DataPrivs EscAccounts 
---        AccFound AccessLevel AttActive DataInjected)
---    )
---
---    (O
---        (EndPtAlerts)
---    )
---
---    (A  DefActions)
---    (Aj AttActions)
---
---    (Mj Defl3ModelsAttl2)
---    (EC Defl3ModelsAttl2EC)
---
---    (Thetaj AttackerFrame
---        (att    attl2)
---    )
---
---    (dynamics
---        (LockAccounts       (actionLockAccounts))
---        (RestrictAccPrivs   (actionRestrictAccPrivs))
---        (Nop                (actionNop))
---        (DeployData         (actionDeployData))
---        (DecoyAccount       (actionDecoyAccount))
---    )
---    
---    (R
---        (LockAccounts       (stateReward - 1.0))
---        (RestrictAccPrivs   (stateReward - 1.0))
---        (Nop                (stateReward - 0.5))
---        (DeployData         (stateReward - 1.0))
---        (DecoyAccount       (stateReward - 1.0))
---    )
---
---    (discount 0.95)
---    (H 10)
---)
+(initmodelvar Defl3ModelsAttl2
+    (frames AttackerFrame)
+    (
+        (att    (m0     (initAttl2)))
+    )
+)
+
+
+(defipomdp defl3
+    (S
+        (HostType HostHasData DataFound DataPrivs EscAccounts 
+        AccFound AccessLevel AttActive DataInjected)
+    )
+
+    (O
+        (EndPtAlerts)
+    )
+
+    (A  DefActions)
+    (Aj AttActions)
+
+    (Mj Defl3ModelsAttl2)
+    (EC Defl3ModelsAttl2EC)
+
+    (Thetaj AttackerFrame
+        (att    attl2)
+    )
+
+    (dynamics
+        (LockAccounts       (actionLockAccounts))
+        (RestrictAccPrivs   (actionRestrictAccPrivs))
+        (Nop                (actionNop))
+        (DeployData         (actionDeployData))
+        (DecoyAccount       (actionDecoyAccount))
+    )
+    
+    (R
+        (LockAccounts       (stateReward - 1.0))
+        (RestrictAccPrivs   (stateReward - 1.0))
+        (Nop                (stateReward - 0.5))
+        (DeployData         (stateReward - 1.0))
+        (DecoyAccount       (stateReward - 1.0))
+    )
+
+    (discount 0.95)
+    (H 10)
+)
 
 (defdd initDefl3
     (HostType           honeypot)

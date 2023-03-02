@@ -1,0 +1,294 @@
+{
+  "nodes": {
+    "0": {
+      "alpha": 0,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "1": {
+      "alpha": 1,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "2": {
+      "alpha": 2,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "3": {
+      "alpha": 3,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "4": {
+      "alpha": 4,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "6": {
+      "alpha": 6,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "8": {
+      "alpha": 8,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "9": {
+      "alpha": 9,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "10": {
+      "alpha": 10,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "11": {
+      "alpha": 11,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "12": {
+      "alpha": 12,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "14": {
+      "alpha": 14,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "15": {
+      "alpha": 15,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "16": {
+      "alpha": 16,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "18": {
+      "alpha": 18,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "19": {
+      "alpha": 19,
+      "actId": 4,
+      "act": "RestrictAccPrivs",
+      "start": true
+    },
+    "21": {
+      "alpha": 21,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "26": {
+      "alpha": 26,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "27": {
+      "alpha": 27,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "28": {
+      "alpha": 28,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "29": {
+      "alpha": 29,
+      "actId": 4,
+      "act": "RestrictAccPrivs",
+      "start": true
+    },
+    "31": {
+      "alpha": 31,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "33": {
+      "alpha": 33,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "34": {
+      "alpha": 34,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "35": {
+      "alpha": 35,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "37": {
+      "alpha": 37,
+      "actId": 3,
+      "act": "Nop"
+    }
+  },
+  "edges": {
+    "0": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "1": {
+      "[(EndPtAlerts, file_enum)]": "6",
+      "[(EndPtAlerts, file_write)]": "27",
+      "[(EndPtAlerts, login_activity)]": "26",
+      "[(EndPtAlerts, none)]": "27"
+    },
+    "2": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "0",
+      "[(EndPtAlerts, login_activity)]": "0",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "3": {
+      "[(EndPtAlerts, file_enum)]": "0",
+      "[(EndPtAlerts, file_write)]": "0",
+      "[(EndPtAlerts, login_activity)]": "0",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "4": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "6": {
+      "[(EndPtAlerts, file_enum)]": "16",
+      "[(EndPtAlerts, file_write)]": "16",
+      "[(EndPtAlerts, login_activity)]": "18",
+      "[(EndPtAlerts, none)]": "21"
+    },
+    "8": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "0",
+      "[(EndPtAlerts, login_activity)]": "2",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "9": {
+      "[(EndPtAlerts, file_enum)]": "28",
+      "[(EndPtAlerts, file_write)]": "1",
+      "[(EndPtAlerts, login_activity)]": "28",
+      "[(EndPtAlerts, none)]": "28"
+    },
+    "10": {
+      "[(EndPtAlerts, file_enum)]": "2",
+      "[(EndPtAlerts, file_write)]": "2",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "11": {
+      "[(EndPtAlerts, file_enum)]": "35",
+      "[(EndPtAlerts, file_write)]": "31",
+      "[(EndPtAlerts, login_activity)]": "33",
+      "[(EndPtAlerts, none)]": "33"
+    },
+    "12": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "2",
+      "[(EndPtAlerts, login_activity)]": "4",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "14": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "0",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "15": {
+      "[(EndPtAlerts, file_enum)]": "2",
+      "[(EndPtAlerts, file_write)]": "2",
+      "[(EndPtAlerts, login_activity)]": "2",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "16": {
+      "[(EndPtAlerts, file_enum)]": "15",
+      "[(EndPtAlerts, file_write)]": "10",
+      "[(EndPtAlerts, login_activity)]": "34",
+      "[(EndPtAlerts, none)]": "2"
+    },
+    "18": {
+      "[(EndPtAlerts, file_enum)]": "15",
+      "[(EndPtAlerts, file_write)]": "15",
+      "[(EndPtAlerts, login_activity)]": "15",
+      "[(EndPtAlerts, none)]": "15"
+    },
+    "19": {
+      "[(EndPtAlerts, file_enum)]": "11",
+      "[(EndPtAlerts, file_write)]": "11",
+      "[(EndPtAlerts, login_activity)]": "11",
+      "[(EndPtAlerts, none)]": "11"
+    },
+    "21": {
+      "[(EndPtAlerts, file_enum)]": "15",
+      "[(EndPtAlerts, file_write)]": "10",
+      "[(EndPtAlerts, login_activity)]": "34",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "26": {
+      "[(EndPtAlerts, file_enum)]": "0",
+      "[(EndPtAlerts, file_write)]": "0",
+      "[(EndPtAlerts, login_activity)]": "21",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "27": {
+      "[(EndPtAlerts, file_enum)]": "0",
+      "[(EndPtAlerts, file_write)]": "16",
+      "[(EndPtAlerts, login_activity)]": "18",
+      "[(EndPtAlerts, none)]": "21"
+    },
+    "28": {
+      "[(EndPtAlerts, file_enum)]": "26",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "29": {
+      "[(EndPtAlerts, file_enum)]": "9",
+      "[(EndPtAlerts, file_write)]": "9",
+      "[(EndPtAlerts, login_activity)]": "9",
+      "[(EndPtAlerts, none)]": "9"
+    },
+    "31": {
+      "[(EndPtAlerts, file_enum)]": "12",
+      "[(EndPtAlerts, file_write)]": "12",
+      "[(EndPtAlerts, login_activity)]": "37",
+      "[(EndPtAlerts, none)]": "12"
+    },
+    "33": {
+      "[(EndPtAlerts, file_enum)]": "8",
+      "[(EndPtAlerts, file_write)]": "12",
+      "[(EndPtAlerts, login_activity)]": "4",
+      "[(EndPtAlerts, none)]": "12"
+    },
+    "34": {
+      "[(EndPtAlerts, file_enum)]": "2",
+      "[(EndPtAlerts, file_write)]": "2",
+      "[(EndPtAlerts, login_activity)]": "2",
+      "[(EndPtAlerts, none)]": "0"
+    },
+    "35": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "14",
+      "[(EndPtAlerts, login_activity)]": "4",
+      "[(EndPtAlerts, none)]": "14"
+    },
+    "37": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "2",
+      "[(EndPtAlerts, login_activity)]": "4",
+      "[(EndPtAlerts, none)]": "3"
+    }
+  }
+}
