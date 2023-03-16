@@ -3,23 +3,12 @@
     "3": {
       "alpha": 3,
       "actId": 3,
-      "act": "Nop"
-    },
-    "4": {
-      "alpha": 4,
-      "actId": 4,
-      "act": "RestrictAccPrivs",
+      "act": "Nop",
       "start": true
     }
   },
   "edges": {
     "3": {
-      "[(EndPtAlerts, file_enum)]": "3",
-      "[(EndPtAlerts, file_write)]": "3",
-      "[(EndPtAlerts, login_activity)]": "3",
-      "[(EndPtAlerts, none)]": "3"
-    },
-    "4": {
       "[(EndPtAlerts, file_enum)]": "3",
       "[(EndPtAlerts, file_write)]": "3",
       "[(EndPtAlerts, login_activity)]": "3",

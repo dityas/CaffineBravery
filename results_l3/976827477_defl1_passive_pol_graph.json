@@ -1,0 +1,29 @@
+{
+  "nodes": {
+    "1": {
+      "alpha": 1,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "2": {
+      "alpha": 2,
+      "actId": 4,
+      "act": "RestrictAccPrivs",
+      "start": true
+    }
+  },
+  "edges": {
+    "1": {
+      "[(EndPtAlerts, file_enum)]": "1",
+      "[(EndPtAlerts, file_write)]": "1",
+      "[(EndPtAlerts, login_activity)]": "1",
+      "[(EndPtAlerts, none)]": "1"
+    },
+    "2": {
+      "[(EndPtAlerts, file_enum)]": "1",
+      "[(EndPtAlerts, file_write)]": "1",
+      "[(EndPtAlerts, login_activity)]": "1",
+      "[(EndPtAlerts, none)]": "1"
+    }
+  }
+}

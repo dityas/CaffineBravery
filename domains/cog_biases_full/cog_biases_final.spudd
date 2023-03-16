@@ -462,27 +462,27 @@
     )
 )
 
+(defdd defenceActionCost
+    (DefActions
+        (LockAccounts       (0.0))
+        (DeployData         (100.0))
+        (DecoyAccount       (0.0))
+        (RestrictAccPrivs   (0.0))
+        (Nop                (0.0))
+    )
+)
+
+(defdd defenceActionSumout
+    (# (DefActions) (distDefActions * defenceActionCost))
+)
 
 (defdd exitReward
     (AttActive
         (yes
             (HostType
                 (critical   (successCondition))
-
                 (honeypot   (0.0))
-
-                (critical_honeypot
-                    (HostHasData
-                        (yes
-                            (DataInjected
-                                (yes    (30.0))
-                                (no     (-1.0))
-                            )
-                        )
-
-                        (no     (0.0))
-                    )
-                )
+                (critical_honeypot  (successCondition))
             )
         )
 
@@ -506,7 +506,7 @@
 
 (defdd nopCost
     (AttActive
-        (yes    -(1.0))
+        (yes    (-0.9))
         (no     (0.0))
     )
 )
@@ -534,10 +534,10 @@
     )
     
     (R
-        (FileRecon          (-1.0))
-        (EnumAccounts       (-1.0))
-        (PrivEscAcc         (-1.0))
-        (ManipulateData     (-2.0))
+        (FileRecon          (-1.0 - defenceActionSumout))
+        (EnumAccounts       (-1.0 - defenceActionSumout))
+        (PrivEscAcc         (-1.0 - defenceActionSumout))
+        (ManipulateData     (-2.0 - defenceActionSumout))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -581,6 +581,25 @@
     * (AttActive        yes)
     * (DataInjected     no)
 )
+
+(defdd attCertain
+    (HostType           critical_honeypot)
+    * (HostHasData      
+        (yes    (0.9))
+        (no     (0.1))
+    )
+    * (DataFound        no)
+    * (DataPrivs        UNIFORM)
+    * (EscAccounts      
+        (yes    (0.9))
+        (no     (0.1))
+    )
+    * (AccFound         no)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+)
+
 ---------------------------------------------------------------
 -- Defender l1 models
 
@@ -799,7 +818,7 @@
         )
         (honeypot   
             (AttActive
-                (yes    (2.0))
+                (yes    (5.0))
                 (no     (0.0))
             )
         )
@@ -1195,10 +1214,10 @@
     )
 
     (R
-        (FileRecon          (-1.0))
-        (EnumAccounts       (-1.0))
-        (PrivEscAcc         (-1.0))
-        (ManipulateData     (-2.0))
+        (FileRecon          (-1.0 - defenceActionCost))
+        (EnumAccounts       (-1.0 - defenceActionCost))
+        (PrivEscAcc         (-1.0 - defenceActionCost))
+        (ManipulateData     (-2.0 - defenceActionCost))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -1251,68 +1270,68 @@
 )
 
 
----- defender L3 model
---
---(initmodelvar Defl3ModelsAttl2
---    (frames AttackerFrame)
---    (
---        (att    (m0     (initAttl2)))
---    )
---)
---
---
---(defipomdp defl3
---    (S
---        (HostType HostHasData DataFound DataPrivs EscAccounts 
---        AccFound AccessLevel AttActive DataInjected)
---    )
---
---    (O
---        (EndPtAlerts)
---    )
---
---    (A  DefActions)
---    (Aj AttActions)
---
---    (Mj Defl3ModelsAttl2)
---    (EC Defl3ModelsAttl2EC)
---
---    (Thetaj AttackerFrame
---        (att    attl2)
---    )
---
---    (dynamics
---        (LockAccounts       (actionLockAccounts))
---        (RestrictAccPrivs   (actionRestrictAccPrivs))
---        (Nop                (actionNop))
---        (DeployData         (actionDeployData))
---        (DecoyAccount       (actionDecoyAccount))
---    )
---    
---    (R
---        (LockAccounts       (stateReward - 1.0))
---        (RestrictAccPrivs   (stateReward - 1.0))
---        (Nop                (stateReward - 0.5))
---        (DeployData         (stateReward - 1.0))
---        (DecoyAccount       (stateReward - 1.0))
---    )
---
---    (discount 0.95)
---    (H 10)
---)
---
---(defdd initDefl3
---    (HostType           honeypot)
---    * (EscAccounts      no)
---    * (AccFound         no)
---    * (HostHasData      no)
---    * (DataFound        no)
---    * (DataPrivs        user)
---    * (AccessLevel      user)
---    * (AttActive        yes)
---    * (DataInjected     no)
---    * (Defl3ModelsAttl2 m0)
---)
+-- defender L3 model
+
+(initmodelvar Defl3ModelsAttl2
+    (frames AttackerFrame)
+    (
+        (att    (m0     (initAttl2)))
+    )
+)
+
+
+(defipomdp defl3
+    (S
+        (HostType HostHasData DataFound DataPrivs EscAccounts 
+        AccFound AccessLevel AttActive DataInjected)
+    )
+
+    (O
+        (EndPtAlerts)
+    )
+
+    (A  DefActions)
+    (Aj AttActions)
+
+    (Mj Defl3ModelsAttl2)
+    (EC Defl3ModelsAttl2EC)
+
+    (Thetaj AttackerFrame
+        (att    attl2)
+    )
+
+    (dynamics
+        (LockAccounts       (actionLockAccounts))
+        (RestrictAccPrivs   (actionRestrictAccPrivs))
+        (Nop                (actionNop))
+        (DeployData         (actionDeployData))
+        (DecoyAccount       (actionDecoyAccount))
+    )
+    
+    (R
+        (LockAccounts       (stateReward - 1.0))
+        (RestrictAccPrivs   (stateReward - 1.0))
+        (Nop                (stateReward - 0.5))
+        (DeployData         (stateReward - 1.0))
+        (DecoyAccount       (stateReward - 1.0))
+    )
+
+    (discount 0.95)
+    (H 10)
+)
+
+(defdd initDefl3
+    (HostType           honeypot)
+    * (EscAccounts      no)
+    * (AccFound         no)
+    * (HostHasData      no)
+    * (DataFound        no)
+    * (DataPrivs        user)
+    * (AccessLevel      user)
+    * (AttActive        yes)
+    * (DataInjected     no)
+    * (Defl3ModelsAttl2 m0)
+)
 
 (defdd initState
     (HostType           honeypot)
