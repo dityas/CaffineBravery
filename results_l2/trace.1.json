@@ -15,8 +15,8 @@
         "user": 1.0
       },
       "EscAccounts": {
-        "no": 1.0,
-        "yes": 0.0
+        "no": 0.0,
+        "yes": 1.0
       },
       "AccFound": {
         "no": 1.0,
@@ -79,19 +79,32 @@
       },
       "Attl2ModelsDefl1EC": {
         "ec0": 0.0,
-        "ec1": 0.0,
+        "ec1": 0.25,
         "ec10": 0.0,
-        "ec11": 0.0,
-        "ec12": 0.0,
-        "ec13": 0.5,
-        "ec2": 0.25,
+        "ec11": 0.5,
+        "ec2": 0.0,
         "ec3": 0.0,
         "ec4": 0.0,
         "ec5": 0.0,
         "ec6": 0.0,
         "ec7": 0.0,
-        "ec8": 0.0,
-        "ec9": 0.25
+        "ec8": 0.25,
+        "ec9": 0.0
+      },
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.5,
+          "lowCap": 0.5
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.25,
+          "DeployData": 0.0,
+          "LockAccounts": 0.0,
+          "Nop": 0.0,
+          "RestrictAccPrivs": 0.75
+        }
       },
       "action": "EnumAccounts",
       "observation": {
@@ -99,7 +112,7 @@
         "HostObs\u0027": "none",
         "ActionResult\u0027": "failure",
         "ConnStatus\u0027": "active",
-        "DefenseObs\u0027": "none"
+        "DefenseObs\u0027": "perms_change"
       }
     },
     "agent_j": {
@@ -146,174 +159,29 @@
         "ec10": 0.0,
         "ec2": 0.0,
         "ec3": 0.0,
-        "ec4": 0.0,
+        "ec4": 1.0,
         "ec5": 0.0,
         "ec6": 0.0,
         "ec7": 0.0,
-        "ec8": 1.0,
+        "ec8": 0.0,
         "ec9": 0.0
+      },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 1.0
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0,
+          "Exit": 0.0,
+          "FileRecon": 1.0,
+          "ManipulateData": 0.0,
+          "Nop": 0.0,
+          "PrivEscAcc": 0.0
+        }
       },
       "action": "DecoyAccount",
-      "observation": {
-        "EndPtAlerts\u0027": "file_enum"
-      }
-    }
-  },
-  {
-    "state": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 0.0,
-        "honeypot": 1.0
-      },
-      "HostHasData": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "DataPrivs": {
-        "root": 0.0,
-        "user": 1.0
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccFound": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "DataFound": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "AccessLevel": {
-        "root": 0.0,
-        "user": 1.0
-      },
-      "AttActive": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataInjected": {
-        "no": 1.0,
-        "yes": 0.0
-      }
-    },
-    "agent_i": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 1.0,
-        "honeypot": 0.0
-      },
-      "HostHasData": {
-        "no": 0.5,
-        "yes": 0.5
-      },
-      "DataPrivs": {
-        "root": 0.57142854,
-        "user": 0.42857143
-      },
-      "EscAccounts": {
-        "no": 0.11083743,
-        "yes": 0.88916254
-      },
-      "AccFound": {
-        "no": 0.93103445,
-        "yes": 0.06896552
-      },
-      "DataFound": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "AccessLevel": {
-        "root": 0.0,
-        "user": 1.0
-      },
-      "AttActive": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataInjected": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "Attl2ModelsDefl1EC": {
-        "ec0": 0.0,
-        "ec1": 0.04761904,
-        "ec10": 0.0,
-        "ec11": 0.0,
-        "ec12": 0.09523808,
-        "ec13": 0.0,
-        "ec2": 0.0,
-        "ec3": 0.0,
-        "ec4": 0.0,
-        "ec5": 0.0,
-        "ec6": 0.85714287,
-        "ec7": 0.0,
-        "ec8": 0.0,
-        "ec9": 0.0
-      },
-      "action": "EnumAccounts",
-      "observation": {
-        "AccessPerm\u0027": "denied",
-        "HostObs\u0027": "none",
-        "ActionResult\u0027": "success",
-        "ConnStatus\u0027": "active",
-        "DefenseObs\u0027": "none"
-      }
-    },
-    "agent_j": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 0.0,
-        "honeypot": 0.99999994
-      },
-      "HostHasData": {
-        "no": 0.99999994,
-        "yes": 0.0
-      },
-      "DataPrivs": {
-        "root": 0.0,
-        "user": 0.99999994
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 0.99999994
-      },
-      "AccFound": {
-        "no": 0.99999994,
-        "yes": 0.0
-      },
-      "DataFound": {
-        "no": 0.99999994,
-        "yes": 0.0
-      },
-      "AccessLevel": {
-        "root": 0.0,
-        "user": 0.99999994
-      },
-      "AttActive": {
-        "no": 0.0,
-        "yes": 0.99999994
-      },
-      "DataInjected": {
-        "no": 0.99999994,
-        "yes": 0.0
-      },
-      "Defl1ModelsAttl0EC": {
-        "ec0": 0.0,
-        "ec1": 0.0,
-        "ec10": 0.0,
-        "ec2": 0.0,
-        "ec3": 0.9499999,
-        "ec4": 0.0,
-        "ec5": 0.0,
-        "ec6": 0.049999997,
-        "ec7": 0.0,
-        "ec8": 0.0,
-        "ec9": 0.0
-      },
-      "action": "Nop",
       "observation": {
         "EndPtAlerts\u0027": "file_enum"
       }
@@ -370,16 +238,16 @@
         "yes": 0.49999997
       },
       "DataPrivs": {
-        "root": 0.52672744,
-        "user": 0.47327244
+        "root": 0.99090904,
+        "user": 0.009090909
       },
       "EscAccounts": {
-        "no": 0.01629726,
-        "yes": 0.98370266
+        "no": 0.76175547,
+        "yes": 0.2382445
       },
       "AccFound": {
-        "no": 0.04041721,
-        "yes": 0.95958275
+        "no": 0.9310345,
+        "yes": 0.06896551
       },
       "DataFound": {
         "no": 0.99999994,
@@ -398,24 +266,37 @@
         "yes": 0.0
       },
       "Attl2ModelsDefl1EC": {
-        "ec0": 0.0,
+        "ec0": 0.3272727,
         "ec1": 0.0,
-        "ec10": 0.01781834,
+        "ec10": 0.6545454,
         "ec11": 0.0,
-        "ec12": 0.03563668,
-        "ec13": 0.0,
         "ec2": 0.0,
-        "ec3": 0.047327247,
+        "ec3": 0.018181818,
         "ec4": 0.0,
-        "ec5": 0.80456316,
+        "ec5": 0.0,
         "ec6": 0.0,
         "ec7": 0.0,
-        "ec8": 0.09465449,
+        "ec8": 0.0,
         "ec9": 0.0
       },
-      "action": "PrivEscAcc",
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.34545454,
+          "lowCap": 0.6545454
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 0.0,
+          "LockAccounts": 0.0,
+          "Nop": 0.99999994,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "EnumAccounts",
       "observation": {
-        "AccessPerm\u0027": "auth",
+        "AccessPerm\u0027": "denied",
         "HostObs\u0027": "none",
         "ActionResult\u0027": "success",
         "ConnStatus\u0027": "active",
@@ -426,46 +307,46 @@
       "HostType": {
         "critical": 0.0,
         "critical_honeypot": 0.0,
-        "honeypot": 1.0
+        "honeypot": 0.99999994
       },
       "HostHasData": {
-        "no": 1.0,
+        "no": 0.99999994,
         "yes": 0.0
       },
       "DataPrivs": {
         "root": 0.0,
-        "user": 1.0
+        "user": 0.99999994
       },
       "EscAccounts": {
         "no": 0.0,
-        "yes": 1.0
+        "yes": 0.99999994
       },
       "AccFound": {
-        "no": 0.20246916,
-        "yes": 0.7975309
+        "no": 0.99999994,
+        "yes": 0.0
       },
       "DataFound": {
-        "no": 1.0,
+        "no": 0.99999994,
         "yes": 0.0
       },
       "AccessLevel": {
         "root": 0.0,
-        "user": 1.0
+        "user": 0.99999994
       },
       "AttActive": {
         "no": 0.0,
-        "yes": 1.0
+        "yes": 0.99999994
       },
       "DataInjected": {
-        "no": 1.0,
+        "no": 0.99999994,
         "yes": 0.0
       },
       "Defl1ModelsAttl0EC": {
-        "ec0": 1.5432101E-6,
-        "ec1": 0.25919753,
-        "ec10": 0.7377161,
+        "ec0": 0.0,
+        "ec1": 0.9499999,
+        "ec10": 0.049999997,
         "ec2": 0.0,
-        "ec3": 0.0030848773,
+        "ec3": 0.0,
         "ec4": 0.0,
         "ec5": 0.0,
         "ec6": 0.0,
@@ -473,9 +354,24 @@
         "ec8": 0.0,
         "ec9": 0.0
       },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 0.99999994
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.9499999,
+          "Exit": 0.0,
+          "FileRecon": 0.0,
+          "ManipulateData": 0.049999997,
+          "Nop": 0.0,
+          "PrivEscAcc": 0.0
+        }
+      },
       "action": "Nop",
       "observation": {
-        "EndPtAlerts\u0027": "login_activity"
+        "EndPtAlerts\u0027": "file_enum"
       }
     }
   },
@@ -530,24 +426,24 @@
         "yes": 0.5
       },
       "DataPrivs": {
-        "root": 0.512844,
-        "user": 0.48715597
+        "root": 0.9740899,
+        "user": 0.025910065
       },
       "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
+        "no": 0.28907925,
+        "yes": 0.7109208
       },
       "AccFound": {
-        "no": 0.0,
-        "yes": 1.0
+        "no": 0.30192724,
+        "yes": 0.6980728
       },
       "DataFound": {
         "no": 1.0,
         "yes": 0.0
       },
       "AccessLevel": {
-        "root": 1.0,
-        "user": 0.0
+        "root": 0.0,
+        "user": 1.0
       },
       "AttActive": {
         "no": 0.0,
@@ -558,24 +454,37 @@
         "yes": 0.0
       },
       "Attl2ModelsDefl1EC": {
-        "ec0": 0.041408256,
+        "ec0": 0.0,
         "ec1": 0.0,
-        "ec10": 0.0,
-        "ec11": 0.9207248,
-        "ec12": 0.025688073,
-        "ec13": 0.0,
-        "ec2": 0.0,
+        "ec10": 0.6321199,
+        "ec11": 0.0,
+        "ec2": 0.31605995,
         "ec3": 0.0,
-        "ec4": 0.0048715593,
-        "ec5": 0.0,
+        "ec4": 0.04404711,
+        "ec5": 0.007773019,
         "ec6": 0.0,
-        "ec7": 0.007307339,
+        "ec7": 0.0,
         "ec8": 0.0,
         "ec9": 0.0
       },
-      "action": "Nop",
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.36788008,
+          "lowCap": 0.6321199
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 0.0,
+          "LockAccounts": 0.31605995,
+          "Nop": 0.68394005,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "PrivEscAcc",
       "observation": {
-        "AccessPerm\u0027": "denied",
+        "AccessPerm\u0027": "auth",
         "HostObs\u0027": "none",
         "ActionResult\u0027": "failure",
         "ConnStatus\u0027": "active",
@@ -601,41 +510,56 @@
         "yes": 1.0
       },
       "AccFound": {
-        "no": 0.040536992,
-        "yes": 0.959463
+        "no": 0.20246914,
+        "yes": 0.7975309
       },
       "DataFound": {
         "no": 1.0,
         "yes": 0.0
       },
       "AccessLevel": {
-        "root": 0.95304126,
-        "user": 0.046958774
+        "root": 0.0,
+        "user": 1.0
       },
       "AttActive": {
-        "no": 1.2053074E-7,
-        "yes": 0.9999999
+        "no": 0.0,
+        "yes": 1.0
       },
       "DataInjected": {
         "no": 1.0,
         "yes": 0.0
       },
       "Defl1ModelsAttl0EC": {
-        "ec0": 0.019232124,
-        "ec1": 0.026536018,
-        "ec10": 1.7829632E-4,
-        "ec2": 0.95304126,
+        "ec0": 1.5432101E-6,
+        "ec1": 0.0030848773,
+        "ec10": 0.0,
+        "ec2": 0.25919753,
         "ec3": 0.0,
         "ec4": 0.0,
-        "ec5": 1.2053074E-7,
+        "ec5": 0.0,
         "ec6": 0.0,
-        "ec7": 0.0,
+        "ec7": 0.7377161,
         "ec8": 0.0,
-        "ec9": 0.0010122171
+        "ec9": 0.0
       },
-      "action": "DeployData",
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 1.0
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0030848773,
+          "Exit": 1.5432101E-6,
+          "FileRecon": 0.25919753,
+          "ManipulateData": 0.0,
+          "Nop": 0.0,
+          "PrivEscAcc": 0.7377161
+        }
+      },
+      "action": "Nop",
       "observation": {
-        "EndPtAlerts\u0027": "none"
+        "EndPtAlerts\u0027": "login_activity"
       }
     }
   },
@@ -686,12 +610,12 @@
         "honeypot": 0.0
       },
       "HostHasData": {
-        "no": 0.03963761,
-        "yes": 0.9603624
+        "no": 0.49999997,
+        "yes": 0.49999997
       },
       "DataPrivs": {
-        "root": 0.512844,
-        "user": 0.48715594
+        "root": 0.94760203,
+        "user": 0.05239787
       },
       "EscAccounts": {
         "no": 0.0,
@@ -718,31 +642,117 @@
         "yes": 0.0
       },
       "Attl2ModelsDefl1EC": {
-        "ec0": 0.9733376,
+        "ec0": 0.0,
         "ec1": 0.0,
-        "ec10": 0.0,
-        "ec11": 9.7431184E-4,
-        "ec12": 0.02568807,
-        "ec13": 0.0,
+        "ec10": 0.8952042,
+        "ec11": 0.0,
         "ec2": 0.0,
         "ec3": 0.0,
         "ec4": 0.0,
         "ec5": 0.0,
-        "ec6": 0.0,
-        "ec7": 0.0,
+        "ec6": 0.0044538183,
+        "ec7": 0.002357904,
         "ec8": 0.0,
-        "ec9": 0.0
+        "ec9": 0.097984016
       },
-      "action": "FileRecon",
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.10479574,
+          "lowCap": 0.8952042
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 0.097984016,
+          "LockAccounts": 0.0,
+          "Nop": 0.9020159,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "Nop",
       "observation": {
         "AccessPerm\u0027": "auth",
-        "HostObs\u0027": "user_files",
-        "ActionResult\u0027": "success",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
         "ConnStatus\u0027": "active",
         "DefenseObs\u0027": "none"
       }
     },
     "agent_j": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 0.0,
+        "honeypot": 0.9999999
+      },
+      "HostHasData": {
+        "no": 0.9999999,
+        "yes": 0.0
+      },
+      "DataPrivs": {
+        "root": 0.0,
+        "user": 0.9999999
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 0.9999999
+      },
+      "AccFound": {
+        "no": 0.040536992,
+        "yes": 0.9594629
+      },
+      "DataFound": {
+        "no": 0.9999999,
+        "yes": 0.0
+      },
+      "AccessLevel": {
+        "root": 0.95304114,
+        "user": 0.046958774
+      },
+      "AttActive": {
+        "no": 1.2053073E-7,
+        "yes": 0.99999976
+      },
+      "DataInjected": {
+        "no": 0.9999999,
+        "yes": 0.0
+      },
+      "Defl1ModelsAttl0EC": {
+        "ec0": 0.019232124,
+        "ec1": 0.0,
+        "ec10": 0.0,
+        "ec2": 0.026536016,
+        "ec3": 1.2053073E-7,
+        "ec4": 0.0,
+        "ec5": 0.95304114,
+        "ec6": 0.0,
+        "ec7": 1.7829631E-4,
+        "ec8": 0.0,
+        "ec9": 0.001012217
+      },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 0.9999999
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0,
+          "Exit": 0.019232124,
+          "FileRecon": 0.9795771,
+          "ManipulateData": 0.001012217,
+          "Nop": 1.2053073E-7,
+          "PrivEscAcc": 1.7829631E-4
+        }
+      },
+      "action": "DeployData",
+      "observation": {
+        "EndPtAlerts\u0027": "none"
+      }
+    }
+  },
+  {
+    "state": {
       "HostType": {
         "critical": 0.0,
         "critical_honeypot": 0.0,
@@ -761,11 +771,126 @@
         "yes": 1.0
       },
       "AccFound": {
-        "no": 0.19390425,
-        "yes": 0.8060957
+        "no": 0.0,
+        "yes": 1.0
       },
       "DataFound": {
         "no": 1.0,
+        "yes": 0.0
+      },
+      "AccessLevel": {
+        "root": 1.0,
+        "user": 0.0
+      },
+      "AttActive": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataInjected": {
+        "no": 1.0,
+        "yes": 0.0
+      }
+    },
+    "agent_i": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 1.0,
+        "honeypot": 0.0
+      },
+      "HostHasData": {
+        "no": 0.45100802,
+        "yes": 0.54899204
+      },
+      "DataPrivs": {
+        "root": 0.94760215,
+        "user": 0.052397873
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "AccFound": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataFound": {
+        "no": 1.0,
+        "yes": 0.0
+      },
+      "AccessLevel": {
+        "root": 1.0,
+        "user": 0.0
+      },
+      "AttActive": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataInjected": {
+        "no": 1.0,
+        "yes": 0.0
+      },
+      "Attl2ModelsDefl1EC": {
+        "ec0": 0.0,
+        "ec1": 0.0,
+        "ec10": 0.8952043,
+        "ec11": 0.0,
+        "ec2": 0.0,
+        "ec3": 0.0,
+        "ec4": 0.0,
+        "ec5": 0.0,
+        "ec6": 0.10455996,
+        "ec7": 0.0,
+        "ec8": 0.0,
+        "ec9": 2.3579045E-4
+      },
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.10479575,
+          "lowCap": 0.8952043
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 2.3579045E-4,
+          "LockAccounts": 0.0,
+          "Nop": 0.99976426,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "FileRecon",
+      "observation": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "active",
+        "DefenseObs\u0027": "perms_change"
+      }
+    },
+    "agent_j": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 0.0,
+        "honeypot": 0.99999994
+      },
+      "HostHasData": {
+        "no": 0.0,
+        "yes": 0.99999994
+      },
+      "DataPrivs": {
+        "root": 0.0,
+        "user": 0.99999994
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 0.99999994
+      },
+      "AccFound": {
+        "no": 0.19390425,
+        "yes": 0.8060956
+      },
+      "DataFound": {
+        "no": 0.99999994,
         "yes": 0.0
       },
       "AccessLevel": {
@@ -774,24 +899,39 @@
       },
       "AttActive": {
         "no": 0.25001466,
-        "yes": 0.74998534
+        "yes": 0.7499853
       },
       "DataInjected": {
-        "no": 1.0,
+        "no": 0.99999994,
         "yes": 0.0
       },
       "Defl1ModelsAttl0EC": {
         "ec0": 0.020051323,
-        "ec1": 0.36439523,
+        "ec1": 0.0,
         "ec10": 0.0,
-        "ec2": 1.3265687E-4,
-        "ec3": 0.0,
-        "ec4": 0.036439154,
-        "ec5": 0.25001466,
-        "ec6": 0.0,
-        "ec7": 0.32795238,
-        "ec8": 0.0,
-        "ec9": 0.0010145942
+        "ec2": 0.3643952,
+        "ec3": 0.25001466,
+        "ec4": 0.0,
+        "ec5": 1.3265686E-4,
+        "ec6": 0.32795233,
+        "ec7": 0.0,
+        "ec8": 0.036439154,
+        "ec9": 0.0010145941
+      },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 0.99999994
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0,
+          "Exit": 0.020051323,
+          "FileRecon": 0.6924802,
+          "ManipulateData": 0.03745375,
+          "Nop": 0.25001466,
+          "PrivEscAcc": 0.0
+        }
       },
       "action": "Nop",
       "observation": {
@@ -846,12 +986,12 @@
         "honeypot": 0.0
       },
       "HostHasData": {
-        "no": 0.0027843432,
-        "yes": 0.9972157
+        "no": 0.68482184,
+        "yes": 0.31517816
       },
       "DataPrivs": {
-        "root": 0.50712496,
-        "user": 0.49287507
+        "root": 0.9683259,
+        "user": 0.031674054
       },
       "EscAccounts": {
         "no": 0.0,
@@ -862,8 +1002,8 @@
         "yes": 1.0
       },
       "DataFound": {
-        "no": 0.016479004,
-        "yes": 0.983521
+        "no": 0.8517651,
+        "yes": 0.14823487
       },
       "AccessLevel": {
         "root": 1.0,
@@ -878,25 +1018,38 @@
         "yes": 0.0
       },
       "Attl2ModelsDefl1EC": {
-        "ec0": 0.98575014,
+        "ec0": 0.0,
         "ec1": 0.0,
-        "ec10": 0.0,
+        "ec10": 0.9366519,
         "ec11": 0.0,
-        "ec12": 0.014249909,
-        "ec13": 0.0,
         "ec2": 0.0,
         "ec3": 0.0,
         "ec4": 0.0,
         "ec5": 0.0,
-        "ec6": 0.0,
+        "ec6": 0.06334811,
         "ec7": 0.0,
         "ec8": 0.0,
         "ec9": 0.0
       },
-      "action": "ManipulateData",
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.06334811,
+          "lowCap": 0.9366519
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 0.0,
+          "LockAccounts": 0.0,
+          "Nop": 1.0,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "FileRecon",
       "observation": {
         "AccessPerm\u0027": "auth",
-        "HostObs\u0027": "user_files",
+        "HostObs\u0027": "none",
         "ActionResult\u0027": "success",
         "ConnStatus\u0027": "active",
         "DefenseObs\u0027": "none"
@@ -906,52 +1059,255 @@
       "HostType": {
         "critical": 0.0,
         "critical_honeypot": 0.0,
-        "honeypot": 1.0000001
+        "honeypot": 1.0
       },
       "HostHasData": {
         "no": 0.0,
-        "yes": 1.0000001
+        "yes": 1.0
       },
       "DataPrivs": {
         "root": 0.0,
-        "user": 1.0000001
+        "user": 1.0
       },
       "EscAccounts": {
         "no": 0.0,
-        "yes": 1.0000001
+        "yes": 1.0
       },
       "AccFound": {
-        "no": 0.016056975,
-        "yes": 0.9839431
+        "no": 0.01605698,
+        "yes": 0.983943
       },
       "DataFound": {
-        "no": 0.22036608,
-        "yes": 0.779634
+        "no": 0.22036609,
+        "yes": 0.77963394
       },
       "AccessLevel": {
-        "root": 0.97755384,
-        "user": 0.022446215
+        "root": 0.9775538,
+        "user": 0.022446219
       },
       "AttActive": {
-        "no": 0.02235704,
+        "no": 0.022357043,
         "yes": 0.977643
       },
       "DataInjected": {
-        "no": 1.0000001,
+        "no": 1.0,
         "yes": 0.0
       },
       "Defl1ModelsAttl0EC": {
-        "ec0": 0.18470068,
-        "ec1": 0.081494585,
+        "ec0": 0.18470071,
+        "ec1": 0.0,
         "ec10": 0.0,
+        "ec2": 0.081494585,
+        "ec3": 0.022357043,
+        "ec4": 0.0,
+        "ec5": 0.0,
+        "ec6": 3.173745E-5,
+        "ec7": 0.0,
+        "ec8": 1.3628435E-4,
+        "ec9": 0.7112797
+      },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 1.0
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0,
+          "Exit": 0.18470071,
+          "FileRecon": 0.081526324,
+          "ManipulateData": 0.71141595,
+          "Nop": 0.022357043,
+          "PrivEscAcc": 0.0
+        }
+      },
+      "action": "Nop",
+      "observation": {
+        "EndPtAlerts\u0027": "file_enum"
+      }
+    }
+  },
+  {
+    "state": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 0.0,
+        "honeypot": 1.0
+      },
+      "HostHasData": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataPrivs": {
+        "root": 0.0,
+        "user": 1.0
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "AccFound": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataFound": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "AccessLevel": {
+        "root": 1.0,
+        "user": 0.0
+      },
+      "AttActive": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataInjected": {
+        "no": 0.0,
+        "yes": 1.0
+      }
+    },
+    "agent_i": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 1.0,
+        "honeypot": 0.0
+      },
+      "HostHasData": {
+        "no": 0.11826806,
+        "yes": 0.88173205
+      },
+      "DataPrivs": {
+        "root": 0.917964,
+        "user": 0.08203605
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "AccFound": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataFound": {
+        "no": 0.124034256,
+        "yes": 0.87596583
+      },
+      "AccessLevel": {
+        "root": 1.0,
+        "user": 0.0
+      },
+      "AttActive": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataInjected": {
+        "no": 1.0,
+        "yes": 0.0
+      },
+      "Attl2ModelsDefl1EC": {
+        "ec0": 0.0,
+        "ec1": 0.0,
+        "ec10": 0.83592796,
+        "ec11": 0.0,
         "ec2": 0.0,
         "ec3": 0.0,
-        "ec4": 1.3628433E-4,
-        "ec5": 0.02235704,
-        "ec6": 0.0,
-        "ec7": 3.173745E-5,
+        "ec4": 0.0,
+        "ec5": 0.0,
+        "ec6": 0.1640721,
+        "ec7": 0.0,
         "ec8": 0.0,
-        "ec9": 0.71127975
+        "ec9": 0.0
+      },
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.1640721,
+          "lowCap": 0.83592796
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 0.0,
+          "LockAccounts": 0.0,
+          "Nop": 1.0,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "ManipulateData",
+      "observation": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "active",
+        "DefenseObs\u0027": "none"
+      }
+    },
+    "agent_j": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 0.0,
+        "honeypot": 1.0
+      },
+      "HostHasData": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataPrivs": {
+        "root": 0.0,
+        "user": 1.0
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "AccFound": {
+        "no": 0.0069679013,
+        "yes": 0.9930321
+      },
+      "DataFound": {
+        "no": 0.14206551,
+        "yes": 0.8579345
+      },
+      "AccessLevel": {
+        "root": 0.9902595,
+        "user": 0.009740503
+      },
+      "AttActive": {
+        "no": 0.089852385,
+        "yes": 0.91014767
+      },
+      "DataInjected": {
+        "no": 0.69551116,
+        "yes": 0.30448884
+      },
+      "Defl1ModelsAttl0EC": {
+        "ec0": 0.42474696,
+        "ec1": 0.0,
+        "ec10": 0.0,
+        "ec2": 3.2957803E-5,
+        "ec3": 0.089852385,
+        "ec4": 0.0,
+        "ec5": 0.0,
+        "ec6": 0.0,
+        "ec7": 0.0,
+        "ec8": 0.0,
+        "ec9": 0.48536772
+      },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 1.0
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0,
+          "Exit": 0.42474696,
+          "FileRecon": 3.2957803E-5,
+          "ManipulateData": 0.48536772,
+          "Nop": 0.089852385,
+          "PrivEscAcc": 0.0
+        }
       },
       "action": "Nop",
       "observation": {
@@ -991,8 +1347,8 @@
         "user": 0.0
       },
       "AttActive": {
-        "no": 0.0,
-        "yes": 1.0
+        "no": 1.0,
+        "yes": 0.0
       },
       "DataInjected": {
         "no": 0.0,
@@ -1002,16 +1358,165 @@
     "agent_i": {
       "HostType": {
         "critical": 0.0,
-        "critical_honeypot": 1.0,
+        "critical_honeypot": 0.99999994,
         "honeypot": 0.0
       },
       "HostHasData": {
-        "no": 1.4169027E-6,
-        "yes": 0.99999857
+        "no": 6.757003E-5,
+        "yes": 0.9999324
       },
       "DataPrivs": {
-        "root": 0.5066873,
-        "user": 0.4933127
+        "root": 0.9074569,
+        "user": 0.092543095
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 0.99999994
+      },
+      "AccFound": {
+        "no": 0.0,
+        "yes": 0.99999994
+      },
+      "DataFound": {
+        "no": 7.0864415E-5,
+        "yes": 0.9999291
+      },
+      "AccessLevel": {
+        "root": 0.99999994,
+        "user": 0.0
+      },
+      "AttActive": {
+        "no": 0.0,
+        "yes": 0.99999994
+      },
+      "DataInjected": {
+        "no": 7.0864415E-5,
+        "yes": 0.9999291
+      },
+      "Attl2ModelsDefl1EC": {
+        "ec0": 0.0,
+        "ec1": 0.0,
+        "ec10": 0.81491375,
+        "ec11": 0.0,
+        "ec2": 0.0,
+        "ec3": 0.0,
+        "ec4": 0.0,
+        "ec5": 0.0,
+        "ec6": 0.18508619,
+        "ec7": 0.0,
+        "ec8": 0.0,
+        "ec9": 0.0
+      },
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.18508619,
+          "lowCap": 0.81491375
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 0.0,
+          "LockAccounts": 0.0,
+          "Nop": 0.99999994,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "Exit",
+      "observation": {
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "user_files",
+        "ActionResult\u0027": "failure",
+        "ConnStatus\u0027": "terminated",
+        "DefenseObs\u0027": "none"
+      }
+    },
+    "agent_j": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 0.0,
+        "honeypot": 1.0
+      },
+      "HostHasData": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataPrivs": {
+        "root": 0.0,
+        "user": 1.0
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "AccFound": {
+        "no": 7.9488865E-4,
+        "yes": 0.9992051
+      },
+      "DataFound": {
+        "no": 0.022209475,
+        "yes": 0.97779053
+      },
+      "AccessLevel": {
+        "root": 0.9988888,
+        "user": 0.0011111832
+      },
+      "AttActive": {
+        "no": 0.05870479,
+        "yes": 0.9412952
+      },
+      "DataInjected": {
+        "no": 0.03035205,
+        "yes": 0.96964794
+      },
+      "Defl1ModelsAttl0EC": {
+        "ec0": 0.94129205,
+        "ec1": 0.0,
+        "ec10": 0.0,
+        "ec2": 0.0,
+        "ec3": 0.05870479,
+        "ec4": 0.0,
+        "ec5": 0.0,
+        "ec6": 0.0,
+        "ec7": 0.0,
+        "ec8": 0.0,
+        "ec9": 3.1517532E-6
+      },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 1.0
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0,
+          "Exit": 0.94129205,
+          "FileRecon": 0.0,
+          "ManipulateData": 3.1517532E-6,
+          "Nop": 0.05870479,
+          "PrivEscAcc": 0.0
+        }
+      },
+      "action": "Nop",
+      "observation": {
+        "EndPtAlerts\u0027": "none"
+      }
+    }
+  },
+  {
+    "state": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 0.0,
+        "honeypot": 1.0
+      },
+      "HostHasData": {
+        "no": 0.0,
+        "yes": 1.0
+      },
+      "DataPrivs": {
+        "root": 0.0,
+        "user": 1.0
       },
       "EscAccounts": {
         "no": 0.0,
@@ -1022,41 +1527,93 @@
         "yes": 1.0
       },
       "DataFound": {
-        "no": 8.385871E-6,
-        "yes": 0.9999916
+        "no": 0.0,
+        "yes": 1.0
       },
       "AccessLevel": {
         "root": 1.0,
         "user": 0.0
       },
       "AttActive": {
-        "no": 0.0,
-        "yes": 1.0
+        "no": 1.0,
+        "yes": 0.0
       },
       "DataInjected": {
-        "no": 8.385871E-6,
-        "yes": 0.9999916
+        "no": 0.0,
+        "yes": 1.0
+      }
+    },
+    "agent_i": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 1.0000001,
+        "honeypot": 0.0
+      },
+      "HostHasData": {
+        "no": 6.7570036E-5,
+        "yes": 0.9999325
+      },
+      "DataPrivs": {
+        "root": 0.907457,
+        "user": 0.0925431
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 1.0000001
+      },
+      "AccFound": {
+        "no": 0.0,
+        "yes": 1.0000001
+      },
+      "DataFound": {
+        "no": 7.086442E-5,
+        "yes": 0.99992925
+      },
+      "AccessLevel": {
+        "root": 1.0000001,
+        "user": 0.0
+      },
+      "AttActive": {
+        "no": 1.0000001,
+        "yes": 0.0
+      },
+      "DataInjected": {
+        "no": 7.086442E-5,
+        "yes": 0.99992925
       },
       "Attl2ModelsDefl1EC": {
-        "ec0": 0.9866254,
+        "ec0": 0.0,
         "ec1": 0.0,
-        "ec10": 0.0,
+        "ec10": 0.81491387,
         "ec11": 0.0,
-        "ec12": 0.0133746,
-        "ec13": 0.0,
         "ec2": 0.0,
         "ec3": 0.0,
         "ec4": 0.0,
         "ec5": 0.0,
-        "ec6": 0.0,
+        "ec6": 0.1850862,
         "ec7": 0.0,
         "ec8": 0.0,
         "ec9": 0.0
       },
-      "action": "Exit",
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.1850862,
+          "lowCap": 0.81491387
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 0.0,
+          "LockAccounts": 0.0,
+          "Nop": 1.0000001,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "Nop",
       "observation": {
-        "AccessPerm\u0027": "auth",
-        "HostObs\u0027": "user_files",
+        "AccessPerm\u0027": "denied",
+        "HostObs\u0027": "none",
         "ActionResult\u0027": "success",
         "ConnStatus\u0027": "terminated",
         "DefenseObs\u0027": "none"
@@ -1066,166 +1623,6 @@
       "HostType": {
         "critical": 0.0,
         "critical_honeypot": 0.0,
-        "honeypot": 1.0
-      },
-      "HostHasData": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataPrivs": {
-        "root": 0.0,
-        "user": 1.0
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccFound": {
-        "no": 0.0013016228,
-        "yes": 0.9986984
-      },
-      "DataFound": {
-        "no": 0.027507987,
-        "yes": 0.97249204
-      },
-      "AccessLevel": {
-        "root": 0.9981825,
-        "user": 0.0018176059
-      },
-      "AttActive": {
-        "no": 0.016721591,
-        "yes": 0.98327845
-      },
-      "DataInjected": {
-        "no": 0.036684882,
-        "yes": 0.9633151
-      },
-      "Defl1ModelsAttl0EC": {
-        "ec0": 0.97796196,
-        "ec1": 3.097605E-6,
-        "ec10": 0.0,
-        "ec2": 0.0,
-        "ec3": 0.0,
-        "ec4": 0.0,
-        "ec5": 0.016721591,
-        "ec6": 0.0,
-        "ec7": 0.0,
-        "ec8": 0.0,
-        "ec9": 0.0053133694
-      },
-      "action": "Nop",
-      "observation": {
-        "EndPtAlerts\u0027": "none"
-      }
-    }
-  },
-  {
-    "state": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 0.0,
-        "honeypot": 1.0
-      },
-      "HostHasData": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataPrivs": {
-        "root": 0.0,
-        "user": 1.0
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccFound": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataFound": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccessLevel": {
-        "root": 1.0,
-        "user": 0.0
-      },
-      "AttActive": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "DataInjected": {
-        "no": 0.0,
-        "yes": 1.0
-      }
-    },
-    "agent_i": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 1.0,
-        "honeypot": 0.0
-      },
-      "HostHasData": {
-        "no": 1.4169027E-6,
-        "yes": 0.99999857
-      },
-      "DataPrivs": {
-        "root": 0.5066873,
-        "user": 0.4933127
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccFound": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataFound": {
-        "no": 8.385871E-6,
-        "yes": 0.9999916
-      },
-      "AccessLevel": {
-        "root": 1.0,
-        "user": 0.0
-      },
-      "AttActive": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "DataInjected": {
-        "no": 8.385871E-6,
-        "yes": 0.9999916
-      },
-      "Attl2ModelsDefl1EC": {
-        "ec0": 0.9866254,
-        "ec1": 0.0,
-        "ec10": 0.0,
-        "ec11": 0.0,
-        "ec12": 0.0133746,
-        "ec13": 0.0,
-        "ec2": 0.0,
-        "ec3": 0.0,
-        "ec4": 0.0,
-        "ec5": 0.0,
-        "ec6": 0.0,
-        "ec7": 0.0,
-        "ec8": 0.0,
-        "ec9": 0.0
-      },
-      "action": "Nop",
-      "observation": {
-        "AccessPerm\u0027": "denied",
-        "HostObs\u0027": "user_files",
-        "ActionResult\u0027": "failure",
-        "ConnStatus\u0027": "terminated",
-        "DefenseObs\u0027": "none"
-      }
-    },
-    "agent_j": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 0.0,
         "honeypot": 0.99999994
       },
       "HostHasData": {
@@ -1241,37 +1638,52 @@
         "yes": 0.99999994
       },
       "AccFound": {
-        "no": 0.0013081684,
-        "yes": 0.9986918
+        "no": 7.948909E-4,
+        "yes": 0.99920505
       },
       "DataFound": {
-        "no": 0.027609596,
-        "yes": 0.97239035
+        "no": 0.022209525,
+        "yes": 0.9777904
       },
       "AccessLevel": {
-        "root": 0.99817324,
-        "user": 0.0018267463
+        "root": 0.99888873,
+        "user": 0.0011111863
       },
       "AttActive": {
-        "no": 0.99968565,
-        "yes": 3.1430603E-4
+        "no": 0.99999976,
+        "yes": 1.8539778E-7
       },
       "DataInjected": {
-        "no": 0.031528648,
-        "yes": 0.9684713
+        "no": 0.030348992,
+        "yes": 0.9696509
       },
       "Defl1ModelsAttl0EC": {
-        "ec0": 3.141682E-4,
+        "ec0": 1.8539778E-7,
         "ec1": 0.0,
         "ec10": 0.0,
         "ec2": 0.0,
-        "ec3": 0.0,
+        "ec3": 0.99999976,
         "ec4": 0.0,
-        "ec5": 0.99968565,
+        "ec5": 0.0,
         "ec6": 0.0,
         "ec7": 0.0,
         "ec8": 0.0,
-        "ec9": 1.3784158E-7
+        "ec9": 0.0
+      },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 0.99999994
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0,
+          "Exit": 1.8539778E-7,
+          "FileRecon": 0.0,
+          "ManipulateData": 0.0,
+          "Nop": 0.99999976,
+          "PrivEscAcc": 0.0
+        }
       },
       "action": "Nop",
       "observation": {
@@ -1322,280 +1734,148 @@
     "agent_i": {
       "HostType": {
         "critical": 0.0,
-        "critical_honeypot": 1.0,
+        "critical_honeypot": 0.99999994,
         "honeypot": 0.0
       },
       "HostHasData": {
-        "no": 1.4169027E-6,
-        "yes": 0.99999857
+        "no": 6.757003E-5,
+        "yes": 0.9999324
       },
       "DataPrivs": {
-        "root": 0.5066873,
-        "user": 0.4933127
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccFound": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataFound": {
-        "no": 8.385871E-6,
-        "yes": 0.9999916
-      },
-      "AccessLevel": {
-        "root": 1.0,
-        "user": 0.0
-      },
-      "AttActive": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "DataInjected": {
-        "no": 8.385871E-6,
-        "yes": 0.9999916
-      },
-      "Attl2ModelsDefl1EC": {
-        "ec0": 0.9866254,
-        "ec1": 0.0,
-        "ec10": 0.0,
-        "ec11": 0.0,
-        "ec12": 0.0133746,
-        "ec13": 0.0,
-        "ec2": 0.0,
-        "ec3": 0.0,
-        "ec4": 0.0,
-        "ec5": 0.0,
-        "ec6": 0.0,
-        "ec7": 0.0,
-        "ec8": 0.0,
-        "ec9": 0.0
-      },
-      "action": "Nop",
-      "observation": {
-        "AccessPerm\u0027": "denied",
-        "HostObs\u0027": "none",
-        "ActionResult\u0027": "failure",
-        "ConnStatus\u0027": "terminated",
-        "DefenseObs\u0027": "none"
-      }
-    },
-    "agent_j": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 0.0,
-        "honeypot": 1.0
-      },
-      "HostHasData": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataPrivs": {
-        "root": 0.0,
-        "user": 1.0
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccFound": {
-        "no": 0.0013081686,
-        "yes": 0.99869186
-      },
-      "DataFound": {
-        "no": 0.027609598,
-        "yes": 0.9723904
-      },
-      "AccessLevel": {
-        "root": 0.9981733,
-        "user": 0.0018267466
-      },
-      "AttActive": {
-        "no": 1.0,
-        "yes": 8.108329E-9
-      },
-      "DataInjected": {
-        "no": 0.031528525,
-        "yes": 0.96847147
-      },
-      "Defl1ModelsAttl0EC": {
-        "ec0": 8.108329E-9,
-        "ec1": 0.0,
-        "ec10": 0.0,
-        "ec2": 0.0,
-        "ec3": 0.0,
-        "ec4": 0.0,
-        "ec5": 1.0,
-        "ec6": 0.0,
-        "ec7": 0.0,
-        "ec8": 0.0,
-        "ec9": 0.0
-      },
-      "action": "Nop",
-      "observation": {
-        "EndPtAlerts\u0027": "none"
-      }
-    }
-  },
-  {
-    "state": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 0.0,
-        "honeypot": 1.0
-      },
-      "HostHasData": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataPrivs": {
-        "root": 0.0,
-        "user": 1.0
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccFound": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataFound": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccessLevel": {
-        "root": 1.0,
-        "user": 0.0
-      },
-      "AttActive": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "DataInjected": {
-        "no": 0.0,
-        "yes": 1.0
-      }
-    },
-    "agent_i": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 1.0,
-        "honeypot": 0.0
-      },
-      "HostHasData": {
-        "no": 1.4169027E-6,
-        "yes": 0.99999857
-      },
-      "DataPrivs": {
-        "root": 0.5066873,
-        "user": 0.4933127
-      },
-      "EscAccounts": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "AccFound": {
-        "no": 0.0,
-        "yes": 1.0
-      },
-      "DataFound": {
-        "no": 8.385871E-6,
-        "yes": 0.9999916
-      },
-      "AccessLevel": {
-        "root": 1.0,
-        "user": 0.0
-      },
-      "AttActive": {
-        "no": 1.0,
-        "yes": 0.0
-      },
-      "DataInjected": {
-        "no": 8.385871E-6,
-        "yes": 0.9999916
-      },
-      "Attl2ModelsDefl1EC": {
-        "ec0": 0.9866254,
-        "ec1": 0.0,
-        "ec10": 0.0,
-        "ec11": 0.0,
-        "ec12": 0.0133746,
-        "ec13": 0.0,
-        "ec2": 0.0,
-        "ec3": 0.0,
-        "ec4": 0.0,
-        "ec5": 0.0,
-        "ec6": 0.0,
-        "ec7": 0.0,
-        "ec8": 0.0,
-        "ec9": 0.0
-      },
-      "action": "Nop",
-      "observation": {
-        "AccessPerm\u0027": "auth",
-        "HostObs\u0027": "user_files",
-        "ActionResult\u0027": "failure",
-        "ConnStatus\u0027": "terminated",
-        "DefenseObs\u0027": "none"
-      }
-    },
-    "agent_j": {
-      "HostType": {
-        "critical": 0.0,
-        "critical_honeypot": 0.0,
-        "honeypot": 0.99999994
-      },
-      "HostHasData": {
-        "no": 0.0,
-        "yes": 0.99999994
-      },
-      "DataPrivs": {
-        "root": 0.0,
-        "user": 0.99999994
+        "root": 0.9074569,
+        "user": 0.092543095
       },
       "EscAccounts": {
         "no": 0.0,
         "yes": 0.99999994
       },
       "AccFound": {
-        "no": 0.0013081685,
-        "yes": 0.9986918
+        "no": 0.0,
+        "yes": 0.99999994
       },
       "DataFound": {
-        "no": 0.027609596,
-        "yes": 0.97239035
+        "no": 7.0864415E-5,
+        "yes": 0.9999291
       },
       "AccessLevel": {
-        "root": 0.99817324,
-        "user": 0.0018267465
+        "root": 0.99999994,
+        "user": 0.0
       },
       "AttActive": {
         "no": 0.99999994,
         "yes": 0.0
       },
       "DataInjected": {
-        "no": 0.031528525,
-        "yes": 0.9684714
+        "no": 7.0864415E-5,
+        "yes": 0.9999291
+      },
+      "Attl2ModelsDefl1EC": {
+        "ec0": 0.0,
+        "ec1": 0.0,
+        "ec10": 0.81491375,
+        "ec11": 0.0,
+        "ec2": 0.0,
+        "ec3": 0.0,
+        "ec4": 0.0,
+        "ec5": 0.0,
+        "ec6": 0.18508619,
+        "ec7": 0.0,
+        "ec8": 0.0,
+        "ec9": 0.0
+      },
+      "thetaj": {
+        "DefFrame": {
+          "highCap": 0.18508619,
+          "lowCap": 0.81491375
+        }
+      },
+      "Aj": {
+        "DefActions": {
+          "DecoyAccount": 0.0,
+          "DeployData": 0.0,
+          "LockAccounts": 0.0,
+          "Nop": 0.99999994,
+          "RestrictAccPrivs": 0.0
+        }
+      },
+      "action": "Nop",
+      "observation": {
+        "AccessPerm\u0027": "auth",
+        "HostObs\u0027": "none",
+        "ActionResult\u0027": "success",
+        "ConnStatus\u0027": "terminated",
+        "DefenseObs\u0027": "none"
+      }
+    },
+    "agent_j": {
+      "HostType": {
+        "critical": 0.0,
+        "critical_honeypot": 0.0,
+        "honeypot": 0.99999994
+      },
+      "HostHasData": {
+        "no": 0.0,
+        "yes": 0.99999994
+      },
+      "DataPrivs": {
+        "root": 0.0,
+        "user": 0.99999994
+      },
+      "EscAccounts": {
+        "no": 0.0,
+        "yes": 0.99999994
+      },
+      "AccFound": {
+        "no": 7.9489086E-4,
+        "yes": 0.99920505
+      },
+      "DataFound": {
+        "no": 0.022209525,
+        "yes": 0.9777904
+      },
+      "AccessLevel": {
+        "root": 0.99888873,
+        "user": 0.0011111863
+      },
+      "AttActive": {
+        "no": 0.99999994,
+        "yes": 0.0
+      },
+      "DataInjected": {
+        "no": 0.030348992,
+        "yes": 0.9696509
       },
       "Defl1ModelsAttl0EC": {
         "ec0": 0.0,
         "ec1": 0.0,
         "ec10": 0.0,
         "ec2": 0.0,
-        "ec3": 0.0,
+        "ec3": 0.99999994,
         "ec4": 0.0,
-        "ec5": 0.99999994,
+        "ec5": 0.0,
         "ec6": 0.0,
         "ec7": 0.0,
         "ec8": 0.0,
         "ec9": 0.0
       },
+      "thetaj": {
+        "AttackerFrame": {
+          "att": 0.99999994
+        }
+      },
+      "Aj": {
+        "AttActions": {
+          "EnumAccounts": 0.0,
+          "Exit": 0.0,
+          "FileRecon": 0.0,
+          "ManipulateData": 0.0,
+          "Nop": 0.99999994,
+          "PrivEscAcc": 0.0
+        }
+      },
       "action": "Nop",
       "observation": {
-        "EndPtAlerts\u0027": "none"
+        "EndPtAlerts\u0027": "login_activity"
       }
     }
   }
