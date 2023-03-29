@@ -1,0 +1,199 @@
+{
+  "nodes": {
+    "1": {
+      "alpha": 1,
+      "actId": 4,
+      "act": "Nop"
+    },
+    "2": {
+      "alpha": 2,
+      "actId": 0,
+      "act": "EnumAccounts"
+    },
+    "3": {
+      "alpha": 3,
+      "actId": 1,
+      "act": "Exit"
+    },
+    "5": {
+      "alpha": 5,
+      "actId": 5,
+      "act": "PrivEscAcc"
+    },
+    "7": {
+      "alpha": 7,
+      "actId": 2,
+      "act": "FileRecon",
+      "start": true
+    },
+    "9": {
+      "alpha": 9,
+      "actId": 3,
+      "act": "ManipulateData"
+    },
+    "12": {
+      "alpha": 12,
+      "actId": 3,
+      "act": "ManipulateData"
+    },
+    "13": {
+      "alpha": 13,
+      "actId": 0,
+      "act": "EnumAccounts"
+    }
+  },
+  "edges": {
+    "1": {
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, terminated), (DefenseObs, none)]": "1"
+    },
+    "2": {
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "5",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "7",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "7",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "5"
+    },
+    "3": {
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, terminated), (DefenseObs, none)]": "1",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, terminated), (DefenseObs, none)]": "1"
+    },
+    "5": {
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "12",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "5",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "5",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "12",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "12",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "12"
+    },
+    "7": {
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "2",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "13",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "13",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "2",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "12",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "9",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "12",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "9",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "12",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "12",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "13",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "13",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "2",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "2",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "2",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "13",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "13"
+    },
+    "9": {
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3"
+    },
+    "12": {
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, auth), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "3",
+      "[(AccessPerm, auth), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3"
+    },
+    "13": {
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, none)]": "2",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, failure), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "7",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "5",
+      "[(AccessPerm, denied), (HostObs, user_files), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, acc_policy_change)]": "7",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, perms_change)]": "3",
+      "[(AccessPerm, denied), (HostObs, none), (ActionResult, success), (ConnStatus, active), (DefenseObs, none)]": "5"
+    }
+  }
+}

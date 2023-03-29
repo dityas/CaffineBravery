@@ -1,0 +1,261 @@
+{
+  "nodes": {
+    "0": {
+      "alpha": 0,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "1": {
+      "alpha": 1,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "2": {
+      "alpha": 2,
+      "actId": 2,
+      "act": "LogActivity"
+    },
+    "3": {
+      "alpha": 3,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "4": {
+      "alpha": 4,
+      "actId": 4,
+      "act": "RestrictAccPrivs"
+    },
+    "5": {
+      "alpha": 5,
+      "actId": 4,
+      "act": "RestrictAccPrivs",
+      "start": true
+    },
+    "6": {
+      "alpha": 6,
+      "actId": 1,
+      "act": "LockAccounts"
+    },
+    "7": {
+      "alpha": 7,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "8": {
+      "alpha": 8,
+      "actId": 0,
+      "act": "DecoyAccount",
+      "start": true
+    },
+    "9": {
+      "alpha": 9,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "10": {
+      "alpha": 10,
+      "actId": 2,
+      "act": "LogActivity"
+    },
+    "11": {
+      "alpha": 11,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "12": {
+      "alpha": 12,
+      "actId": 1,
+      "act": "LockAccounts"
+    },
+    "13": {
+      "alpha": 13,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "14": {
+      "alpha": 14,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "15": {
+      "alpha": 15,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "17": {
+      "alpha": 17,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "19": {
+      "alpha": 19,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "21": {
+      "alpha": 21,
+      "actId": 2,
+      "act": "LogActivity"
+    },
+    "22": {
+      "alpha": 22,
+      "actId": 3,
+      "act": "Nop"
+    },
+    "23": {
+      "alpha": 23,
+      "actId": 2,
+      "act": "LogActivity"
+    },
+    "24": {
+      "alpha": 24,
+      "actId": 2,
+      "act": "LogActivity"
+    },
+    "25": {
+      "alpha": 25,
+      "actId": 3,
+      "act": "Nop"
+    }
+  },
+  "edges": {
+    "0": {
+      "[(EndPtAlerts, file_enum)]": "15",
+      "[(EndPtAlerts, file_write)]": "17",
+      "[(EndPtAlerts, login_activity)]": "11",
+      "[(EndPtAlerts, none)]": "17"
+    },
+    "1": {
+      "[(EndPtAlerts, file_enum)]": "2",
+      "[(EndPtAlerts, file_write)]": "23",
+      "[(EndPtAlerts, login_activity)]": "23",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "2": {
+      "[(EndPtAlerts, file_enum)]": "23",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "21",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "3": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "4": {
+      "[(EndPtAlerts, file_enum)]": "0",
+      "[(EndPtAlerts, file_write)]": "9",
+      "[(EndPtAlerts, login_activity)]": "13",
+      "[(EndPtAlerts, none)]": "13"
+    },
+    "5": {
+      "[(EndPtAlerts, file_enum)]": "7",
+      "[(EndPtAlerts, file_write)]": "7",
+      "[(EndPtAlerts, login_activity)]": "7",
+      "[(EndPtAlerts, none)]": "7"
+    },
+    "6": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "7": {
+      "[(EndPtAlerts, file_enum)]": "6",
+      "[(EndPtAlerts, file_write)]": "12",
+      "[(EndPtAlerts, login_activity)]": "6",
+      "[(EndPtAlerts, none)]": "6"
+    },
+    "8": {
+      "[(EndPtAlerts, file_enum)]": "4",
+      "[(EndPtAlerts, file_write)]": "4",
+      "[(EndPtAlerts, login_activity)]": "4",
+      "[(EndPtAlerts, none)]": "4"
+    },
+    "9": {
+      "[(EndPtAlerts, file_enum)]": "19",
+      "[(EndPtAlerts, file_write)]": "14",
+      "[(EndPtAlerts, login_activity)]": "14",
+      "[(EndPtAlerts, none)]": "14"
+    },
+    "10": {
+      "[(EndPtAlerts, file_enum)]": "2",
+      "[(EndPtAlerts, file_write)]": "21",
+      "[(EndPtAlerts, login_activity)]": "23",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "11": {
+      "[(EndPtAlerts, file_enum)]": "24",
+      "[(EndPtAlerts, file_write)]": "10",
+      "[(EndPtAlerts, login_activity)]": "10",
+      "[(EndPtAlerts, none)]": "2"
+    },
+    "12": {
+      "[(EndPtAlerts, file_enum)]": "6",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "13": {
+      "[(EndPtAlerts, file_enum)]": "14",
+      "[(EndPtAlerts, file_write)]": "14",
+      "[(EndPtAlerts, login_activity)]": "11",
+      "[(EndPtAlerts, none)]": "14"
+    },
+    "14": {
+      "[(EndPtAlerts, file_enum)]": "10",
+      "[(EndPtAlerts, file_write)]": "1",
+      "[(EndPtAlerts, login_activity)]": "11",
+      "[(EndPtAlerts, none)]": "22"
+    },
+    "15": {
+      "[(EndPtAlerts, file_enum)]": "10",
+      "[(EndPtAlerts, file_write)]": "22",
+      "[(EndPtAlerts, login_activity)]": "25",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "17": {
+      "[(EndPtAlerts, file_enum)]": "2",
+      "[(EndPtAlerts, file_write)]": "10",
+      "[(EndPtAlerts, login_activity)]": "10",
+      "[(EndPtAlerts, none)]": "22"
+    },
+    "19": {
+      "[(EndPtAlerts, file_enum)]": "1",
+      "[(EndPtAlerts, file_write)]": "1",
+      "[(EndPtAlerts, login_activity)]": "11",
+      "[(EndPtAlerts, none)]": "22"
+    },
+    "21": {
+      "[(EndPtAlerts, file_enum)]": "3",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "22": {
+      "[(EndPtAlerts, file_enum)]": "23",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "23": {
+      "[(EndPtAlerts, file_enum)]": "21",
+      "[(EndPtAlerts, file_write)]": "3",
+      "[(EndPtAlerts, login_activity)]": "3",
+      "[(EndPtAlerts, none)]": "3"
+    },
+    "24": {
+      "[(EndPtAlerts, file_enum)]": "23",
+      "[(EndPtAlerts, file_write)]": "21",
+      "[(EndPtAlerts, login_activity)]": "21",
+      "[(EndPtAlerts, none)]": "21"
+    },
+    "25": {
+      "[(EndPtAlerts, file_enum)]": "2",
+      "[(EndPtAlerts, file_write)]": "23",
+      "[(EndPtAlerts, login_activity)]": "23",
+      "[(EndPtAlerts, none)]": "23"
+    }
+  }
+}
