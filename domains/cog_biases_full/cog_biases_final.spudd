@@ -828,21 +828,18 @@
 (defdd loggingActionReward
     (AttActive
         (yes
-            (IOCsLogged
+            (DataInjected
+                (no
+                    (IOCsLogged
+                        (yes    (10.0))
+                        (no     (0.0))
+                    )
+                )
                 (yes    (10.0))
-                (no     (0.0))
             )
         )
 
-        (no     (-10.0))
-    )
-)
-
-(defdd loggingReward
-    (HostType
-        (honeypot               (loggingActionReward))
-        (critical               (-1.0))
-        (critical_honeypot      (-1.0))
+        (no     (0.0))
     )
 )
 
