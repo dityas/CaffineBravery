@@ -523,23 +523,6 @@
     )
 )
 
-(defdd loggingCost
-    (AttActive
-        (yes    
-            (IOCsLogged
-                (yes    (10.0))
-                (no     (0.0))
-            )
-        )
-
-        (no     (0.0))
-    )
-)
-
-(defdd loggingCostSumout
-    (# (DefActions) (distDefActions * loggingCost))
-)
-
 (defdd nopCost
     (AttActive
         (yes    (-1.0))
@@ -570,10 +553,10 @@
     )
     
     (R
-        (FileRecon          (-1.0 - loggingCostSumout))
-        (EnumAccounts       (-1.0 - loggingCostSumout))
-        (PrivEscAcc         (-1.0 - loggingCostSumout))
-        (ManipulateData     (-2.0 - loggingCostSumout))
+        (FileRecon          (-1.0))
+        (EnumAccounts       (-1.0))
+        (PrivEscAcc         (-1.0))
+        (ManipulateData     (-2.0))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -828,14 +811,18 @@
 (defdd loggingActionReward
     (AttActive
         (yes
-            (DataInjected
-                (no
-                    (IOCsLogged
-                        (yes    (10.0))
-                        (no     (0.0))
-                    )
-                )
+            (IOCsLogged
                 (yes    (10.0))
+                (no     (0.0))
+            )
+
+            + (AttActions
+                (FileRecon      (0.0))
+                (EnumAccounts   (0.0))
+                (PrivEscAcc     (0.0))
+                (Nop            (0.0))
+                (Exit           (-100.0))
+                (ManipulateData (0.0))
             )
         )
 
@@ -1240,10 +1227,10 @@
     )
 
     (R
-        (FileRecon          (-1.0 - loggingCost))
-        (EnumAccounts       (-1.0 - loggingCost))
-        (PrivEscAcc         (-1.0 - loggingCost))
-        (ManipulateData     (-2.0 - loggingCost))
+        (FileRecon          (-1.0))
+        (EnumAccounts       (-1.0))
+        (PrivEscAcc         (-1.0))
+        (ManipulateData     (-2.0))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
