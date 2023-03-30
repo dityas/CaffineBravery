@@ -301,7 +301,7 @@
 )
 
 (defdd accFoundDD
-    (EscAccounts
+    (EscAccounts'
         (yes
             (AccFound
                 (yes    (AccFound' yes))
@@ -478,14 +478,14 @@
             (DataInjected
                 (yes    
                     (IOCsLogged
-                        (yes    (0.0))
+                        (yes    (-1.0))
                         (no     (30.0))
                     )
                 )
                 (no     
                     (IOCsLogged
                         (yes    (30))
-                        (no     (0.0))
+                        (no     (-1.0))
                     )
                 )
             )
@@ -826,15 +826,11 @@
 )
 
 (defdd loggingActionReward
-    (IOCsLogged
+    (AttActive
         (yes
-            (AttActions
-                (FileRecon      (0.0))
-                (EnumAccounts   (0.0))
-                (PrivEscAcc     (5.0))
-                (Nop            (0.0))
-                (Exit           (0.0))
-                (ManipulateData (5.0))
+            (IOCsLogged
+                (yes    (10.0))
+                (no     (0.0))
             )
         )
 
