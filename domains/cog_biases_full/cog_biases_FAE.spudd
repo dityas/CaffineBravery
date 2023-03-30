@@ -496,12 +496,15 @@
         (RestrictAccPrivs   (0.0))
         (Nop                (0.0))
         (DecoyAccount       (0.0))
-        (LogIOCs            (30.0))
+        (LogIOCs            (5.0))
     )
 )
 
 (defdd loggingCost
-    (logIOCsActionCost)
+    (AttActive
+        (yes    (logIOCsActionCost))
+        (no     (0.0))
+    )
 )
 
 (defdd loggingCostSumout
@@ -542,8 +545,8 @@
         (EnumAccounts       (-1.0 - loggingCostSumout))
         (PrivEscAcc         (-1.0 - loggingCostSumout))
         (ManipulateData     (-2.0 - loggingCostSumout))
-        (Nop                (nopCost - loggingCostSumout))
-        (Exit               (exitReward - loggingCostSumout))
+        (Nop                (nopCost))
+        (Exit               (exitReward))
     )
 
     (discount 0.95)
@@ -792,9 +795,16 @@
         (FileRecon      (10.0))
         (EnumAccounts   (10.0))
         (PrivEscAcc     (10.0))
-        (Nop            (-10.0))
-        (Exit           (-10.0))
+        (Nop            (-1.0))
+        (Exit           (-1.0))
         (ManipulateData (10.0))
+    )
+)
+
+(defdd loggingAttPresentReward
+    (AttActive
+        (yes    (10.0))
+        (no     (0.0))
     )
 )
 
@@ -1195,8 +1205,8 @@
         (EnumAccounts       (-1.0 - loggingCost))
         (PrivEscAcc         (-1.0 - loggingCost))
         (ManipulateData     (-2.0 - loggingCost))
-        (Nop                (nopCost - loggingCost))
-        (Exit               (exitReward - loggingCost))
+        (Nop                (nopCost))
+        (Exit               (exitReward))
     )
 
     (discount 0.95)

@@ -524,7 +524,16 @@
 )
 
 (defdd loggingCost
-    (logIOCsActionCost)
+    (AttActive
+        (yes    
+            (IOCsLogged
+                (yes    (10.0))
+                (no     (0.0))
+            )
+        )
+
+        (no     (0.0))
+    )
 )
 
 (defdd loggingCostSumout
