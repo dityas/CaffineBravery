@@ -5,8 +5,8 @@
       "actId": 3,
       "act": "Nop"
     },
-    "1": {
-      "alpha": 1,
+    "2": {
+      "alpha": 2,
       "actId": 4,
       "act": "RestrictAccPrivs",
       "start": true
@@ -19,7 +19,7 @@
       "[(EndPtAlerts, login_activity)]": "0",
       "[(EndPtAlerts, none)]": "0"
     },
-    "1": {
+    "2": {
       "[(EndPtAlerts, file_enum)]": "0",
       "[(EndPtAlerts, file_write)]": "0",
       "[(EndPtAlerts, login_activity)]": "0",
