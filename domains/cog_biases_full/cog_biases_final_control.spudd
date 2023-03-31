@@ -7,6 +7,7 @@
 (defvar AccessLevel     (user root))
 (defvar AttActive       (yes no))
 (defvar DataInjected    (yes no))
+(defvar IOCsLogged      (yes no))
 
 -- Defender modeling the attacker
 (defvar Defl1ModelsAttl0            (m0))
@@ -25,7 +26,7 @@
 
 -- Actions for both agents
 (defvar DefActions      
-    (LockAccounts RestrictAccPrivs Nop DeployData DecoyAccount))
+    (LockAccounts RestrictAccPrivs Nop LogIOCs DecoyAccount))
 (defvar AttActions      
     (FileRecon EnumAccounts PrivEscAcc Nop Exit ManipulateData))
 
@@ -44,7 +45,7 @@
 (defdd distDefActions
     (DefActions
         (LockAccounts       (0.00001))
-        (DeployData         (0.00001))
+        (LogIOCs            (0.00001))
         (DecoyAccount       (0.00001))
         (RestrictAccPrivs   (0.00001))
         (Nop                (0.9999))
@@ -75,7 +76,7 @@
     (DefActions
         (LockAccounts       (SAME AccessLevel))
         (RestrictAccPrivs   (privEscAccDD))
-        (DeployData         (privEscAccDD))
+        (LogIOCs        (privEscAccDD))
         (DecoyAccount       (privEscAccDD))
         (Nop                (privEscAccDD))
     )
@@ -92,15 +93,15 @@
     (HostType'
         (critical
             (HostObs'
-                (user_files     (0.7))
-                (none           (0.3))
+                (user_files     (0.6))
+                (none           (0.4))
             )
         )
 
         (honeypot
             (HostObs'
-                (user_files     (0.3))
-                (none           (0.7))
+                (user_files     (0.4))
+                (none           (0.6))
             )
         )
 
@@ -169,8 +170,8 @@
                 (yes    (DataFound' yes))
                 (no 
                     (DataFound'
-                        (yes    (0.8))
-                        (no     (0.2))
+                        (yes    (0.7))
+                        (no     (0.3))
                     )
                 )
             )
@@ -249,9 +250,19 @@
     (DefActions
         (LockAccounts       (SAME EscAccounts))
         (RestrictAccPrivs   (SAME EscAccounts))
-        (DeployData         (SAME EscAccounts))
+        (LogIOCs            (SAME EscAccounts))
         (DecoyAccount       (EscAccounts' yes))
         (Nop                (SAME EscAccounts))
+    )
+)
+
+(defdd defActionsIOCsLogged
+    (DefActions
+        (LockAccounts       (SAME IOCsLogged))
+        (RestrictAccPrivs   (SAME IOCsLogged))
+        (LogIOCs            (IOCsLogged' yes))
+        (DecoyAccount       (SAME IOCsLogged))
+        (Nop                (SAME IOCsLogged))
     )
 )
 
@@ -259,7 +270,7 @@
     (DefActions
         (LockAccounts       (SAME HostHasData))
         (RestrictAccPrivs   (SAME HostHasData))
-        (DeployData         (HostHasData' yes))
+        (LogIOCs            (SAME HostHasData))
         (DecoyAccount       (SAME HostHasData))
         (Nop                (SAME HostHasData))
     )
@@ -276,7 +287,7 @@
     (DefActions
         (LockAccounts       (SAME DataPrivs))
         (RestrictAccPrivs   (DataPrivs' root))
-        (DeployData         (SAME DataPrivs))
+        (LogIOCs            (SAME DataPrivs))
         (DecoyAccount       (SAME DataPrivs))
         (Nop                (SAME DataPrivs))
     )
@@ -290,14 +301,14 @@
 )
 
 (defdd accFoundDD
-    (EscAccounts
+    (EscAccounts'
         (yes
             (AccFound
                 (yes    (AccFound' yes))
                 (no
                     (AccFound'
-                        (yes    (0.8))
-                        (no     (0.2))
+                        (yes    (0.7))
+                        (no     (0.3))
                     )
                 )
             )
@@ -336,6 +347,8 @@
         (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (IOCsLogged     (# (DefActions) 
+        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive)
@@ -356,6 +369,8 @@
     (DataFound      (SAME DataFound))
     (DataPrivs      (# (DefActions) 
         (distDefActions * defActionsDataPrivs)))
+    (IOCsLogged     (# (DefActions) 
+        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (accFoundDD))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive)
@@ -376,6 +391,8 @@
         (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (IOCsLogged     (# (DefActions) 
+        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
@@ -396,6 +413,8 @@
         (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (IOCsLogged     (# (DefActions) 
+        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
@@ -416,6 +435,8 @@
         (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (IOCsLogged     (# (DefActions) 
+        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (# (DefActions) 
         (distDefActions * defActionsPrivEsc)))
@@ -436,6 +457,8 @@
     (DataFound      (SAME DataFound))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
+    (IOCsLogged     (# (DefActions) 
+        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
@@ -453,8 +476,18 @@
     (HostHasData
         (yes
             (DataInjected
-                (yes    (30.0))
-                (no     (-1.0))
+                (yes    
+                    (IOCsLogged
+                        (yes    (-1.0))
+                        (no     (30.0))
+                    )
+                )
+                (no     
+                    (IOCsLogged
+                        (yes    (30))
+                        (no     (-1.0))
+                    )
+                )
             )
         )
 
@@ -462,27 +495,13 @@
     )
 )
 
-
 (defdd exitReward
     (AttActive
         (yes
             (HostType
-                (critical   (successCondition))
-
-                (honeypot   (0.0))
-
-                (critical_honeypot
-                    (HostHasData
-                        (yes
-                            (DataInjected
-                                (yes    (30.0))
-                                (no     (-1.0))
-                            )
-                        )
-
-                        (no     (0.0))
-                    )
-                )
+                (critical           (successCondition))
+                (honeypot           (0.0))
+                (critical_honeypot  (successCondition))
             )
         )
 
@@ -506,7 +525,7 @@
 
 (defdd nopCost
     (AttActive
-        (yes    -(1.0))
+        (yes    (-1.0))
         (no     (0.0))
     )
 )
@@ -515,7 +534,7 @@
 (defpomdp attl0
     (S
         (HostType HostHasData DataFound DataPrivs EscAccounts 
-        AccFound AccessLevel AttActive DataInjected)
+        AccFound IOCsLogged AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -548,9 +567,8 @@
 -- Initial belief of the attacker
 (defdd initAttl0
     (HostType           
-        (critical           (0.5))
-        (honeypot           (0.5))
-        (critical_honeypot  (0.0))
+        (critical       (0.5))
+        (honeypot       (0.5))
     )
     * (HostHasData      UNIFORM)
     * (DataFound        no)
@@ -559,40 +577,10 @@
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
+    * (IOCsLogged       no)
     * (DataInjected     no)
 )
 
-(defdd attAbsent
-    (HostType           
-        (critical           (0.5))
-        (honeypot           (0.5))
-        (critical_honeypot  (0.0))
-    )
-    * (HostHasData      UNIFORM)
-    * (DataFound        no)
-    * (DataPrivs        UNIFORM)
-    * (EscAccounts      UNIFORM)
-    * (AccFound         no)
-    * (AccessLevel      UNIFORM)
-    * (AttActive        no)
-    * (DataInjected     no)
-)
-
-(defdd attCertain
-    (HostType           
-        (critical           (0.5))
-        (honeypot           (0.5))
-        (critical_honeypot  (0.0))
-    )
-    * (HostHasData      yes)
-    * (DataFound        no)
-    * (DataPrivs        UNIFORM)
-    * (EscAccounts      UNIFORM)
-    * (AccFound         no)
-    * (AccessLevel      UNIFORM)
-    * (AttActive        yes)
-    * (DataInjected     no)
-)
 ---------------------------------------------------------------
 -- Defender l1 models
 
@@ -606,37 +594,37 @@
 ---- Observations
 (defdd defaultEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.05))
-        (file_write             (0.05))
-        (login_activity         (0.05))
-        (none                   (0.85))
+        (file_enum              (0.1))
+        (file_write             (0.1))
+        (login_activity         (0.1))
+        (none                   (0.7))
     )
 )
 
 (defdd hostReconEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.85))
-        (file_write             (0.05))
-        (login_activity         (0.05))
-        (none                   (0.05))
+        (file_enum              (0.7))
+        (file_write             (0.1))
+        (login_activity         (0.1))
+        (none                   (0.1))
     )
 )
 
 (defdd manipulateDataEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.05))
-        (file_write             (0.85))
-        (login_activity         (0.05))
-        (none                   (0.05))
+        (file_enum              (0.1))
+        (file_write             (0.7))
+        (login_activity         (0.1))
+        (none                   (0.1))
     )
 )
 
 (defdd privEscEndPtAlert
     (EndPtAlerts'
-        (file_enum              (0.05))
-        (file_write             (0.05))
-        (login_activity         (0.85))
-        (none                   (0.05))
+        (file_enum              (0.1))
+        (file_write             (0.1))
+        (login_activity         (0.7))
+        (none                   (0.1))
     )
 )
 
@@ -718,6 +706,7 @@
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
+    (IOCsLogged     (SAME IOCsLogged))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (attActionsAttActive))
@@ -732,6 +721,7 @@
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
+    (IOCsLogged     (SAME IOCsLogged))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
@@ -746,6 +736,7 @@
     (DataFound      (attActionsDataFound))
     (DataPrivs      (DataPrivs' root)
     (EscAccounts    (SAME EscAccounts))
+    (IOCsLogged     (SAME IOCsLogged))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
@@ -754,12 +745,13 @@
     (EndPtAlerts    (endPtAlertsObs))
 )
 
-(defdbn actionDeployData
+(defdbn actionLogIOCs
     (HostType       (SAME HostType))
-    (HostHasData    (HostHasData' yes))
+    (HostHasData    (SAME HostHasData))
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
+    (IOCsLogged     (IOCsLogged' yes))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
@@ -774,6 +766,7 @@
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (EscAccounts' yes))
+    (IOCsLogged     (SAME IOCsLogged))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
@@ -786,15 +779,15 @@
     (AttActive
         (yes    
             (DataInjected
-                (yes    (-100.0))
+                (yes    (0.0))
                 (no
                     (AttActions
                         (FileRecon      (0.0))
                         (EnumAccounts   (0.0))
                         (PrivEscAcc     (0.0))
                         (Nop            (0.0))
-                        (Exit           (100.0))
-                        (ManipulateData (0.0))
+                        (Exit           (10.0))
+                        (ManipulateData (-10.0))
                     )
                 )
             )
@@ -804,29 +797,47 @@
     )
 )
 
-(defdd stateReward
-    (HostType
-        (critical
-            (criticalReward)
-        )
-        (honeypot   
-            (AttActive
-                (yes    (2.0))
-                (no     (0.0))
-            )
-        )
-        (critical_honeypot  (0.0))
+(defdd lockAccCost
+    (AttActive
+        (yes    (1.0))
+        (no     (5.0))
     )
 )
 
-(defdd lockAccountsCost
-    (AttActions
-        (FileRecon      (-5.0))
-        (EnumAccounts   (-5.0))
-        (PrivEscAcc     (0.0))
-        (Nop            (-5.0))
-        (Exit           (-5.0))
-        (ManipulateData (-5.0))
+(defdd restrictCost
+    (AttActive
+        (yes    (1.0))
+        (no     (5.0))
+    )
+)
+
+(defdd loggingActionReward
+    (AttActive
+        (yes
+            (IOCsLogged
+                (yes    (10.0))
+                (no     (0.0))
+            )
+
+            + (AttActions
+                (FileRecon      (0.0))
+                (EnumAccounts   (0.0))
+                (PrivEscAcc     (0.0))
+                (Nop            (0.0))
+                (Exit           (-100.0))
+                (ManipulateData (0.0))
+            )
+        )
+
+        (no     (0.0))
+    )
+)
+
+(defdd stateReward
+    (HostType
+        (critical           (criticalReward))
+        (honeypot           (loggingActionReward))
+        (critical_honeypot  (0.0))
     )
 )
 
@@ -834,7 +845,7 @@
 (defipomdp defl1_active
     (S
         (HostType HostHasData DataFound DataPrivs EscAccounts 
-        AccFound AccessLevel AttActive DataInjected)
+        AccFound IOCsLogged AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -855,15 +866,15 @@
         (LockAccounts       (actionLockAccounts))
         (RestrictAccPrivs   (actionRestrictAccPrivs))
         (Nop                (actionNop))
-        (DeployData         (actionDeployData))
+        (LogIOCs            (actionLogIOCs))
         (DecoyAccount       (actionDecoyAccount))
     )
     
     (R
-        (LockAccounts       (stateReward - 5.0))
-        (RestrictAccPrivs   (stateReward - 1.0))
-        (Nop                (stateReward - 0.5))
-        (DeployData         (stateReward - 1.0))
+        (LockAccounts       (stateReward - lockAccCost))
+        (RestrictAccPrivs   (stateReward - restrictCost))
+        (Nop                (stateReward))
+        (LogIOCs            (stateReward - 1.0))
         (DecoyAccount       (stateReward - 1.0))
     )
 
@@ -875,12 +886,13 @@
     (HostType           honeypot)
     * (EscAccounts      no)
     * (AccFound         no)
-    * (HostHasData      no)
+    * (HostHasData      yes)
     * (DataFound        no)
     * (DataPrivs        user)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
+    * (IOCsLogged       no)
     * (Defl1ModelsAttl0 m0)
 )
 
@@ -896,6 +908,7 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
+    * (IOCsLogged       no)
     * (Defl1ModelsAttl0 m0)
 )
 
@@ -903,12 +916,13 @@
     (HostType           honeypot)
     * (EscAccounts      no)
     * (AccFound         no)
-    * (HostHasData      no)
+    * (HostHasData      yes)
     * (DataFound        no)
     * (DataPrivs        user)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
+    * (IOCsLogged       no)
     * (Defl1ModelsAttl0 m0)
 )
 
@@ -925,8 +939,8 @@
 -- passive defender l1 model
 (defipomdp defl1_passive
     (S
-        (HostType HostHasData DataFound DataPrivs EscAccounts AccFound 
-        AccessLevel AttActive DataInjected)
+        (HostType HostHasData DataFound DataPrivs EscAccounts
+        AccFound IOCsLogged AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -947,16 +961,16 @@
         (LockAccounts       (actionLockAccounts))
         (RestrictAccPrivs   (actionRestrictAccPrivs))
         (Nop                (actionNop))
-        (DeployData         (actionDeployData))
+        (LogIOCs            (actionLogIOCs))
         (DecoyAccount       (actionDecoyAccount))
     )
     
     (R
-        (LockAccounts       (criticalReward - 100.0))
-        (RestrictAccPrivs   (criticalReward - 1.0))
-        (Nop                (criticalReward - 0.5))
-        (DeployData         (criticalReward - 100.0))
-        (DecoyAccount       (criticalReward - 100.0))
+        (LockAccounts       (criticalReward - 20.0))
+        (RestrictAccPrivs   (criticalReward - restrictCost))
+        (Nop                (criticalReward))
+        (LogIOCs            (criticalReward - 20.0))
+        (DecoyAccount       (criticalReward - 20.0))
     )
 
     (discount 0.95)
@@ -974,33 +988,36 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (PassiveDefl1ModelsAttl0 m0)
+    * (IOCsLogged       no)
+    * (PassiveDefl1ModelsAttl0  m0)
 )
 
 (defdd initDefl1c_passive
     (HostType           critical)
     * (EscAccounts      yes)
     * (AccFound         no)
-    * (HostHasData      UNIFORM)
+    * (HostHasData      yes)
     * (DataFound        no)
     * (DataPrivs        user)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (PassiveDefl1ModelsAttl0 m0)
+    * (IOCsLogged       no)
+    * (PassiveDefl1ModelsAttl0  m0)
 )
 
 (defdd initDefl1hp_passive
     (HostType           honeypot)
     * (EscAccounts      no)
     * (AccFound         no)
-    * (HostHasData      UNIFORM)
+    * (HostHasData      yes)
     * (DataFound        no)
     * (DataPrivs        user)
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (PassiveDefl1ModelsAttl0 m0)
+    * (IOCsLogged       no)
+    * (PassiveDefl1ModelsAttl0  m0)
 )
 
 -- Attacker l2
@@ -1025,9 +1042,31 @@
                     )
                 )
 
-                (Nop            (DefenseObs' none))
-                (DeployData     (DefenseObs' none))
-                (DecoyAccount   (DefenseObs' none))
+                (Nop        
+                    (DefenseObs'
+                        (acc_policy_change  (0.05))
+                        (perms_change       (0.05))
+                        (none               (0.9))
+                    )
+                )
+
+                (LogIOCs 
+                    (DefenseObs'
+                        (acc_policy_change  (0.05))
+                        (perms_change       (0.05))
+                        (none               (0.9))
+                    )
+
+                )
+
+                (DecoyAccount
+                    (DefenseObs'
+                        (acc_policy_change  (0.05))
+                        (perms_change       (0.05))
+                        (none               (0.9))
+                    )
+
+                )
             )
         )
 
@@ -1042,6 +1081,7 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
+    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -1060,6 +1100,7 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (accFoundDD))
+    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -1078,6 +1119,7 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
+    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
@@ -1096,6 +1138,7 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
+    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -1114,6 +1157,7 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
+    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (defActionsPrivEsc))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
@@ -1132,6 +1176,7 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
+    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (manipulateDataDD))
@@ -1156,8 +1201,8 @@
 -- Level 2 Attacker model
 (defipomdp attl2
     (S
-        (HostType EscAccounts AccFound HostHasData DataFound DataPrivs 
-        AccessLevel AttActive DataInjected)
+        (HostType EscAccounts AccFound HostHasData DataFound 
+        DataPrivs AccessLevel IOCsLogged AttActive DataInjected)
     )
 
     (O
@@ -1229,9 +1274,8 @@
 
 (defdd initAttl2
     (HostType           
-        (critical           (0.5))
-        (honeypot           (0.5))
-        (critical_honeypot  (0.0))
+        (critical       (0.5))
+        (honeypot       (0.5))
     )
     * (DataPrivs        UNIFORM)
     * (HostHasData      UNIFORM)
@@ -1241,72 +1285,87 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
+    * (IOCsLogged       no)
     * (dependentMjAttl2)
 )
 
+--(defdd initAttl2Absent
+--    (HostType           critical_honeypot)
+--    * (DataPrivs        UNIFORM)
+--    * (HostHasData      UNIFORM)
+--    * (EscAccounts      UNIFORM)
+--    * (DataFound        no)
+--    * (AccFound         no)
+--    * (AccessLevel      user)
+--    * (AttActive        no)
+--    * (DataInjected     no)
+--    * (IOCsLogged       no)
+--    * (dependentMjAttl2)
+--)
+--
+---- defender L3 model
 
--- defender L3 model
-
-(initmodelvar Defl3ModelsAttl2
-    (frames AttackerFrame)
-    (
-        (att    (m0     (initAttl2)))
-    )
-)
-
-
-(defipomdp defl3
-    (S
-        (HostType HostHasData DataFound DataPrivs EscAccounts 
-        AccFound AccessLevel AttActive DataInjected)
-    )
-
-    (O
-        (EndPtAlerts)
-    )
-
-    (A  DefActions)
-    (Aj AttActions)
-
-    (Mj Defl3ModelsAttl2)
-    (EC Defl3ModelsAttl2EC)
-
-    (Thetaj AttackerFrame
-        (att    attl2)
-    )
-
-    (dynamics
-        (LockAccounts       (actionLockAccounts))
-        (RestrictAccPrivs   (actionRestrictAccPrivs))
-        (Nop                (actionNop))
-        (DeployData         (actionDeployData))
-        (DecoyAccount       (actionDecoyAccount))
-    )
-    
-    (R
-        (LockAccounts       (stateReward - 5.0))
-        (RestrictAccPrivs   (stateReward - 1.0))
-        (Nop                (stateReward - 0.5))
-        (DeployData         (stateReward - 1.0))
-        (DecoyAccount       (stateReward - 1.0))
-    )
-
-    (discount 0.95)
-    (H 10)
-)
-
-(defdd initDefl3
-    (HostType           honeypot)
-    * (EscAccounts      no)
-    * (AccFound         no)
-    * (HostHasData      no)
-    * (DataFound        no)
-    * (DataPrivs        user)
-    * (AccessLevel      user)
-    * (AttActive        yes)
-    * (DataInjected     no)
-    * (Defl3ModelsAttl2 m0)
-)
+--(initmodelvar Defl3ModelsAttl2
+--    (frames AttackerFrame)
+--    (
+--        (att    (m0     (initAttl2)))
+--    )
+--)
+--
+--
+--(defipomdp defl3
+--    (S
+--        (HostType HostHasData DataFound DataPrivs EscAccounts 
+--        AccFound IOCsLogged AccessLevel AttActive DataInjected)
+--    )
+--
+--    (O
+--        (EndPtAlerts)
+--    )
+--
+--    (A  DefActions)
+--    (Aj AttActions)
+--
+--    (Mj Defl3ModelsAttl2)
+--    (EC Defl3ModelsAttl2EC)
+--
+--    (Thetaj AttackerFrame
+--        (att    attl2)
+--    )
+--
+--    (dynamics
+--        (LockAccounts       (actionLockAccounts))
+--        (RestrictAccPrivs   (actionRestrictAccPrivs))
+--        (Nop                (actionNop))
+--        (LogIOCs            (actionLogIOCs))
+--        (DecoyAccount       (actionDecoyAccount))
+--    )
+--    
+--    (R
+--        (LockAccounts       (stateReward - lockAccCost))
+--        (RestrictAccPrivs   (stateReward - restrictCost))
+--        (Nop                (stateReward))
+--        (LogIOCs            (stateReward - 1.0))
+--        (DecoyAccount       (stateReward - 1.0))
+--    )
+--
+--    (discount 0.95)
+--    (H 10)
+--)
+--
+--(defdd initDefl3
+--    (HostType           honeypot)
+--    * (EscAccounts      no)
+--    * (AccFound         no)
+--    * (HostHasData      yes)
+--    * (DataFound        no)
+--    * (DataPrivs        user)
+--    * (AccessLevel      user)
+--    * (AttActive        yes)
+--    * (DataInjected     no)
+--    * (IOCsLogged       no)
+--    * (Defl3ModelsAttl2 m0)
+--)
 
 (defdd initState
     (HostType           honeypot)
@@ -1317,6 +1376,7 @@
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
+    * (IOCsLogged       no)
     * (DataInjected     no)
 )
 
@@ -1329,5 +1389,6 @@
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
+    * (IOCsLogged       no)
     * (DataInjected     no)
 )
