@@ -393,7 +393,7 @@
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (ActionResult   (ActionResult'  UNIFORM))
+    (ActionResult   (privEscObs))
 )
 
 (defdbn attackerManipulateDataDBN
@@ -467,7 +467,7 @@
         (FileRecon          (-1.0))
         (EnumAccounts       (-1.0))
         (PrivEscAcc         (-1.0))
-        (ManipulateData     (-2.0))
+        (ManipulateData     (-1.0))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -1243,7 +1243,6 @@
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
-    * (IOCsLogged       no)
     * (DataInjected     no)
 )
 
@@ -1256,6 +1255,5 @@
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
-    * (IOCsLogged       no)
     * (DataInjected     no)
 )
