@@ -376,7 +376,7 @@
     (AttActive      (SAME AttActive)
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (HostObs' UNIFORM))
+    (HostObs        (hostObsDD))
     (AccessPerm     (accessPermsObs))
     (ActionResult   (escAccountObs))
     (ConnStatus     (connStatusObs))
@@ -1105,7 +1105,7 @@
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (HostObs'       UNIFORM))
+    (HostObs        (hostObsDD))
     (AccessPerm     (accessPermsObs))
     (ActionResult   (escAccountObs))
     (ConnStatus     (connStatusObs))
