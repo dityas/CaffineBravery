@@ -420,7 +420,7 @@
         (yes
             (DataInjected
                 (yes    (30.0))
-                (no     (-1.0))
+                (no     (0.0))
             )
         )
         (no     (0.0))
@@ -957,7 +957,6 @@
 
     (HostObs        (hostObsDD))
     (ActionResult   (fileReconObs))
-    (DefenseObs     (defenseObs))
 )
 
 (defdbn actionAttEnumAccountsDBN
@@ -973,7 +972,6 @@
 
     (HostObs        (hostObsDD))
     (ActionResult   (escAccountObs))
-    (DefenseObs     (defenseObs))
 )
 
 (defdbn actionAttExitDBN
@@ -989,7 +987,6 @@
 
     (HostObs        (HostObs'       UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
-    (DefenseObs     (defenseObs))
 )
 
 (defdbn actionAttNopDBN
@@ -1005,7 +1002,6 @@
 
     (HostObs        (HostObs'       UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
-    (DefenseObs     (defenseObs))
 )
 
 (defdbn actionAttPrivEscAccDBN
@@ -1020,8 +1016,7 @@
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (ActionResult   (ActionResult'  UNIFORM))
-    (DefenseObs     (defenseObs))
+    (ActionResult   (privEscObs))
 )
 
 (defdbn actionAttManipulateDataDBN
@@ -1037,7 +1032,6 @@
 
     (HostObs        (HostObs' UNIFORM))
     (ActionResult   (dataInjectedObs))
-    (DefenseObs     (defenseObs))
 )
 
 (initmodelvar Attl2ModelsDefl1
@@ -1058,7 +1052,7 @@
     )
 
     (O
-        (ActionResult HostObs DefenseObs)
+        (ActionResult HostObs)
     )
 
     (A  AttActions)
