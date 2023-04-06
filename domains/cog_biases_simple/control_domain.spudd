@@ -152,15 +152,15 @@
             (AccFound'
                 (yes
                     (ActionResult'
-                        (success    (0.8))
-                        (failure    (0.2))
+                        (success    (0.9))
+                        (failure    (0.1))
                     )
                 )
 
                 (no
                     (ActionResult'
-                        (success    (0.2))
-                        (failure    (0.8))
+                        (success    (0.1))
+                        (failure    (0.9))
                     )
                 )
             )
@@ -212,15 +212,15 @@
             (DataFound'
                 (yes
                     (ActionResult'
-                        (success    (0.8))
-                        (failure    (0.2))
+                        (success    (0.9))
+                        (failure    (0.1))
                     )
                 )
 
                 (no
                     (ActionResult'
-                        (success    (0.2))
-                        (failure    (0.8))
+                        (success    (0.1))
+                        (failure    (0.9))
                     )
                 )
             )
@@ -232,7 +232,7 @@
 
 (defdd defActionsEscAccounts
     (DefActions
-        (LockAccounts       (SAME EscAccounts))
+        (LockAccounts       (EscAccounts' no))
         (RestrictAccPrivs   (SAME EscAccounts))
         (LogIOCs            (SAME EscAccounts))
         (DecoyAccount       (EscAccounts' yes))
@@ -432,7 +432,7 @@
         (yes    
             (HostType
                 (critical           (successCondition))
-                (honeypot           (0.0))
+                (honeypot           (successCondition))
                 (critical_honeypot  (successCondition))
             )
         )
@@ -510,37 +510,37 @@
 ---- Observations
 (defdd defaultEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.1))
-        (login_activity         (0.1))
-        (none                   (0.7))
+        (file_enum              (0.01))
+        (file_write             (0.01))
+        (login_activity         (0.01))
+        (none                   (0.97))
     )
 )
 
 (defdd hostReconEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.7))
-        (file_write             (0.1))
-        (login_activity         (0.1))
-        (none                   (0.1))
+        (file_enum              (0.97))
+        (file_write             (0.01))
+        (login_activity         (0.01))
+        (none                   (0.01))
     )
 )
 
 (defdd manipulateDataEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.7))
-        (login_activity         (0.1))
-        (none                   (0.1))
+        (file_enum              (0.01))
+        (file_write             (0.97))
+        (login_activity         (0.01))
+        (none                   (0.01))
     )
 )
 
 (defdd privEscEndPtAlert
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.1))
-        (login_activity         (0.7))
-        (none                   (0.1))
+        (file_enum              (0.01))
+        (file_write             (0.01))
+        (login_activity         (0.97))
+        (none                   (0.01))
     )
 )
 
@@ -621,7 +621,7 @@
     (HostHasData    (SAME HostHasData))
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
-    (EscAccounts    (SAME EscAccounts))
+    (EscAccounts    (EscAccounts' no))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (attActionsAttActive))
@@ -718,7 +718,7 @@
 (defdd stateReward
     (HostType
         (critical           (criticalReward))
-        (honeypot           (loggingActionReward))
+        (honeypot           (0.0))
         (critical_honeypot  (0.0))
     )
 )
@@ -753,7 +753,7 @@
     )
     
     (R
-        (LockAccounts       (stateReward - 5.0))
+        (LockAccounts       (stateReward - 2.0))
         (RestrictAccPrivs   (stateReward - 1.0))
         (Nop                (stateReward))
         (LogIOCs            (stateReward - 1.0))
@@ -1192,7 +1192,7 @@
     )
     
     (R
-        (LockAccounts       (stateReward - 5.0))
+        (LockAccounts       (stateReward - 2.0))
         (RestrictAccPrivs   (stateReward - 1.0))
         (Nop                (stateReward))
         (LogIOCs            (stateReward - 1.0))
@@ -1221,7 +1221,7 @@
     * (HostHasData      yes)
     * (DataFound        no)
     * (DataPrivs        root)
-    * (EscAccounts      no)
+    * (EscAccounts      yes)
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
