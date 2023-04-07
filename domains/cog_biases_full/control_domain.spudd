@@ -7,7 +7,6 @@
 (defvar AccessLevel     (user root))
 (defvar AttActive       (yes no))
 (defvar DataInjected    (yes no))
-(defvar IOCsLogged      (yes no))
 
 -- Defender modeling the attacker
 (defvar Defl1ModelsAttl0            (m0))
@@ -35,10 +34,8 @@
     (file_enum file_write process_creation login_activity none))
 
 -- Attacker observations
-(defvar AccessPerm      (auth denied))
 (defvar HostObs         (user_files none))
 (defvar ActionResult    (success failure))
-(defvar ConnStatus      (active terminated))
 (defvar DefenseObs      (acc_policy_change perms_change none))
 
 -- L0 Attacker's guess of L1 defender's action distribution
@@ -76,16 +73,26 @@
     (DefActions
         (LockAccounts       (SAME AccessLevel))
         (RestrictAccPrivs   (privEscAccDD))
-        (LogIOCs        (privEscAccDD))
+        (LogIOCs            (privEscAccDD))
         (DecoyAccount       (privEscAccDD))
         (Nop                (privEscAccDD))
     )
 )
 
-(defdd connStatusObs
-    (AttActive'
-        (yes    (ConnStatus' active))
-        (no     (ConnStatus' terminated))
+(defdd privEscObs
+    (AccessLevel'
+        (root
+            (ActionResult'
+                (success    (0.999))
+                (failure    (0.001))
+            )
+        )
+        (user
+            (ActionResult'
+                (success    (0.001))
+                (failure    (0.999))
+            )
+        )
     )
 )
 
@@ -93,15 +100,15 @@
     (HostType'
         (critical
             (HostObs'
-                (user_files     (0.7))
-                (none           (0.3))
+                (user_files     (0.8))
+                (none           (0.2))
             )
         )
 
         (honeypot
             (HostObs'
-                (user_files     (0.3))
-                (none           (0.7))
+                (user_files     (0.2))
+                (none           (0.8))
             )
         )
 
@@ -170,8 +177,8 @@
                 (yes    (DataFound' yes))
                 (no 
                     (DataFound'
-                        (yes    (0.7))
-                        (no     (0.3))
+                        (yes    (0.8))
+                        (no     (0.2))
                     )
                 )
             )
@@ -223,46 +230,13 @@
     )
 )
 
-(defdd fileReconAuthObs
-    (AttActive'
-        (yes    
-            (DataFound'
-                (yes
-                    (AccessLevel'
-                        (user
-                            (DataPrivs'
-                                (user   (AccessPerm' auth))
-                                (root   (AccessPerm' denied))
-                            )
-                        )
-                        (root   (AccessPerm' auth))
-                    )
-                )
-                (no     (AccessLevel' UNIFORM))
-            )
-        )
-
-        (no     (AccessPerm'    UNIFORM))
-    )
-)
-
 (defdd defActionsEscAccounts
     (DefActions
-        (LockAccounts       (SAME EscAccounts))
+        (LockAccounts       (EscAccounts' no))
         (RestrictAccPrivs   (SAME EscAccounts))
         (LogIOCs            (SAME EscAccounts))
         (DecoyAccount       (EscAccounts' yes))
         (Nop                (SAME EscAccounts))
-    )
-)
-
-(defdd defActionsIOCsLogged
-    (DefActions
-        (LockAccounts       (SAME IOCsLogged))
-        (RestrictAccPrivs   (SAME IOCsLogged))
-        (LogIOCs            (IOCsLogged' yes))
-        (DecoyAccount       (SAME IOCsLogged))
-        (Nop                (SAME IOCsLogged))
     )
 )
 
@@ -293,13 +267,6 @@
     )
 )
 
-(defdd accessPermsObs
-    (AccessLevel'
-        (user           (AccessPerm'    denied))
-        (root           (AccessPerm'    auth))
-    )
-)
-
 (defdd accFoundDD
     (EscAccounts'
         (yes
@@ -307,8 +274,8 @@
                 (yes    (AccFound' yes))
                 (no
                     (AccFound'
-                        (yes    (0.7))
-                        (no     (0.3))
+                        (yes    (0.8))
+                        (no     (0.2))
                     )
                 )
             )
@@ -347,17 +314,13 @@
         (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (IOCsLogged     (# (DefActions) 
-        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive)
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (hostObsDD))
-    (AccessPerm     (fileReconAuthObs))
     (ActionResult   (fileReconObs))
-    (ConnStatus     (connStatusObs))
 )
 
 (defdbn attackerEnumAccountsDBN
@@ -369,17 +332,13 @@
     (DataFound      (SAME DataFound))
     (DataPrivs      (# (DefActions) 
         (distDefActions * defActionsDataPrivs)))
-    (IOCsLogged     (# (DefActions) 
-        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (accFoundDD))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive)
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (hostObsDD))
-    (AccessPerm     (accessPermsObs))
     (ActionResult   (escAccountObs))
-    (ConnStatus     (connStatusObs))
 )
 
 (defdbn attackerExitDBN
@@ -391,17 +350,13 @@
         (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (IOCsLogged     (# (DefActions) 
-        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
-    (ConnStatus     (connStatusObs))
 )
 
 (defdbn attackerNopDBN
@@ -413,17 +368,13 @@
         (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (IOCsLogged     (# (DefActions) 
-        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
-    (ConnStatus     (connStatusObs))
 )
 
 (defdbn attackerPrivEscAccDBN
@@ -435,8 +386,6 @@
         (distDefActions * defActionsDataPrivs)))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (IOCsLogged     (# (DefActions) 
-        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (# (DefActions) 
         (distDefActions * defActionsPrivEsc)))
@@ -444,9 +393,7 @@
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (AccessPerm     (accessPermsObs))
-    (ActionResult   (ActionResult'  UNIFORM))
-    (ConnStatus     (connStatusObs))
+    (ActionResult   (privEscObs))
 )
 
 (defdbn attackerManipulateDataDBN
@@ -457,17 +404,13 @@
     (DataFound      (SAME DataFound))
     (EscAccounts    (# (DefActions) 
         (distDefActions * defActionsEscAccounts)))
-    (IOCsLogged     (# (DefActions) 
-        (distDefActions * defActionsIOCsLogged)))
     (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (manipulateDataDD))
 
     (HostObs        (HostObs' UNIFORM))
-    (AccessPerm     (fileReconAuthObs))
     (ActionResult   (dataInjectedObs))
-    (ConnStatus     (connStatusObs))
 )
 
 -- multi agent reward DD for level 0
@@ -477,7 +420,7 @@
         (yes
             (DataInjected
                 (yes    (30.0))
-                (no     (-1.0))
+                (no     (0.0))
             )
         )
         (no     (0.0))
@@ -486,29 +429,14 @@
 
 (defdd exitReward
     (AttActive
-        (yes
+        (yes    
             (HostType
                 (critical           (successCondition))
                 (honeypot           (successCondition))
                 (critical_honeypot  (successCondition))
             )
         )
-
         (no     (-1.0))
-    )
-)
-
-(defdd privEscAccCost
-    (AccFound
-        (yes    (0.0))
-        (no     (-5.0))
-    )
-)
-
-(defdd manipulateCost
-    (DataFound
-        (yes    (0.0))
-        (no     (-5.0))
     )
 )
 
@@ -523,11 +451,11 @@
 (defpomdp attl0
     (S
         (HostType HostHasData DataFound DataPrivs EscAccounts 
-        AccFound IOCsLogged AccessLevel AttActive DataInjected)
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
-        (AccessPerm ActionResult ConnStatus HostObs)
+        (ActionResult HostObs)
     )
 
     (A  AttActions)
@@ -545,7 +473,7 @@
         (FileRecon          (-1.0))
         (EnumAccounts       (-1.0))
         (PrivEscAcc         (-1.0))
-        (ManipulateData     (-2.0))
+        (ManipulateData     (-1.0))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -555,7 +483,10 @@
 
 -- Initial belief of the attacker
 (defdd initAttl0
-    (HostType           critical_honeypot)
+    (HostType           
+        (critical       (0.5))
+        (honeypot       (0.5))
+    )
     * (HostHasData      UNIFORM)
     * (DataFound        no)
     * (DataPrivs        UNIFORM)
@@ -563,7 +494,6 @@
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
-    * (IOCsLogged       no)
     * (DataInjected     no)
 )
 
@@ -580,37 +510,37 @@
 ---- Observations
 (defdd defaultEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.1))
-        (login_activity         (0.1))
-        (none                   (0.7))
+        (file_enum              (0.01))
+        (file_write             (0.01))
+        (login_activity         (0.01))
+        (none                   (0.97))
     )
 )
 
 (defdd hostReconEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.7))
-        (file_write             (0.1))
-        (login_activity         (0.1))
-        (none                   (0.1))
+        (file_enum              (0.97))
+        (file_write             (0.01))
+        (login_activity         (0.01))
+        (none                   (0.01))
     )
 )
 
 (defdd manipulateDataEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.7))
-        (login_activity         (0.1))
-        (none                   (0.1))
+        (file_enum              (0.01))
+        (file_write             (0.97))
+        (login_activity         (0.01))
+        (none                   (0.01))
     )
 )
 
 (defdd privEscEndPtAlert
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.1))
-        (login_activity         (0.7))
-        (none                   (0.1))
+        (file_enum              (0.01))
+        (file_write             (0.01))
+        (login_activity         (0.97))
+        (none                   (0.01))
     )
 )
 
@@ -691,8 +621,7 @@
     (HostHasData    (SAME HostHasData))
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
-    (EscAccounts    (SAME EscAccounts))
-    (IOCsLogged     (SAME IOCsLogged))
+    (EscAccounts    (EscAccounts' no))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (attActionsAttActive))
@@ -707,7 +636,6 @@
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
-    (IOCsLogged     (SAME IOCsLogged))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
@@ -722,7 +650,6 @@
     (DataFound      (attActionsDataFound))
     (DataPrivs      (DataPrivs' root)
     (EscAccounts    (SAME EscAccounts))
-    (IOCsLogged     (SAME IOCsLogged))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
@@ -737,7 +664,6 @@
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
-    (IOCsLogged     (IOCsLogged' yes))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
@@ -752,7 +678,6 @@
     (DataFound      (attActionsDataFound))
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (EscAccounts' yes))
-    (IOCsLogged     (SAME IOCsLogged))
     (AccFound       (attActionsAccFound))
     (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
@@ -783,38 +708,9 @@
     )
 )
 
-(defdd lockAccCost
-    (AttActive
-        (yes    (1.0))
-        (no     (5.0))
-    )
-)
-
-(defdd restrictCost
-    (AttActive
-        (yes    (1.0))
-        (no     (5.0))
-    )
-)
-
 (defdd loggingActionReward
     (AttActive
-        (yes
-            (IOCsLogged
-                (yes    (10.0))
-                (no     (0.0))
-            )
-
-            + (AttActions
-                (FileRecon      (0.0))
-                (EnumAccounts   (0.0))
-                (PrivEscAcc     (0.0))
-                (Nop            (0.0))
-                (Exit           (-100.0))
-                (ManipulateData (0.0))
-            )
-        )
-
+        (yes    (5.0))
         (no     (0.0))
     )
 )
@@ -822,7 +718,7 @@
 (defdd stateReward
     (HostType
         (critical           (criticalReward))
-        (honeypot           (loggingActionReward))
+        (honeypot           (0.0))
         (critical_honeypot  (0.0))
     )
 )
@@ -831,7 +727,7 @@
 (defipomdp defl1_active
     (S
         (HostType HostHasData DataFound DataPrivs EscAccounts 
-        AccFound IOCsLogged AccessLevel AttActive DataInjected)
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -857,8 +753,8 @@
     )
     
     (R
-        (LockAccounts       (stateReward - lockAccCost))
-        (RestrictAccPrivs   (stateReward - restrictCost))
+        (LockAccounts       (stateReward - 2.0))
+        (RestrictAccPrivs   (stateReward - 1.0))
         (Nop                (stateReward))
         (LogIOCs            (stateReward - 1.0))
         (DecoyAccount       (stateReward - 1.0))
@@ -878,7 +774,6 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (IOCsLogged       no)
     * (Defl1ModelsAttl0 m0)
 )
 
@@ -894,7 +789,6 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (IOCsLogged       no)
     * (Defl1ModelsAttl0 m0)
 )
 
@@ -908,7 +802,6 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (IOCsLogged       no)
     * (Defl1ModelsAttl0 m0)
 )
 
@@ -926,7 +819,7 @@
 (defipomdp defl1_passive
     (S
         (HostType HostHasData DataFound DataPrivs EscAccounts
-        AccFound IOCsLogged AccessLevel AttActive DataInjected)
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -952,11 +845,11 @@
     )
     
     (R
-        (LockAccounts       (criticalReward - 20.0))
-        (RestrictAccPrivs   (criticalReward - restrictCost))
-        (Nop                (criticalReward))
-        (LogIOCs            (criticalReward - 20.0))
-        (DecoyAccount       (criticalReward - 20.0))
+        (LockAccounts       (-1.0))
+        (RestrictAccPrivs   (-1.0))
+        (Nop                (0.0))
+        (LogIOCs            (-1.0))
+        (DecoyAccount       (-1.0))
     )
 
     (discount 0.95)
@@ -974,7 +867,6 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (IOCsLogged       no)
     * (PassiveDefl1ModelsAttl0  m0)
 )
 
@@ -988,7 +880,6 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (IOCsLogged       no)
     * (PassiveDefl1ModelsAttl0  m0)
 )
 
@@ -1002,7 +893,6 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (IOCsLogged       no)
     * (PassiveDefl1ModelsAttl0  m0)
 )
 
@@ -1067,16 +957,12 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
-    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (hostObsDD))
-    (AccessPerm     (fileReconAuthObs))
     (ActionResult   (fileReconObs))
-    (ConnStatus     (connStatusObs))
-    (DefenseObs     (defenseObs))
 )
 
 (defdbn actionAttEnumAccountsDBN
@@ -1086,16 +972,12 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (accFoundDD))
-    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (hostObsDD))
-    (AccessPerm     (accessPermsObs))
     (ActionResult   (escAccountObs))
-    (ConnStatus     (connStatusObs))
-    (DefenseObs     (defenseObs))
 )
 
 (defdbn actionAttExitDBN
@@ -1105,16 +987,12 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
-    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
-    (ConnStatus     (connStatusObs))
-    (DefenseObs     (defenseObs))
 )
 
 (defdbn actionAttNopDBN
@@ -1124,16 +1002,12 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
-    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (AccessPerm     (AccessPerm'    UNIFORM))
     (ActionResult   (ActionResult'  UNIFORM))
-    (ConnStatus     (connStatusObs))
-    (DefenseObs     (defenseObs))
 )
 
 (defdbn actionAttPrivEscAccDBN
@@ -1143,16 +1017,12 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
-    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (defActionsPrivEsc))
     (AttActive      (SAME AttActive))
     (DataInjected   (SAME DataInjected))
 
     (HostObs        (HostObs'       UNIFORM))
-    (AccessPerm     (accessPermsObs))
-    (ActionResult   (ActionResult'  UNIFORM))
-    (ConnStatus     (connStatusObs))
-    (DefenseObs     (defenseObs))
+    (ActionResult   (privEscObs))
 )
 
 (defdbn actionAttManipulateDataDBN
@@ -1162,16 +1032,12 @@
     (DataPrivs      (defActionsDataPrivs))
     (EscAccounts    (defActionsEscAccounts))
     (AccFound       (SAME AccFound))
-    (IOCsLogged     (defActionsIOCsLogged))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (SAME AttActive))
     (DataInjected   (manipulateDataDD))
 
     (HostObs        (HostObs' UNIFORM))
-    (AccessPerm     (fileReconAuthObs))
     (ActionResult   (dataInjectedObs))
-    (ConnStatus     (connStatusObs))
-    (DefenseObs     (defenseObs))
 )
 
 (initmodelvar Attl2ModelsDefl1
@@ -1188,11 +1054,11 @@
 (defipomdp attl2
     (S
         (HostType EscAccounts AccFound HostHasData DataFound 
-        DataPrivs AccessLevel IOCsLogged AttActive DataInjected)
+        DataPrivs AccessLevel AttActive DataInjected)
     )
 
     (O
-        (AccessPerm ActionResult ConnStatus HostObs DefenseObs)
+        (ActionResult HostObs)
     )
 
     (A  AttActions)
@@ -1219,7 +1085,7 @@
         (FileRecon          (-1.0))
         (EnumAccounts       (-1.0))
         (PrivEscAcc         (-1.0))
-        (ManipulateData     (-2.0))
+        (ManipulateData     (-1.0))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -1259,7 +1125,10 @@
 )
 
 (defdd initAttl2
-    (HostType           critical_honeypot)
+    (HostType           
+        (critical       (0.5))
+        (honeypot       (0.5))
+    )
     * (DataPrivs        UNIFORM)
     * (HostHasData      UNIFORM)
     * (EscAccounts      UNIFORM)
@@ -1268,24 +1137,22 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (IOCsLogged       no)
     * (dependentMjAttl2)
 )
 
---(defdd initAttl2Absent
---    (HostType           critical_honeypot)
---    * (DataPrivs        UNIFORM)
---    * (HostHasData      UNIFORM)
---    * (EscAccounts      UNIFORM)
---    * (DataFound        no)
---    * (AccFound         no)
---    * (AccessLevel      user)
---    * (AttActive        no)
---    * (DataInjected     no)
---    * (IOCsLogged       no)
---    * (dependentMjAttl2)
---)
---
+----(defdd initAttl2Absent
+----    (HostType           critical_honeypot)
+----    * (DataPrivs        UNIFORM)
+----    * (HostHasData      UNIFORM)
+----    * (EscAccounts      UNIFORM)
+----    * (DataFound        no)
+----    * (AccFound         no)
+----    * (AccessLevel      user)
+----    * (AttActive        no)
+----    * (DataInjected     no)
+----    * (dependentMjAttl2)
+----)
+----
 ---- defender L3 model
 
 (initmodelvar Defl3ModelsAttl2
@@ -1299,7 +1166,7 @@
 (defipomdp defl3
     (S
         (HostType HostHasData DataFound DataPrivs EscAccounts 
-        AccFound IOCsLogged AccessLevel AttActive DataInjected)
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -1325,8 +1192,8 @@
     )
     
     (R
-        (LockAccounts       (stateReward - lockAccCost))
-        (RestrictAccPrivs   (stateReward - restrictCost))
+        (LockAccounts       (stateReward - 2.0))
+        (RestrictAccPrivs   (stateReward - 1.0))
         (Nop                (stateReward))
         (LogIOCs            (stateReward - 1.0))
         (DecoyAccount       (stateReward - 1.0))
@@ -1346,7 +1213,6 @@
     * (AccessLevel      user)
     * (AttActive        yes)
     * (DataInjected     no)
-    * (IOCsLogged       no)
     * (Defl3ModelsAttl2 m0)
 )
 
@@ -1355,11 +1221,10 @@
     * (HostHasData      yes)
     * (DataFound        no)
     * (DataPrivs        root)
-    * (EscAccounts      no)
+    * (EscAccounts      yes)
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
-    * (IOCsLogged       no)
     * (DataInjected     no)
 )
 
@@ -1372,6 +1237,5 @@
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
-    * (IOCsLogged       no)
     * (DataInjected     no)
 )
