@@ -562,6 +562,20 @@
     )
 )
 
+(defdd decoyDataReward
+    (DataType
+        (decoy
+            (AttActive
+                (yes
+                    (AttActions
+                        (ManipulateData     (10.0))
+                    )
+                )
+            )
+        )   
+    )
+)
+
 -- defender L1 model
 (defipomdp defl1_active
     (S
@@ -591,10 +605,10 @@
     )
     
     (R
-        (LockAccount        (realDataCost - 0.1))
-        (EnableSudo         (realDataCost - 0.1))
-        (DisableSudo        (realDataCost - 0.1))
-        (Nop                (realDataCost))
+        (LockAccount        (decoyDataReward + realDataCost - 0.1))
+        (EnableSudo         (decoyDataReward + realDataCost - 0.1))
+        (DisableSudo        (decoyDataReward + realDataCost - 0.1))
+        (Nop                (decoyDataReward + realDataCost))
     )
 
     (discount 0.95)
