@@ -156,16 +156,26 @@
 -- Priv Esc
 
 (defdd privEscAccessLevel
-    (SudoAvailable
-        (yes    (AccessLevel' root))
-        (no     (AccessLevel' user))
+    (AttActive
+        (yes
+            (SudoAvailable
+                (yes    (AccessLevel' root))
+                (no     (AccessLevel' user))
+            )
+        )
+        (no     (SAME AccessLevel))
     )
 )
 
 (defdd privEscObs
-    (AccessLevel'
-        (root   (ActionResult' success))
-        (user   (ActionResult' failure))
+    (AttActive'
+        (yes
+            (AccessLevel'
+                (root   (ActionResult' success))
+                (user   (ActionResult' failure))
+            )
+        )
+        (no     (ActionResult' UNIFORM))
     )
 )
 
@@ -252,7 +262,7 @@
     (ConnObs        (connObsDD))
 )
 
-(defdbn attackerPrivEscAccDBN
+(defdbn attackerPrivEscDBN
     (DataType       (SAME DataType))
     (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
@@ -272,7 +282,7 @@
     (SudoAvailable  (sudoAvailableSumout))
     (DataFound      (SAME DataFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (attActiveSumout))
+    (AttActive      (AttActive' no))
 
     (ActionResult   (manipulateDataObs))
     (ConnObs        (connObsDD))
@@ -303,14 +313,21 @@
                 )
             )
         )
-        (no     (0.1))
+        (no     (-0.1))
     )
 )
 
 (defdd nopCost
     (AttActive
-        (yes    (-1.0))
+        (yes    (-0.1))
         (no     (0.0))
+    )
+)
+
+(defdd privEscCost
+    (SudoAvailable
+        (yes    (-0.1))
+        (no     (-10.0))
     )
 )
 
@@ -333,7 +350,7 @@
         (Exit               (attackerExitDBN))
         (ManipulateData     (attackerManipulateDataDBN))
         (CheckSudo          (attackerCheckSudoDBN))
-        (PrivEscAcc         (attackerPrivEscAccDBN))
+        (PrivEsc            (attackerPrivEscDBN))
     )
     
     (R
@@ -342,7 +359,7 @@
         (Exit               (0.0))
         (ManipulateData     (dataManipulationReward))
         (CheckSudo          (-0.1))
-        (PrivEscAcc         (-0.1))
+        (PrivEsc            (privEscCost))
     )
 
     (discount 0.95)
@@ -362,11 +379,19 @@
     )
 )
 
+(defdd DAPGivenDataType
+    (DataType
+        (decoy  (DataAccessPol permissive))
+        (legit  (DataAccessPol strict))
+        (u      (DataAccessPol UNIFORM))
+    )
+)
+
 -- Initial belief of the attacker
 (defdd initAttl0
     (dataTypeBelief)
     * (compAccTypeBelief)
-    * (DataAccessPol    UNIFORM)
+    * (DAPGivenDataType)
     * (SudoAvailable    UNIFORM)
     * (DataFound        no)
     * (AccessLevel      user)
@@ -376,7 +401,7 @@
 (defdd initAttl0Absent
     (dataTypeBelief)
     * (compAccTypeBelief)
-    * (DataAccessPol    UNIFORM)
+    * (DAPGivenDataType)
     * (SudoAvailable    UNIFORM)
     * (DataFound        no)
     * (AccessLevel      user)
@@ -432,18 +457,13 @@
 )
 
 (defdd endPtAlertsObs
-    (AttActive'
-        (yes
-            (AttActions
-                (FileRecon          (hostReconEndPtAlerts))
-                (CheckSudo          (defaultEndPtAlerts))
-                (ManipulateData     (manipulateDataEndPtAlerts))
-                (PrivEscAcc         (privEscEndPtAlert))
-                (Nop                (defaultEndPtAlerts))
-                (Exit               (defaultEndPtAlerts))
-            )
-        )
-        (no     (defaultEndPtAlerts))
+    (AttActions
+        (FileRecon          (hostReconEndPtAlerts))
+        (CheckSudo          (defaultEndPtAlerts))
+        (ManipulateData     (manipulateDataEndPtAlerts))
+        (PrivEsc            (privEscEndPtAlert))
+        (Nop                (defaultEndPtAlerts))
+        (Exit               (defaultEndPtAlerts))
     )
 )
 
@@ -462,7 +482,7 @@
     (AttActions
         (FileRecon          (SAME AttActive))
         (CheckSudo          (SAME AttActive))
-        (ManipulateData     (SAME AttActive))
+        (ManipulateData     (AttActive' no))
         (PrivEsc            (SAME AttActive))
         (Nop                (SAME AttActive))
         (Exit               (AttActive' no))
@@ -588,45 +608,17 @@
     )
 )
 
-(defdd initDefl1_active
-    (HostType           honeypot)
-    * (EscAccounts      no)
-    * (AccFound         no)
-    * (HostHasData      yes)
-    * (DataFound        no)
-    * (DataPrivs        root)
-    * (AccessLevel      user)
-    * (AttActive        UNIFORM)
-    * (attl0GivenAttActive)
-    * (DataInjected     no)
-)
-
 ------ Initial beliefs of l1 defender
 
 (defdd initDefl1c_active
-    (HostType           critical)
-    * (EscAccounts      yes)
-    * (AccFound         no)
-    * (HostHasData      yes)
-    * (DataFound        no)
-    * (DataPrivs        root)
+    (DataType           legit)
+    * (DAPGivenDataType)
+    * (CompAccType      legit)
     * (AccessLevel      user)
+    * (SudoAvailable    yes)
+    * (DataFound        no)
     * (AttActive        UNIFORM)
     * (attl0GivenAttActive)
-    * (DataInjected     no)
-)
-
-(defdd initDefl1hp_active
-    (HostType           honeypot)
-    * (EscAccounts      yes)
-    * (AccFound         no)
-    * (HostHasData      no)
-    * (DataFound        no)
-    * (DataPrivs        root)
-    * (AccessLevel      user)
-    * (AttActive        UNIFORM)
-    * (attl0GivenAttActive)
-    * (DataInjected     no)
 )
 
 
@@ -1013,26 +1005,22 @@
 --)
 
 (defdd initState
-    (HostType           honeypot)
-    * (HostHasData      no)
+    (DataType           decoy)
+    * (DataAccessPol    strict)
+    * (CompAccType      decoy)
+    * (SudoAvailable    yes)
     * (DataFound        no)
-    * (DataPrivs        root)
-    * (EscAccounts      yes)
-    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
-    * (DataInjected     no)
 )
 
 (defdd initStateCritical
-    (HostType           critical)
-    * (HostHasData      yes)
+    (DataType           legit)
+    * (DAPGivenDataType)
+    * (CompAccType      legit)
+    * (SudoAvailable    yes)
     * (DataFound        no)
-    * (DataPrivs        root)
-    * (EscAccounts      yes)
-    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
-    * (DataInjected     no)
 )
 
