@@ -293,6 +293,8 @@
 --------------------------------------------------------------------
 -- multi agent reward DD for level 0
 
+(defdd stepCost (-0.5))
+
 (defdd dataManipulationReward
     (AttActive
         (yes
@@ -316,20 +318,27 @@
                 )
             )
         )
-        (no     (-0.1))
+        (no     (stepCost))
     )
 )
 
 (defdd nopCost
     (AttActive
-        (yes    (-0.1))
+        (yes    (stepCost))
         (no     (0.0))
+    )
+)
+
+(defdd exitCost
+    (AttActive
+        (no     (stepCost))
+        (yes    (0.0))
     )
 )
 
 (defdd privEscCost
     (SudoAvailable
-        (yes    (-0.1))
+        (yes    (stepCost))
         (no     (-10.0))
     )
 )
@@ -357,11 +366,11 @@
     )
     
     (R
-        (FileRecon          (-0.1))
+        (FileRecon          (stepCost))
         (Nop                (nopCost))
-        (Exit               (0.0))
+        (Exit               (exitCost))
         (ManipulateData     (dataManipulationReward))
-        (CheckSudo          (-0.1))
+        (CheckSudo          (stepCost))
         (PrivEsc            (privEscCost))
     )
 
@@ -394,7 +403,7 @@
 (defdd initAttl0
     (dataTypeBelief)
     * (compAccTypeBelief)
-    * (DAPGivenDataType)
+    * (DataAccessPol    UNIFORM)
     * (SudoAvailable    UNIFORM)
     * (DataFound        no)
     * (AccessLevel      user)
@@ -404,7 +413,7 @@
 (defdd initAttl0Absent
     (dataTypeBelief)
     * (compAccTypeBelief)
-    * (DAPGivenDataType)
+    * (DataAccessPol    UNIFORM)
     * (SudoAvailable    UNIFORM)
     * (DataFound        no)
     * (AccessLevel      user)
@@ -629,7 +638,7 @@
 
 (defdd initDefl1c_active
     (DataType           legit)
-    * (DAPGivenDataType)
+    * (DataAccessPol    UNIFORM)
     * (CompAccType      legit)
     * (AccessLevel      user)
     * (SudoAvailable    yes)
@@ -640,7 +649,7 @@
 
 (defdd initDefl1hp_active
     (DataType           decoy)
-    * (DAPGivenDataType)
+    * (DataAccessPol    UNIFORM)
     * (CompAccType      decoy)
     * (AccessLevel      user)
     * (SudoAvailable    yes)
@@ -707,7 +716,7 @@
 
 (defdd initDefl1c_passive
     (DataType           legit)
-    * (DAPGivenDataType)
+    * (DataAccessPol    UNIFORM)
     * (CompAccType      legit)
     * (AccessLevel      user)
     * (SudoAvailable    yes)
@@ -718,7 +727,7 @@
 
 (defdd initDefl1hp_passive
     (DataType           decoy)
-    * (DAPGivenDataType)
+    * (DataAccessPol    UNIFORM)
     * (CompAccType      decoy)
     * (AccessLevel      user)
     * (SudoAvailable    yes)
@@ -850,11 +859,11 @@
     )
 
     (R
-        (FileRecon          (-0.1))
+        (FileRecon          (stepCost))
         (Nop                (nopCost))
-        (Exit               (0.0))
+        (Exit               (exitCost))
         (ManipulateData     (dataManipulationReward))
-        (CheckSudo          (-0.1))
+        (CheckSudo          (stepCost))
         (PrivEsc            (privEscCost))
     )
 
@@ -896,7 +905,7 @@
     (dataTypeBelief)
     * (dependentMjAttl2)
     * (compAccTypeBelief)
-    * (DAPGivenDataType)
+    * (DataAccessPol    UNIFORM)
     * (SudoAvailable    UNIFORM)
     * (DataFound        no)
     * (AccessLevel      user)
