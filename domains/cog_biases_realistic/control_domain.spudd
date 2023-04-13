@@ -85,14 +85,14 @@
     (DataType'
         (legit
             (DataTypeObs'
-                (legit  (0.8))
-                (fake   (0.2))
+                (legit  (0.9))
+                (fake   (0.1))
             )
         )
         (decoy
             (DataTypeObs'
-                (legit  (0.2))
-                (fake   (0.8))
+                (legit  (0.1))
+                (fake   (0.9))
             )
         )
         (u  (DataTypeObs' UNIFORM))
@@ -135,8 +135,8 @@
         (yes    (DataFound' yes))
         (no
             (DataFound'
-                (yes    (0.8))
-                (no     (0.2))
+                (yes    (0.9))
+                (no     (0.1))
             )
         )
     )
@@ -368,7 +368,7 @@
 
 (defdd dataManipulationReward
     (DataType
-        (decoy  (stepCost))
+        (decoy  (dataManipulationRewardDD))
         (legit  (dataManipulationRewardDD))
         (u      (dataManipulationRewardDD))
     )
