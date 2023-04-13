@@ -7,12 +7,12 @@
 (defvar AttActive       (yes no))
 
 -- Defender modeling the attacker
-(defvar Defl1ModelsAttl0            (m0 m1))
+(defvar Defl1ModelsAttl0            (m0))
 (defvar Defl1ModelsAttl0EC          (ec0))
-(defvar PassiveDefl1ModelsAttl0     (m0 m1))
+(defvar PassiveDefl1ModelsAttl0     (m0))
 (defvar PassiveDefl1ModelsAttl0EC   (ec0))
 
-(defvar Attl2ModelsDefl1    (m0 m1 m2 m3))
+(defvar Attl2ModelsDefl1    (m0 m1 m2 m3 m4 m5 m6 m7))
 (defvar Attl2ModelsDefl1EC  (ec0))
 
 (defvar Defl3ModelsAttl2    (m0 m1))
@@ -30,10 +30,14 @@
 -- Defender observations
 (defvar EndPtAlerts  
     (file_enum file_write su_login none))
+(defvar ActiveAccObs  (decoy legit))
+(defvar DataAssetObs  (decoy legit))
 
 -- Attacker observations
 (defvar ActionResult    (success failure))
 (defvar ConnObs         (active inactive))
+(defvar DataTypeObs     (legit fake))
+(defvar AccTypeObs      (legit decoy))
 
 -- L0 Attacker's guess of L1 defender's action distribution
 (defdd distDefActions
@@ -52,6 +56,60 @@
     (AttActive'
         (yes    (ConnObs' active))
         (no     (ConnObs' inactive))
+    )
+)
+
+(defdd accTypeObs
+    (AttActive'
+        (yes    
+            (CompAccType'
+                (legit
+                    (AccTypeObs'
+                        (legit  (0.9))
+                        (decoy  (0.1))
+                    )          
+                )
+                (decoy
+                    (AccTypeObs'
+                        (legit  (0.1))
+                        (decoy  (0.9))
+                    )          
+                )
+                (u  (AccTypeObs' UNIFORM))
+            )
+        )
+        (no     (AccTypeObs' UNIFORM))
+    )
+)
+
+(defdd fileReconDataTypeObs
+    (DataType'
+        (legit
+            (DataTypeObs'
+                (legit  (0.8))
+                (fake   (0.2))
+            )
+        )
+        (decoy
+            (DataTypeObs'
+                (legit  (0.2))
+                (fake   (0.8))
+            )
+        )
+        (u  (DataTypeObs' UNIFORM))
+    )
+)
+
+(defdd manipulateDataDataTypeObs
+    (DataFound'
+        (yes
+            (DataType'
+                (legit  (DataTypeObs' legit))
+                (decoy  (DataTypeObs' fake))
+                (u      (DataTypeObs' UNIFORM))
+            )
+        )
+        (no     (DataTypeObs' fake))
     )
 )
 
@@ -223,6 +281,7 @@
 
     (ActionResult   (fileReconObs))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (fileReconDataTypeObs))
 )
 
 (defdbn attackerExitDBN
@@ -236,6 +295,7 @@
 
     (ActionResult   (ActionResult' UNIFORM))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (DataTypeObs' UNIFORM))
 )
 
 (defdbn attackerNopDBN
@@ -249,6 +309,7 @@
 
     (ActionResult   (ActionResult' UNIFORM))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (DataTypeObs' UNIFORM))
 )
 
 (defdbn attackerCheckSudoDBN
@@ -262,6 +323,7 @@
 
     (ActionResult   (checkSudoObs))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (DataTypeObs' UNIFORM))
 )
 
 (defdbn attackerPrivEscDBN
@@ -275,6 +337,7 @@
 
     (ActionResult   (privEscObs))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (DataTypeObs' UNIFORM))
 )
 
 (defdbn attackerManipulateDataDBN
@@ -288,12 +351,14 @@
 
     (ActionResult   (manipulateDataObs))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (manipulateDataDataTypeObs))
 )
 
 --------------------------------------------------------------------
 -- multi agent reward DD for level 0
 
 (defdd stepCost (-0.5))
+(defdd successReward (10))
 
 (defdd dataManipulationReward
     (AttActive
@@ -301,19 +366,19 @@
             (AccessLevel
                 (user
                     (DataAccessPol
-                        (strict     (-10))
+                        (strict     -(successReward))
                         (permissive
                             (DataFound
-                                (yes    (10))
-                                (no     (-10))
+                                (yes    (successReward))
+                                (no     -(successReward))
                             )
                         )
                     )
                 )
                 (root
                     (DataFound
-                        (yes    (10))
-                        (no     (-10))
+                        (yes    (successReward))
+                        (no     -(successReward))
                     )
                 )
             )
@@ -351,7 +416,7 @@
     )
 
     (O
-        (ActionResult ConnObs)
+        (ActionResult ConnObs DataTypeObs)
     )
 
     (A  AttActions)
@@ -399,6 +464,14 @@
     )
 )
 
+(defdd sudoGivenCompAccType
+    (CompAccType
+        (legit  (SudoAvailable yes))
+        (decoy  (SudoAvailable no))
+        (u      (SudoAvailable UNIFORM))
+    )
+)
+
 -- Initial belief of the attacker
 (defdd initAttl0
     (dataTypeBelief)
@@ -410,16 +483,6 @@
     * (AttActive        yes)
 )
 
-(defdd initAttl0Absent
-    (dataTypeBelief)
-    * (compAccTypeBelief)
-    * (DataAccessPol    UNIFORM)
-    * (SudoAvailable    UNIFORM)
-    * (DataFound        no)
-    * (AccessLevel      user)
-    * (AttActive        no)
-)
-
 ---------------------------------------------------------------
 -- Defender l1 models
 
@@ -427,44 +490,43 @@
     (frames AttackerFrame)
     (
         (att    (m0     (initAttl0)))
-        (att    (m1     (initAttl0Absent)))
     )
 )
 ---------------------------------------------------------------
 ---- Observations
 (defdd defaultEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.1))
-        (su_login               (0.1))
-        (none                   (0.7))
+        (file_enum              (0.05))
+        (file_write             (0.05))
+        (su_login               (0.05))
+        (none                   (0.85))
     )
 )
 
 (defdd hostReconEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.7))
-        (file_write             (0.1))
-        (su_login               (0.1))
-        (none                   (0.1))
+        (file_enum              (0.85))
+        (file_write             (0.05))
+        (su_login               (0.05))
+        (none                   (0.05))
     )
 )
 
 (defdd manipulateDataEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.7))
-        (su_login               (0.1))
-        (none                   (0.1))
+        (file_enum              (0.05))
+        (file_write             (0.85))
+        (su_login               (0.05))
+        (none                   (0.05))
     )
 )
 
 (defdd privEscEndPtAlert
     (EndPtAlerts'
-        (file_enum              (0.1))
-        (file_write             (0.1))
-        (su_login               (0.7))
-        (none                   (0.1))
+        (file_enum              (0.05))
+        (file_write             (0.05))
+        (su_login               (0.85))
+        (none                   (0.05))
     )
 )
 
@@ -476,6 +538,27 @@
         (PrivEsc            (privEscEndPtAlert))
         (Nop                (defaultEndPtAlerts))
         (Exit               (defaultEndPtAlerts))
+    )
+)
+
+(defdd activeAccObs
+    (AttActive'
+        (yes
+            (CompAccType'
+                (legit  (ActiveAccObs' legit))
+                (decoy  (ActiveAccObs' decoy))
+                (u      (ActiveAccObs' UNIFORM))
+            )
+        )
+        (no     (ActiveAccObs' UNIFORM))
+    )
+)
+
+(defdd dataAssetObs
+    (DataType'
+        (legit  (DataAssetObs' legit))
+        (decoy  (DataAssetObs' decoy))
+        (u      (DataAssetObs' UNIFORM))
     )
 )
 
@@ -522,6 +605,8 @@
     (AttActive      (AttActive' no))
 
     (EndPtAlerts    (endPtAlertsObs))
+    (ActiveAccObs   (activeAccObs))
+    (DataAssetObs   (dataAssetObs))
 )
 
 (defdbn actionNop
@@ -534,6 +619,8 @@
     (AttActive      (attActionsAttActive))
 
     (EndPtAlerts    (endPtAlertsObs))
+    (ActiveAccObs   (activeAccObs))
+    (DataAssetObs   (dataAssetObs))
 )
 
 (defdbn actionDisableSudo
@@ -546,6 +633,8 @@
     (AttActive      (attActionsAttActive))
 
     (EndPtAlerts    (endPtAlertsObs))
+    (ActiveAccObs   (activeAccObs))
+    (DataAssetObs   (dataAssetObs))
 )
 
 (defdbn actionEnableSudo
@@ -558,7 +647,11 @@
     (AttActive      (attActionsAttActive))
 
     (EndPtAlerts    (endPtAlertsObs))
+    (ActiveAccObs   (activeAccObs))
+    (DataAssetObs   (dataAssetObs))
 )
+
+--------------------------------------------------------------------
 
 (defdd realDataCost
     (DataType
@@ -585,6 +678,32 @@
                 )
             )
         )   
+    )
+)
+
+(defdd lockAccountCost
+    (AttActive
+        (yes    (0.0))
+        (no     (-5.0))
+    )
+)
+
+(defdd activeDefenderRewardFn
+    (DataType
+        (legit
+            (AttActions     (ManipulateData     (-10.0)))
+        )
+
+        (decoy
+            (CompAccType
+                (decoy
+                    (AttActions     (ManipulateData     (10.0)))
+                )
+                (legit
+                    (AttActions     (PrivEsc            (-10.0)))
+                )
+            )
+        )
     )
 )
 
@@ -617,45 +736,60 @@
     )
     
     (R
-        (LockAccount        (decoyDataReward + realDataCost - 0.1))
-        (EnableSudo         (decoyDataReward + realDataCost - 0.1))
-        (DisableSudo        (decoyDataReward + realDataCost - 0.1))
-        (Nop                (decoyDataReward + realDataCost))
+        (LockAccount        (activeDefenderRewardFn - 0.1))
+        (EnableSudo         (activeDefenderRewardFn - 0.1))
+        (DisableSudo        (activeDefenderRewardFn - 0.1))
+        (Nop                (activeDefenderRewardFn))
     )
 
     (discount 0.95)
     (H 10)
 )
 
-(defdd attl0GivenAttActive
-    (AttActive
-        (yes    (Defl1ModelsAttl0 m0))
-        (no     (Defl1ModelsAttl0 m1))
-    )
-)
-
 ------ Initial beliefs of l1 defender
 
-(defdd initDefl1c_active
-    (DataType           legit)
-    * (DataAccessPol    UNIFORM)
-    * (CompAccType      legit)
-    * (AccessLevel      user)
-    * (SudoAvailable    yes)
-    * (DataFound        no)
-    * (AttActive        UNIFORM)
-    * (attl0GivenAttActive)
-)
-
-(defdd initDefl1hp_active
+(defdd initDefl10_active
     (DataType           decoy)
-    * (DataAccessPol    UNIFORM)
+    * (DataAccessPol    permissive)
     * (CompAccType      decoy)
     * (AccessLevel      user)
     * (SudoAvailable    yes)
     * (DataFound        no)
-    * (AttActive        UNIFORM)
-    * (attl0GivenAttActive)
+    * (AttActive        yes)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl11_active
+    (DataType           decoy)
+    * (DataAccessPol    permissive)
+    * (CompAccType      legit)
+    * (AccessLevel      user)
+    * (SudoAvailable    yes)
+    * (DataFound        no)
+    * (AttActive        yes)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl12_active
+    (DataType           legit)
+    * (DataAccessPol    permissive)
+    * (CompAccType      decoy)
+    * (AccessLevel      user)
+    * (SudoAvailable    yes)
+    * (DataFound        no)
+    * (AttActive        yes)
+    * (Defl1ModelsAttl0 m0)
+)
+
+(defdd initDefl13_active
+    (DataType           legit)
+    * (DataAccessPol    permissive)
+    * (CompAccType      legit)
+    * (AccessLevel      user)
+    * (SudoAvailable    yes)
+    * (DataFound        no)
+    * (AttActive        yes)
+    * (Defl1ModelsAttl0 m0)
 )
 
 -- Make passive defender model
@@ -664,7 +798,6 @@
     (frames AttackerFrame)
     (
         (att    (m0     (initAttl0)))
-        (att    (m1     (initAttl0Absent)))
     )
 )
 
@@ -707,33 +840,48 @@
     (H 10)
 )
 
-(defdd attl0GivenAttActivePassive
-    (AttActive
-        (yes    (PassiveDefl1ModelsAttl0 m0))
-        (no     (PassiveDefl1ModelsAttl0 m1))
-    )
-)
-
-(defdd initDefl1c_passive
-    (DataType           legit)
-    * (DataAccessPol    UNIFORM)
-    * (CompAccType      legit)
-    * (AccessLevel      user)
-    * (SudoAvailable    yes)
-    * (DataFound        no)
-    * (AttActive        UNIFORM)
-    * (attl0GivenAttActivePassive)
-)
-
-(defdd initDefl1hp_passive
+(defdd initDefl10_passive
     (DataType           decoy)
-    * (DataAccessPol    UNIFORM)
+    * (DataAccessPol    permissive)
     * (CompAccType      decoy)
     * (AccessLevel      user)
     * (SudoAvailable    yes)
     * (DataFound        no)
-    * (AttActive        UNIFORM)
-    * (attl0GivenAttActivePassive)
+    * (AttActive        yes)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+(defdd initDefl11_passive
+    (DataType           decoy)
+    * (DataAccessPol    permissive)
+    * (CompAccType      legit)
+    * (AccessLevel      user)
+    * (SudoAvailable    yes)
+    * (DataFound        no)
+    * (AttActive        yes)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+(defdd initDefl12_passive
+    (DataType           legit)
+    * (DataAccessPol    permissive)
+    * (CompAccType      decoy)
+    * (AccessLevel      user)
+    * (SudoAvailable    yes)
+    * (DataFound        no)
+    * (AttActive        yes)
+    * (PassiveDefl1ModelsAttl0 m0)
+)
+
+(defdd initDefl13_passive
+    (DataType           legit)
+    * (DataAccessPol    permissive)
+    * (CompAccType      legit)
+    * (AccessLevel      user)
+    * (SudoAvailable    yes)
+    * (DataFound        no)
+    * (AttActive        yes)
+    * (PassiveDefl1ModelsAttl0 m0)
 )
 
 --------------------------------------------------------------------
@@ -750,6 +898,7 @@
 
     (ActionResult   (fileReconObs))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (fileReconDataTypeObs))
 )
 
 (defdbn attackerExitlNDBN
@@ -763,6 +912,7 @@
 
     (ActionResult   (ActionResult' UNIFORM))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (DataTypeObs' UNIFORM))
 )
 
 (defdbn attackerNoplNDBN
@@ -776,6 +926,7 @@
 
     (ActionResult   (ActionResult' UNIFORM))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (DataTypeObs' UNIFORM))
 )
 
 (defdbn attackerCheckSudolNDBN
@@ -789,6 +940,7 @@
 
     (ActionResult   (checkSudoObs))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (DataTypeObs' UNIFORM))
 )
 
 (defdbn attackerPrivEsclNDBN
@@ -802,6 +954,7 @@
 
     (ActionResult   (privEscObs))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (DataTypeObs' UNIFORM))
 )
 
 (defdbn attackerManipulateDatalNDBN
@@ -815,15 +968,85 @@
 
     (ActionResult   (manipulateDataObs))
     (ConnObs        (connObsDD))
+    (DataTypeObs    (manipulateDataDataTypeObs))
 )
 
 (initmodelvar Attl2ModelsDefl1
     (frames DefFrame)
     (
-        (passive    (m0 (initDefl1c_passive)))
-        (passive    (m1 (initDefl1hp_passive)))
-        (active     (m2 (initDefl1c_active)))
-        (active     (m3 (initDefl1hp_active)))
+        (passive    (m0 (initDefl10_passive)))
+        (passive    (m1 (initDefl11_passive)))
+        (passive    (m2 (initDefl12_passive)))
+        (passive    (m3 (initDefl13_passive)))
+        (active     (m4 (initDefl10_active)))
+        (active     (m5 (initDefl11_active)))
+        (active     (m6 (initDefl12_active)))
+        (active     (m7 (initDefl13_active)))
+    )
+)
+
+(defdd dependentMjAttl2
+    (DataType
+        (legit
+            (CompAccType
+                (legit
+                    (Attl2ModelsDefl1
+                        (m3     (0.5))
+                        (m7     (0.5))
+                    )
+                )
+                (decoy
+                    (Attl2ModelsDefl1
+                        (m2     (0.5))
+                        (m6     (0.5))
+                    )
+                )
+                (u
+                    (Attl2ModelsDefl1
+                        (m2     (0.25))
+                        (m3     (0.25))
+                        (m6     (0.25))
+                        (m7     (0.25))
+                    )
+                )
+            )
+        )
+        (decoy
+            (CompAccType
+                (legit
+                    (Attl2ModelsDefl1
+                        (m1     (0.5))
+                        (m5     (0.5))
+                    )
+                )
+                (decoy
+                    (Attl2ModelsDefl1
+                        (m0     (0.5))
+                        (m4     (0.5))
+                    )
+                )
+                (u
+                    (Attl2ModelsDefl1
+                        (m0     (0.25))
+                        (m1     (0.25))
+                        (m4     (0.25))
+                        (m5     (0.25))
+                    )
+                )
+            )
+        )
+
+        (u
+            (Attl2ModelsDefl1
+                (m0     (0.125))
+                (m1     (0.125))
+                (m2     (0.125))
+                (m3     (0.125))
+                (m4     (0.125))
+                (m5     (0.125))
+                (m6     (0.125))
+                (m7     (0.125))
+        )
     )
 )
 
@@ -835,7 +1058,7 @@
     )
 
     (O
-        (ActionResult ConnObs) 
+        (ActionResult ConnObs DataTypeObs) 
     )
 
     (A  AttActions)
@@ -871,35 +1094,6 @@
     (H 10)
 )
 
-(defdd dependentMjAttl2
-    (DataType
-        (legit
-            (Attl2ModelsDefl1
-                (m0     (0.5))
-                (m1     (0.0))
-                (m2     (0.5))
-                (m3     (0.0))
-            )      
-        )
-
-        (decoy
-            (Attl2ModelsDefl1
-                (m0     (0.0))
-                (m1     (0.5))
-                (m2     (0.0))
-                (m3     (0.5))
-            )
-        )
-
-        (u
-            (Attl2ModelsDefl1
-                (m0     (0.25))
-                (m1     (0.25))
-                (m2     (0.25))
-                (m3     (0.25))
-        )
-    )
-)
 
 (defdd initAttl2
     (dataTypeBelief)
