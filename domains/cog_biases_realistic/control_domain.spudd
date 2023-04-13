@@ -1,5 +1,4 @@
 (defvar DataType        (decoy legit u))
-(defvar DataAccessPol   (strict permissive))
 (defvar CompAccType     (decoy legit u))
 (defvar SudoAvailable   (yes no))
 (defvar DataFound       (yes no))
@@ -15,7 +14,7 @@
 (defvar Attl2ModelsDefl1    (m0 m1 m2 m3 m4 m5 m6 m7))
 (defvar Attl2ModelsDefl1EC  (ec0))
 
-(defvar Defl3ModelsAttl2    (m0 m1))
+(defvar Defl3ModelsAttl2    (m0))
 (defvar Defl3ModelsAttl2EC  (ec0))
 
 (defvar AttackerFrame   (att))
@@ -147,12 +146,7 @@
     (AttActive
         (yes    
             (AccessLevel
-                (user   
-                    (DataAccessPol
-                        (strict     (DataFound' no))
-                        (permissive (dataFoundTransition))
-                    )
-                )
+                (user   (DataFound' no))
                 (root   (dataFoundTransition))
             )
         )
@@ -196,12 +190,7 @@
     (AttActive'
         (yes
             (AccessLevel'
-                (user
-                    (DataAccessPol'
-                        (strict     (ActionResult' failure))
-                        (permissive (manipulateDataResultObs))
-                    )
-                )
+                (user   (ActionResult' failure))
                 (root   (manipulateDataResultObs))
             )
         )
@@ -272,7 +261,6 @@
 
 (defdbn attackerFileReconDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (sudoAvailableSumout))
     (DataFound      (fileReconDataFound))
@@ -287,7 +275,6 @@
 
 (defdbn attackerExitDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (sudoAvailableSumout))
     (DataFound      (SAME DataFound))
@@ -302,7 +289,6 @@
 
 (defdbn attackerNopDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (sudoAvailableSumout))
     (DataFound      (SAME DataFound))
@@ -317,7 +303,6 @@
 
 (defdbn attackerCheckSudoDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (sudoAvailableSumout))
     (DataFound      (SAME DataFound))
@@ -332,7 +317,6 @@
 
 (defdbn attackerPrivEscDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (sudoAvailableSumout))
     (DataFound      (SAME DataFound))
@@ -347,7 +331,6 @@
 
 (defdbn attackerManipulateDataDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (sudoAvailableSumout))
     (DataFound      (SAME DataFound))
@@ -366,21 +349,11 @@
 (defdd stepCost (-0.1))
 (defdd successReward (10))
 
-(defdd dataManipulationReward
+(defdd dataManipulationRewardDD
     (AttActive
         (yes
             (AccessLevel
-                (user
-                    (DataAccessPol
-                        (strict     -(successReward))
-                        (permissive
-                            (DataFound
-                                (yes    (successReward))
-                                (no     -(successReward))
-                            )
-                        )
-                    )
-                )
+                (user   -(successReward))
                 (root
                     (DataFound
                         (yes    (successReward))
@@ -390,6 +363,14 @@
             )
         )
         (no     (stepCost))
+    )
+)
+
+(defdd dataManipulationReward
+    (DataType
+        (decoy  (stepCost))
+        (legit  (dataManipulationRewardDD))
+        (u      (dataManipulationRewardDD))
     )
 )
 
@@ -417,7 +398,7 @@
 -- Attacker model
 (defpomdp attl0
     (S
-        (DataType DataAccessPol CompAccType SudoAvailable DataFound
+        (DataType CompAccType SudoAvailable DataFound
         AccessLevel AttActive)
     )
 
@@ -462,10 +443,6 @@
     )
 )
 
-(defdd DAPGivenDataType
-    (DataAccessPol  strict)
-)
-
 (defdd sudoGivenCompAccType
     (CompAccType
         (legit  (SudoAvailable yes))
@@ -478,7 +455,6 @@
 (defdd initAttl0
     (dataTypeBelief)
     * (compAccTypeBelief)
-    * (DAPGivenDataType)
     * (sudoGivenCompAccType)
     * (DataFound        no)
     * (AccessLevel      user)
@@ -599,7 +575,6 @@
 
 (defdbn actionLockAccount
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (SAME SudoAvailable))
     (DataFound      (attActionsDataFound))
@@ -613,7 +588,6 @@
 
 (defdbn actionNop
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (SAME SudoAvailable))
     (DataFound      (attActionsDataFound))
@@ -627,7 +601,6 @@
 
 (defdbn actionDisableSudo
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (SudoAvailable' no))
     (DataFound      (attActionsDataFound))
@@ -641,7 +614,6 @@
 
 (defdbn actionEnableSudo
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (SudoAvailable' yes))
     (DataFound      (attActionsDataFound))
@@ -654,34 +626,6 @@
 )
 
 --------------------------------------------------------------------
-
-(defdd realDataCost
-    (DataType
-        (legit
-            (AttActive
-                (yes
-                    (AttActions
-                        (ManipulateData     (-10.0))
-                    )
-                )
-            )
-        )   
-    )
-)
-
-(defdd decoyDataReward
-    (DataType
-        (decoy
-            (AttActive
-                (yes
-                    (AttActions
-                        (ManipulateData     (10.0))
-                    )
-                )
-            )
-        )   
-    )
-)
 
 (defdd lockAccountCost
     (AttActive
@@ -699,7 +643,7 @@
                         (ManipulateData     (-10.0))
                     )
                 )
-                (no     (0.0))
+                (no     (10.0))
             )
         )
 
@@ -734,7 +678,7 @@
 -- defender L1 model
 (defipomdp defl1_active
     (S
-        (DataType DataAccessPol CompAccType SudoAvailable DataFound
+        (DataType CompAccType SudoAvailable DataFound
         AccessLevel AttActive)
     )
 
@@ -774,7 +718,6 @@
 
 (defdd initDefl10_active
     (DataType           decoy)
-    * (DAPGivenDataType)
     * (CompAccType      decoy)
     * (AccessLevel      user)
     * (sudoGivenCompAccType)
@@ -785,7 +728,6 @@
 
 (defdd initDefl11_active
     (DataType           decoy)
-    * (DAPGivenDataType)
     * (CompAccType      legit)
     * (AccessLevel      user)
     * (sudoGivenCompAccType)
@@ -796,7 +738,6 @@
 
 (defdd initDefl12_active
     (DataType           legit)
-    * (DAPGivenDataType)
     * (CompAccType      decoy)
     * (AccessLevel      user)
     * (sudoGivenCompAccType)
@@ -807,7 +748,6 @@
 
 (defdd initDefl13_active
     (DataType           legit)
-    * (DAPGivenDataType)
     * (CompAccType      legit)
     * (AccessLevel      user)
     * (sudoGivenCompAccType)
@@ -828,7 +768,7 @@
 -- passive defender l1 model
 (defipomdp defl1_passive
     (S
-        (DataType DataAccessPol CompAccType SudoAvailable DataFound
+        (DataType CompAccType SudoAvailable DataFound
         AccessLevel AttActive)
     )
 
@@ -866,7 +806,6 @@
 
 (defdd initDefl10_passive
     (DataType           decoy)
-    * (DAPGivenDataType)
     * (CompAccType      decoy)
     * (AccessLevel      user)
     * (sudoGivenCompAccType)
@@ -877,7 +816,6 @@
 
 (defdd initDefl11_passive
     (DataType           decoy)
-    * (DAPGivenDataType)
     * (CompAccType      legit)
     * (AccessLevel      user)
     * (sudoGivenCompAccType)
@@ -888,7 +826,6 @@
 
 (defdd initDefl12_passive
     (DataType           legit)
-    * (DAPGivenDataType)
     * (CompAccType      decoy)
     * (AccessLevel      user)
     * (sudoGivenCompAccType)
@@ -899,7 +836,6 @@
 
 (defdd initDefl13_passive
     (DataType           legit)
-    * (DAPGivenDataType)
     * (CompAccType      legit)
     * (AccessLevel      user)
     * (sudoGivenCompAccType)
@@ -913,7 +849,6 @@
 
 (defdbn attackerFileReconlNDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (defActionsSudoAvailable))
     (DataFound      (fileReconDataFound))
@@ -928,7 +863,6 @@
 
 (defdbn attackerExitlNDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (defActionsSudoAvailable))
     (DataFound      (SAME DataFound))
@@ -943,7 +877,6 @@
 
 (defdbn attackerNoplNDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (defActionsSudoAvailable))
     (DataFound      (SAME DataFound))
@@ -958,7 +891,6 @@
 
 (defdbn attackerCheckSudolNDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (defActionsSudoAvailable))
     (DataFound      (SAME DataFound))
@@ -973,7 +905,6 @@
 
 (defdbn attackerPrivEsclNDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (defActionsSudoAvailable))
     (DataFound      (SAME DataFound))
@@ -988,7 +919,6 @@
 
 (defdbn attackerManipulateDatalNDBN
     (DataType       (SAME DataType))
-    (DataAccessPol  (SAME DataAccessPol))
     (CompAccType    (SAME CompAccType))
     (SudoAvailable  (defActionsSudoAvailable))
     (DataFound      (SAME DataFound))
@@ -1083,7 +1013,7 @@
 -- Level 2 Attacker model
 (defipomdp attl2
     (S
-        (DataType DataAccessPol CompAccType SudoAvailable DataFound
+        (DataType CompAccType SudoAvailable DataFound
         AccessLevel AttActive)
     )
 
@@ -1129,100 +1059,72 @@
     (dataTypeBelief)
     * (dependentMjAttl2)
     * (compAccTypeBelief)
-    * (DAPGivenDataType)
     * (sudoGivenCompAccType)
     * (DataFound        no)
     * (AccessLevel      user)
     * (AttActive        yes)
 )
 
---(defdd initAttl2Absent
---    (attHostBelief)
---    * (DataPrivs        UNIFORM)
---    * (HostHasData      UNIFORM)
---    * (EscAccounts      UNIFORM)
---    * (DataFound        no)
---    * (AccFound         no)
---    * (AccessLevel      user)
---    * (AttActive        no)
---    * (DataInjected     no)
---    * (dependentMjAttl2)
---)
---
----- defender L3 model
---
---(initmodelvar Defl3ModelsAttl2
---    (frames AttackerFrame)
---    (
---        (att    (m0     (initAttl2)))
---        (att    (m1     (initAttl2Absent)))
---    )
---)
---
---
---(defipomdp defl3
---    (S
---        (HostType HostHasData DataFound DataPrivs EscAccounts 
---        AccFound AccessLevel AttActive DataInjected)
---    )
---
---    (O
---        (EndPtAlerts)
---    )
---
---    (A  DefActions)
---    (Aj AttActions)
---
---    (Mj Defl3ModelsAttl2)
---    (EC Defl3ModelsAttl2EC)
---
---    (Thetaj AttackerFrame
---        (att    attl2)
---    )
---
---    (dynamics
---        (LockAccount        (actionLockAccount))
---        (ConfineUser        (actionConfineUser))
---        (Nop                (actionNop))
---        (DeployDataDecoys   (actionDeployDataDecoys))
---        (DecoyAccount       (actionDecoyAccount))
---    )
---    
---    (R
---        (LockAccount        (honeypotReward + lockAccountReward))
---        (ConfineUser        (honeypotReward + confineUserReward))
---        (Nop                (honeypotReward))
---        (DeployDataDecoys   (honeypotReward - 1.0))
---        (DecoyAccount       (honeypotReward - 1.0))
---    )
---
---    (discount 0.95)
---    (H 10)
---)
---
---(defdd attl2GivenAttActive
---    (AttActive
---        (yes    (Defl3ModelsAttl2 m0))
---        (no     (Defl3ModelsAttl2 m1))
---    )
---)
---
---(defdd initDefl3
---    (HostType           honeypot)
---    * (EscAccounts      yes)
---    * (AccFound         no)
---    * (HostHasData      no)
---    * (DataFound        no)
---    * (DataPrivs        root)
---    * (AccessLevel      user)
---    * (AttActive        UNIFORM)
---    * (DataInjected     no)
---    * (attl2GivenAttActive)
---)
+-- defender L3 model
+
+(initmodelvar Defl3ModelsAttl2
+    (frames AttackerFrame)
+    (
+        (att    (m0     (initAttl2)))
+    )
+)
+
+
+(defipomdp defl3
+    (S
+        (DataType CompAccType SudoAvailable DataFound
+        AccessLevel AttActive)
+    )
+
+    (O
+        (EndPtAlerts)
+    )
+
+    (A  DefActions)
+    (Aj AttActions)
+
+    (Mj Defl3ModelsAttl2)
+    (EC Defl3ModelsAttl2EC)
+
+    (Thetaj AttackerFrame
+        (att    attl2)
+    )
+
+    (dynamics
+        (LockAccount        (actionLockAccount))
+        (EnableSudo         (actionEnableSudo))
+        (DisableSudo        (actionDisableSudo))
+        (Nop                (actionNop))
+    )
+    
+    (R
+        (LockAccount        (activeDefenderRewardFn - 0.1))
+        (EnableSudo         (activeDefenderRewardFn - 0.1))
+        (DisableSudo        (activeDefenderRewardFn - 0.1))
+        (Nop                (activeDefenderRewardFn))
+    )
+
+    (discount 0.95)
+    (H 10)
+)
+
+(defdd initDefl3
+    (DataType           decoy)
+    * (CompAccType      decoy)
+    * (AccessLevel      user)
+    * (sudoGivenCompAccType)
+    * (DataFound        no)
+    * (AttActive        yes)
+    * (Defl3ModelsAttl2 m0)
+)
 
 (defdd initState
     (DataType           decoy)
-    * (DAPGivenDataType)
     * (CompAccType      decoy)
     * (sudoGivenCompAccType)
     * (DataFound        no)
@@ -1232,7 +1134,6 @@
 
 (defdd initStateCritical
     (DataType           legit)
-    * (DAPGivenDataType)
     * (CompAccType      legit)
     * (SudoAvailable    yes)
     * (DataFound        no)
