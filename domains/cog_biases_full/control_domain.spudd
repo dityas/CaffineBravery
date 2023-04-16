@@ -103,15 +103,15 @@
     (HostType'
         (critical
             (HostObs'
-                (user_files     (0.8))
-                (none           (0.2))
+                (user_files     (0.5))
+                (none           (0.5))
             )
         )
 
         (honeypot
             (HostObs'
-                (user_files     (0.2))
-                (none           (0.8))
+                (user_files     (0.5))
+                (none           (0.5))
             )
         )
 

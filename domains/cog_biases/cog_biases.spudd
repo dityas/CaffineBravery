@@ -1,29 +1,27 @@
-(defvar VulnType    (bait real bait_real))
-(defvar VulnFound   (yes no))
-(defvar AccessLevel (user root restricted))
-(defvar AttActive   (yes no))
+(defvar HostType    (hp c u))
 
--- Defender modeling the attacker
-(defvar Defl1ModelsAttl0        (m0))
-(defvar Defl1ModelsAttl0EC      (ec0))
+-- Defender modeling the Attacker
+(defvar Defl1ModelsAttl0            (m0))
+(defvar Defl1ModelsAttl0EC          (ec0))
 (defvar PassiveDefl1ModelsAttl0     (m0))
 (defvar PassiveDefl1ModelsAttl0EC   (ec0))
 
-(defvar Attl2ModelsDefl1        (m0 m1 m2 m3))
-(defvar Attl2ModelsDefl1EC      (ec0))
+(defvar Attl2ModelsDefl1            (m0 m1))
+(defvar Attl2ModelsDefl1EC          (ec0))
 
-(defvar Defl3ModelsAttl2    (m0))
-(defvar Defl3ModelsAttl2EC  (ec0))
+(defvar Defl3ModelsAttl2            (m0))
+(defvar Defl3ModelsAttl2EC          (ec0))
 
-(defvar AttackerFrame   (att))
-(defvar DefFrame        (highCap lowCap))
+(defvar AttackerFrame               (att))
+(defvar DefFrame                    (highCap lowCap))
 
 -- Actions for both agents
-(defvar DefActions (BLOCK_ACTION NOP))
-(defvar AttActions (RECON PRIV_ESC NOP EXIT))
+(defvar DefActions                  (Defend Nop))
+(defvar AttActions                  (Attack Nop Move))
 
 -- Defender observations
-(defvar BaitInteraction (yes no))
+(defvar hpInteraction   (yes no))
+(defvar HostObs         (c hp))
 
 -- Attacker observations
 (defvar VulnFoundObs    (yes no))
@@ -32,150 +30,65 @@
 -- L0 Attacker's guess of L1 defender's action distribution
 (defdd distDefActions
     (DefActions
-        (BLOCK_ACTION   (0.01))
-        (NOP            (0.99))
+        (Defend         (0.01))
+        (Nop            (0.99))
     )
 )
 
---------------------------------------------------------------------
-
-(defdd privEscAtt
-    (VulnFound
-        (yes
-            (AccessLevel
-                (user           (AccessLevel' root))
-                (root           (AccessLevel' root))
-                (restricted     (AccessLevel' user))
+(defdd hostTypeTransition
+    (HostType
+        (c  
+            (HostType'
+                (c  (0.5))
+                (hp (0.5))
             )
         )
-
-        (no     (SAME AccessLevel))
-    )
-)
-
-(defdd blockActionAccessLevel
-    (AccessLevel
-        (user           (AccessLevel' restricted))
-        (root           (AccessLevel' restricted))
-        (restricted     (AccessLevel' restricted))
-    )
-)
-
-(defdd privEscAccessLevel
-    (DefActions
-        (BLOCK_ACTION   (blockActionAccessLevel))
-        (NOP            (privEscAtt))
-    )
-)
-
-(defdd defaultAccessLevel
-    (DefActions
-        (BLOCK_ACTION   (blockActionAccessLevel))
-        (NOP            (SAME AccessLevel))
-    )
-)
-
-----------------------------------------------------------
--- Attacker's RECON action
--- When defender does not block the attacker's actions
-
-(defdd vulnFoundTransition
-    (VulnFound
-        (yes    (VulnFound' yes))
-        (no     
-            (VulnFound'
-                (yes    (0.7))
-                (no     (0.3))
+        (hp
+            (HostType'
+                (c  (0.5))
+                (hp (0.5))
             )
         )
+        (u  (HostType' u))
     )
 )
 
-
-(defdd vulnFoundVulnFoundObs
-    (VulnFound'
-        (yes
-            (VulnFoundObs'
-                (yes    (0.9))
-                (no     (0.1))
-            )
-        )
-
-        (no
-            (VulnFoundObs'
-                (yes    (0.1))
-                (no     (0.9))
-            )
-        )
+(defdd vulnFoundObs
+    (HostType'
+        (hp     (VulnFoundObs' UNIFORM))
+        (c      (VulnFoundObs' UNIFORM))
+        (u      (VulnFoundObs' UNIFORM))
     )
 )
 
--- recon observation for other actions
-(defdd vulnFoundObsDefault
-    (VulnFoundObs' UNIFORM)
+(defdbn AttackerAttackDBN
+    (HostType       (SAME HostType))
+    (VulnFoundObs   (VulnFoundObs' UNIFORM))
 )
 
-(defdbn attackerReconDBN
-    (VulnType       (SAME VulnType))
-    (VulnFound      (vulnFoundTransition))
-    (AccessLevel    (# (DefActions) (distDefActions * defaultAccessLevel)))
-    (AttActive      (SAME AttActive))
-    (VulnFoundObs   (vulnFoundVulnFoundObs))
+(defdbn AttackerNopDBN
+    (HostType       (SAME HostType))
+    (VulnFoundObs   (vulnFoundObs))
 )
 
-(defdbn attackerExitDBN
-    (VulnType       (SAME VulnType))
-    (VulnFound      (SAME VulnFound))
-    (AccessLevel    (# (DefActions) (distDefActions * defaultAccessLevel)))
-    (AttActive      (AttActive' no))
-    (VulnFoundObs   (vulnFoundObsDefault))
-)
-
-(defdbn attackerNopDBN
-    (VulnType       (SAME VulnType))
-    (VulnFound      (SAME VulnFound))
-    (AccessLevel    (# (DefActions) (distDefActions * defaultAccessLevel)))
-    (AttActive      (SAME AttActive))
-    (VulnFoundObs   (vulnFoundObsDefault))
-)
-
-(defdbn attackerPrivEscDBN
-    (VulnType       (SAME VulnType))
-    (VulnFound      (SAME VulnFound))
-    (AccessLevel    (# (DefActions) (distDefActions * privEscAccessLevel)))
-    (AttActive      (SAME AttActive))
-    (VulnFoundObs   (vulnFoundObsDefault))
+(defdbn AttackerMoveLaterallyDBN
+    (HostType       (hostTypeTransition))
+    (VulnFoundObs   (VulnFoundObs' UNIFORM))
 )
 
 -- multi agent reward DD for level 0
-
 (defdd attackerReward
-    (AttActive
-        (yes
-            (AccessLevel
-                (user       -(1.0))
-                (root       (20.0))
-                (restricted -(1.0))
-            )
-        )
-
-        (no
-            -(1.0)
-        )
-    )
-)
-
-(defdd nopCost
-    (AttActive
-        (yes    -(0.9))
-        (no     (0.0))
+    (HostType
+        (hp     (-10))
+        (c      (10))
+        (u      (10))
     )
 )
 
 -- Attacker model
 (defpomdp attl0
     (S
-        (VulnType VulnFound AccessLevel AttActive)
+        (HostType)
     )
 
     (O
@@ -185,28 +98,27 @@
     (A  AttActions)
 
     (dynamics
-        (RECON      (attackerReconDBN))
-        (NOP        (attackerNopDBN))
-        (EXIT       (attackerExitDBN))
-        (PRIV_ESC   (attackerPrivEscDBN))
+        (Attack     (AttackerAttackDBN))
+        (Nop        (AttackerNopDBN))
+        (Move       (AttackerMoveLaterallyDBN))
     )
     
     (R
-        (RECON      (-1.0))
-        (PRIV_ESC   (-1.0))
-        (NOP        (nopCost))
-        (EXIT       (attackerReward))
+        (Nop        (0.0))
+        (Attack     (attackerReward))
+        (Move       (0.0))
     )
 
     (discount 0.95)
 )
 
--- Initial belief of the attacker
+-- Initial belief of the Attacker
 (defdd initAttl0
-    (VulnType   bait_real)
-    * (VulnFound    no)
-    * (AccessLevel  user)
-    * (AttActive    yes)
+    (HostType
+        (c          (0.5))
+        (hp         (0.5))
+        (u          (0.0))
+    )
 )
 
 ---------------------------------------------------------------
@@ -219,128 +131,60 @@
     )
 )
 
--- Defender's DDs
-(defdd baitInteractionObs
-    (AttActions
-        (RECON      (BaitInteraction' UNIFORM))
-        (NOP        (BaitInteraction' UNIFORM))
-        (EXIT       (BaitInteraction' UNIFORM))
-        (PRIV_ESC   
-            (VulnType'
-                (bait
-                    (BaitInteraction'
-                        (yes    (0.9))
-                        (no     (0.1))
-                    )
-                )
-
-                (real       (BaitInteraction' UNIFORM))
-                (bait_real  (BaitInteraction' UNIFORM))
+(defdd hostObs
+    (HostType'
+        (c  
+            (HostObs'
+                (c      (0.99))
+                (hp     (0.01))
             )
         )
-    )
-)
-
-(defdd attActVulnType
-    (AttActions
-        (RECON      (SAME VulnType))
-        (NOP        (SAME VulnType))
-        (EXIT       (SAME VulnType))
-        (PRIV_ESC   (SAME VulnType))
-    )
-)
-
-(defdd attActAccessLevel
-    (AttActions
-        (RECON      (SAME AccessLevel))
-        (NOP        (SAME AccessLevel))
-        (EXIT       (SAME AccessLevel))
-        (PRIV_ESC   (privEscAtt))
-    )
-)
-
-(defdd attActAttActive
-    (AttActions
-        (RECON      (SAME AttActive))
-        (NOP        (SAME AttActive))
-        (EXIT       (AttActive' no))
-        (PRIV_ESC   (SAME AttActive))
-    )
-)
-
-(defdd jointActionAccessLevel
-    (AttActions
-        (RECON      (blockActionAccessLevel))
-        (NOP        (blockActionAccessLevel))
-        (EXIT       (blockActionAccessLevel))
-        (PRIV_ESC   (privEscAtt))
-    )
-)
-
-(defdd jointActionVulnFound
-    (AttActions
-        (RECON      (vulnFoundTransition))
-        (NOP        (SAME VulnFound))
-        (EXIT       (SAME VulnFound))
-        (PRIV_ESC   (SAME VulnFound))
-    )
-)
-
-(defdbn actionBlockAction
-    (VulnType       (attActVulnType))
-    (VulnFound      (jointActionVulnFound))
-    (AccessLevel    (jointActionAccessLevel))
-    (AttActive      (attActAttActive))
-
-    (BaitInteraction    (baitInteractionObs))
-)
-
-(defdbn actionNOP
-    (VulnType       (attActVulnType))
-    (VulnFound      (jointActionVulnFound))
-    (AccessLevel    (attActAccessLevel))
-    (AttActive      (attActAttActive))
-
-    (BaitInteraction    (baitInteractionObs))
-)
-
-(defdd defReward
-    (VulnType
-        (bait   
-            (AttActions
-                (RECON      (0.0))
-                (PRIV_ESC   (10.0))
-                (NOP        (0.0))
-                (EXIT       (0.0))
+        (hp
+            (HostObs'
+                (c      (0.01))
+                (hp     (0.99))
             )
         )
+        (u  (HostObs' UNIFORM))
+    )
+)
 
-        (real
-            (AccessLevel
-                (user           (0.0))
-                (root           -(1.0))
-                (restricted     (10.0))
-            )
-        )
+(defdd attActionsHostType
+    (AttActions
+        (Attack     (SAME HostType))
+        (Nop        (SAME HostType))
+        (Move       (hostTypeTransition))
+    )
+)
 
-        (bait_real
-            (AccessLevel
-                (user           (0.0))
-                (root           -(1.0))
-                (restricted     (10.0))
-            )
-        )
+(defdbn actionDefend
+    (HostType           (attActionsHostType))
+    (hpInteraction      (hpInteraction' UNIFORM))
+    (HostObs            (HostObs' UNIFORM))
+)
+
+(defdbn actionNop
+    (HostType           (attActionsHostType))
+    (hpInteraction      (hpInteraction' UNIFORM))
+    (HostObs            (hostObs))
+)
+
+(defdd defendReward
+    (HostType
+        (hp         (-10))
+        (c          (10))
+        (u          (0.0))
     )
 )
 
 ---- defender L1 model
 (defipomdp defl1
     (S
-        (VulnType VulnFound AccessLevel AttActive)
+        (HostType)
     )
 
     (O
-        (BaitInteraction)
+        (hpInteraction HostObs)
     )
 
     (A  DefActions)
@@ -354,56 +198,29 @@
     )
 
     (dynamics
-        (BLOCK_ACTION   (actionBlockAction))
-        (NOP            (actionNOP))
+        (Defend         (actionDefend))
+        (Nop            (actionNop))
     )
     
     (R
-        (BLOCK_ACTION   (defReward - (1.0)))
-        (NOP            (defReward - (0.5)))
+        (Defend         (defendReward))
+        (Nop            (0.0))
     )
 
     (discount 0.9)
     (H 7)
 )
 
-(defdd initDefl1Actual
-    (VulnType       real)
-    * (VulnFound    no)
-    * (AccessLevel  user)
-    * (AttActive    yes)
-    * (Defl1ModelsAttl0 m0)
-)
-
 ---- Initial beliefs of l1 defender
 
-(defdd initDefl1c
-    (VulnType       real)
-    * (VulnFound    no)
-    * (AttActive yes)
-    * (AccessLevel user)
+(defdd initDefl1_active
+    (HostType       
+        (c      (0.5))
+        (hp     (0.5))
+        (u      (0.0))
+    )
     * (Defl1ModelsAttl0 m0)
 )
-
-(defdd initDefl1hp
-    (VulnType       bait)
-    * (VulnFound    no)
-    * (AttActive yes)
-    * (AccessLevel user)
-    * (Defl1ModelsAttl0 m0)
-)
-
---(defdd initDefl1Final
---    (HostType 
---        (c      (0.5))
---        (hp     (0.5))
---        (c_hp   (0.0))
---    )
---    * (AccessLevel user)
---    * (ExfilDone no)
---    * (AttActive yes)
---    * (Defl1ModelsAttl0 m0)
---)
 
 ---- Make passive defender model
 
@@ -417,11 +234,11 @@
 -- passive defender l1 model
 (defipomdp defl1Passive
     (S
-        (VulnType VulnFound AccessLevel AttActive)
+        (HostType)
     )
 
     (O
-        (BaitInteraction)
+        (hpInteraction HostObs)
     )
 
     (A  DefActions)
@@ -435,111 +252,72 @@
     )
 
     (dynamics
-        (BLOCK_ACTION   (actionBlockAction))
-        (NOP            (actionNOP))
+        (Defend         (actionDefend))
+        (Nop            (actionNop))
     )
     
     (R
-        (BLOCK_ACTION   -(1.0))
-        (NOP            (0.0))
+        (Defend         -(1.0))
+        (Nop            (0.0))
     )
 
     (discount 0.9)
     (H 6)
 )
 
-(defdd initPassiveDefl1c
-    (VulnType       real)
-    * (VulnFound    no)
-    * (AccessLevel user)
-    * (AttActive yes)
+(defdd initDefl1_passive
+    (HostType       
+        (c      (0.5))
+        (hp     (0.5))
+        (u      (0.0))
+    )
     * (PassiveDefl1ModelsAttl0 m0)
 )
 
-(defdd initPassiveDefl1hp
-    (VulnType       bait)
-    * (VulnFound    no)
-    * (AccessLevel user)
-    * (AttActive yes)
-    * (PassiveDefl1ModelsAttl0 m0)
-)
---
---(defdd initPassiveDefl1Final
---    (HostType 
---        (c      (0.5))
---        (hp     (0.5))
---        (c_hp   (0.0))
---    )
---    * (AccessLevel user)
---    * (ExfilDone no)
---    * (AttActive yes)
---    * (PassiveDefl1ModelsAttl0 m0)
---)
---
 ---- Attacker l2
 
 (defdd defReactionDefault
     (DefActions
-        (BLOCK_ACTION
+        (Defend
             (DefReaction' yes)
         )
 
-        (NOP
+        (Nop
             (DefReaction' no)
         )
     )
 )
 
-(defdbn attackerReconlNDBN
-    (VulnType       (SAME VulnType))
-    (VulnFound      (vulnFoundTransition))
-    (AccessLevel    (defaultAccessLevel))
-    (AttActive      (SAME AttActive))
-    (VulnFoundObs   (vulnFoundVulnFoundObs))
+(defdbn AttackerNoplNDBN
+    (HostType       (SAME HostType))
+    (VulnFoundObs   (vulnFoundObs))
     (DefReaction    (defReactionDefault))
 )
 
-(defdbn attackerExitlNDBN
-    (VulnType       (SAME VulnType))
-    (VulnFound      (SAME VulnFound))
-    (AccessLevel    (defaultAccessLevel))
-    (AttActive      (AttActive' no))
-    (VulnFoundObs   (vulnFoundObsDefault))
+(defdbn AttackerAttacklNDBN
+    (HostType       (SAME HostType))
+    (VulnFoundObs   (VulnFoundObs' UNIFORM))
     (DefReaction    (defReactionDefault))
 )
 
-(defdbn attackerNoplNDBN
-    (VulnType       (SAME VulnType))
-    (VulnFound      (SAME VulnFound))
-    (AccessLevel    (defaultAccessLevel))
-    (AttActive      (SAME AttActive))
-    (VulnFoundObs   (vulnFoundObsDefault))
-    (DefReaction    (defReactionDefault))
-)
-
-(defdbn attackerPrivEsclNDBN
-    (VulnType       (SAME VulnType))
-    (VulnFound      (SAME VulnFound))
-    (AccessLevel    (privEscAccessLevel))
-    (AttActive      (SAME AttActive))
-    (VulnFoundObs   (vulnFoundObsDefault))
+(defdbn AttackerMovelNDBN
+    (HostType       (hostTypeTransition))
+    (VulnFoundObs   (VulnFoundObs' UNIFORM))
     (DefReaction    (defReactionDefault))
 )
 
 (initmodelvar Attl2ModelsDefl1
     (frames DefFrame)
     (
-        (lowCap     (m0 (initPassiveDefl1c)))
-        (lowCap     (m1 (initPassiveDefl1hp)))
-        (highCap    (m2 (initDefl1c)))
-        (highCap    (m3 (initDefl1hp)))
+        (lowCap     (m0 (initDefl1_passive)))
+        (highCap    (m1 (initDefl1_active)))
     )
 )
 
 -- Level 2 Attacker model
 (defipomdp attl2
     (S
-        (VulnType VulnFound AccessLevel AttActive)
+        (HostType)
     )
 
     (O
@@ -558,64 +336,35 @@
     )
 
     (dynamics
-        (RECON      (attackerReconlNDBN))
-        (NOP        (attackerNoplNDBN))
-        (EXIT       (attackerExitlNDBN))
-        (PRIV_ESC   (attackerPrivEsclNDBN))
+        (Nop        (AttackerNoplNDBN))
+        (Attack     (AttackerAttacklNDBN))
+        (Move       (AttackerMovelNDBN))
     )
 
     (R
-        (RECON      (-1.0))
-        (PRIV_ESC   (-1.0))
-        (NOP        (-0.5))
-        (EXFIL      (-1.0))
-        (EXIT       (attackerReward - 1.0))
+        (Attack     (attackerReward))
+        (Nop        (0.0))
+        (Move       (0.0))
     )
 
     (discount 0.9)
     (H 7)
 )
 
-(defdd dependentMj
-    (VulnType
-        (real
-            (Attl2ModelsDefl1
-                (m0     (0.5))
-                (m1     (0.0))
-                (m2     (0.5))
-                (m3     (0.0))
-            )      
-        )
-
-        (bait
-            (Attl2ModelsDefl1
-                (m0     (0.0))
-                (m1     (0.5))
-                (m2     (0.0))
-                (m3     (0.5))
-            )
-        )
-
-        (bait_real
-            (Attl2ModelsDefl1
-                (m0     (0.25))
-                (m1     (0.25))
-                (m2     (0.25))
-                (m3     (0.25))
-        )
+(defdd initAttl2
+    (HostType
+        (c      (0.5))
+        (hp     (0.5))
+        (u      (0.0))
+    )
+    * (Attl2ModelsDefl1 
+        (m0     (0.5))
+        (m1     (0.5))
     )
 )
 
-(defdd initAttl2
-    (VulnType
-        (real       (0.0))
-        (bait       (0.0))
-        (bait_real  (1.0))
-    )
-    * (VulnFound    no)
-    * (AccessLevel  user)
-    * (AttActive    yes)
-    * (dependentMj)
+(defdd state
+    (HostType       hp)
 )
 
 
