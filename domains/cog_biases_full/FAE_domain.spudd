@@ -9,15 +9,15 @@
 (defvar DataInjected    (yes no))
 
 -- Defender modeling the attacker
-(defvar Defl1ModelsAttl0            (m0 m1))
+(defvar Defl1ModelsAttl0            (m0 m1 m2))
 (defvar Defl1ModelsAttl0EC          (ec0))
-(defvar PassiveDefl1ModelsAttl0     (m0 m1))
+(defvar PassiveDefl1ModelsAttl0     (m0 m1 m2))
 (defvar PassiveDefl1ModelsAttl0EC   (ec0))
 
 (defvar Attl2ModelsDefl1    (m0 m1 m2 m3))
 (defvar Attl2ModelsDefl1EC  (ec0))
 
-(defvar Defl3ModelsAttl2    (m0 m1))
+(defvar Defl3ModelsAttl2    (m0 m1 m2))
 (defvar Defl3ModelsAttl2EC  (ec0))
 
 (defvar AttackerFrame   (att))
@@ -31,7 +31,7 @@
 
 -- Defender observations
 (defvar EndPtAlerts  
-    (file_enum file_write process_creation su_login none))
+    (file_enum file_write su_login none))
 (defvar AccObs      (yes no))
 (defvar DataObs     (yes no))
 
@@ -575,6 +575,18 @@
     * (DataInjected     no)
 )
 
+(defdd initAttl0Root
+    (attHostBelief)
+    * (dataGivenHost)
+    * (DataFound        no)
+    * (DataPrivs        UNIFORM)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (AccessLevel      root)
+    * (AttActive        yes)
+    * (DataInjected     no)
+)
+
 (defdd initAttl0Absent
     (attHostBelief)
     * (dataGivenHost)
@@ -595,6 +607,7 @@
     (
         (att    (m0     (initAttl0)))
         (att    (m1     (initAttl0Absent)))
+        (att    (m2     (initAttl0Root)))
     )
 )
 ---------------------------------------------------------------
@@ -801,18 +814,9 @@
 
 
 (defdd loggingActionReward
-    (AttActions
-        (FileRecon      (0.0))
-        (EnumAccounts   (0.0))
-        (PrivEscAcc     (0.0))
-        (Nop            (0.0))
-        (Exit           
-            (DataInjected
-                (yes    (10.0))
-                (no     (0.0))
-            )
-        )
-        (ManipulateData (0.0))
+    (DataInjected
+        (yes    (10.0))
+        (no     (0.0))
     )
 )
 
@@ -890,8 +894,8 @@
     )
     
     (R
-        (LockAccount        (honeypotReward + lockAccountReward))
-        (ConfineUser        (honeypotReward + confineUserReward))
+        (LockAccount        (honeypotReward - 1.0))
+        (ConfineUser        (honeypotReward - 1.0))
         (Nop                (honeypotReward))
         (DeployDataDecoys   (honeypotReward - 1.0))
         (DecoyAccount       (honeypotReward - 1.0))
@@ -901,24 +905,22 @@
     (H 10)
 )
 
-(defdd attl0GivenAttActive
-    (AttActive
-        (yes    (Defl1ModelsAttl0 m0))
-        (no     (Defl1ModelsAttl0 m1))
-    )
-)
+(defdd attl0GivenState
+    (AccessLevel
+        (user
+            (AttActive
+                (yes    (Defl1ModelsAttl0 m0))
+                (no     (Defl1ModelsAttl0 m1))
+            )
+        )
 
-(defdd initDefl1_active
-    (HostType           honeypot)
-    * (EscAccounts      no)
-    * (AccFound         no)
-    * (dataGivenHost)
-    * (DataFound        no)
-    * (DataPrivs        root)
-    * (AccessLevel      user)
-    * (AttActive        UNIFORM)
-    * (attl0GivenAttActive)
-    * (DataInjected     no)
+        (root
+            (AttActive
+                (yes    (Defl1ModelsAttl0 m2))
+                (no     (Defl1ModelsAttl0 m1))
+            )
+        )
+    )
 )
 
 ------ Initial beliefs of l1 defender
@@ -930,9 +932,9 @@
     * (dataGivenHost)
     * (DataFound        no)
     * (DataPrivs        root)
-    * (AccessLevel      user)
+    * (AccessLevel      UNIFORM)
     * (AttActive        UNIFORM)
-    * (attl0GivenAttActive)
+    * (attl0GivenState)
     * (DataInjected     no)
 )
 
@@ -943,9 +945,9 @@
     * (dataGivenHost)
     * (DataFound        no)
     * (DataPrivs        root)
-    * (AccessLevel      user)
+    * (AccessLevel      UNIFORM)
     * (AttActive        UNIFORM)
-    * (attl0GivenAttActive)
+    * (attl0GivenState)
     * (DataInjected     no)
 )
 
@@ -957,6 +959,7 @@
     (
         (att    (m0     (initAttl0)))
         (att    (m1     (initAttl0Absent)))
+        (att    (m2     (initAttl0Root)))
     )
 )
 
@@ -1001,24 +1004,22 @@
     (H 10)
 )
 
-(defdd attl0GivenAttActivePassive
-    (AttActive
-        (yes    (PassiveDefl1ModelsAttl0 m0))
-        (no     (PassiveDefl1ModelsAttl0 m1))
-    )
-)
+(defdd attl0GivenStatePassive
+    (AccessLevel
+        (user
+            (AttActive
+                (yes    (PassiveDefl1ModelsAttl0 m0))
+                (no     (PassiveDefl1ModelsAttl0 m1))
+            )
+        )
 
-(defdd initDefl1_passive
-    (HostType           honeypot)
-    * (EscAccounts      UNIFORM)
-    * (DataFound        no)
-    * (AccFound         no)
-    * (dataGivenHost)
-    * (DataPrivs        root)
-    * (AccessLevel      user)
-    * (AttActive        UNIFORM)
-    * (attl0GivenAttActivePassive)
-    * (DataInjected     no)
+        (root
+            (AttActive
+                (yes    (PassiveDefl1ModelsAttl0 m2))
+                (no     (PassiveDefl1ModelsAttl0 m1))
+            )
+        )
+    )
 )
 
 (defdd initDefl1c_passive
@@ -1028,9 +1029,9 @@
     * (dataGivenHost)
     * (DataFound        no)
     * (DataPrivs        root)
-    * (AccessLevel      user)
+    * (AccessLevel      UNIFORM)
     * (AttActive        UNIFORM)
-    * (attl0GivenAttActivePassive)
+    * (attl0GivenStatePassive)
     * (DataInjected     no)
 )
 
@@ -1041,9 +1042,9 @@
     * (dataGivenHost)
     * (DataFound        no)
     * (DataPrivs        root)
-    * (AccessLevel      user)
+    * (AccessLevel      UNIFORM)
     * (AttActive        UNIFORM)
-    * (attl0GivenAttActivePassive)
+    * (attl0GivenStatePassive)
     * (DataInjected     no)
 )
 
@@ -1255,6 +1256,19 @@
     * (dependentMjAttl2)
 )
 
+(defdd initAttl2Root
+    (attHostBelief)
+    * (DataPrivs        UNIFORM)
+    * (dataGivenHost)
+    * (EscAccounts      yes)
+    * (DataFound        no)
+    * (AccFound         no)
+    * (AccessLevel      root)
+    * (AttActive        yes)
+    * (DataInjected     no)
+    * (dependentMjAttl2)
+)
+
 -- defender L3 model
 
 (initmodelvar Defl3ModelsAttl2
@@ -1262,6 +1276,7 @@
     (
         (att    (m0     (initAttl2)))
         (att    (m1     (initAttl2Absent)))
+        (att    (m2     (initAttl2Root)))
     )
 )
 
@@ -1295,8 +1310,8 @@
     )
     
     (R
-        (LockAccount        (honeypotReward + lockAccountReward))
-        (ConfineUser        (honeypotReward + confineUserReward))
+        (LockAccount        (honeypotReward - 1.0))
+        (ConfineUser        (honeypotReward - 1.0))
         (Nop                (honeypotReward))
         (DeployDataDecoys   (honeypotReward - 1.0))
         (DecoyAccount       (honeypotReward - 1.0))
@@ -1306,10 +1321,21 @@
     (H 10)
 )
 
-(defdd attl2GivenAttActive
-    (AttActive
-        (yes    (Defl3ModelsAttl2 m0))
-        (no     (Defl3ModelsAttl2 m1))
+(defdd attl2GivenState
+    (AccessLevel
+        (user
+            (AttActive
+                (yes    (Defl3ModelsAttl2 m0))
+                (no     (Defl3ModelsAttl2 m1))
+            )
+        )
+
+        (root
+            (AttActive
+                (yes    (Defl3ModelsAttl2 m2))
+                (no     (Defl3ModelsAttl2 m1))
+            )
+        )
     )
 )
 
@@ -1320,10 +1346,10 @@
     * (dataGivenHost)
     * (DataFound        no)
     * (DataPrivs        root)
-    * (AccessLevel      user)
+    * (AccessLevel      UNIFORM)
     * (AttActive        UNIFORM)
     * (DataInjected     no)
-    * (attl2GivenAttActive)
+    * (attl2GivenState)
 )
 
 (defdd initState
@@ -1349,5 +1375,4 @@
     * (AttActive        yes)
     * (DataInjected     no)
 )
-
 
