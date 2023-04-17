@@ -103,15 +103,15 @@
     (HostType'
         (critical
             (HostObs'
-                (user_files     (0.5))
-                (none           (0.5))
+                (user_files     (0.7))
+                (none           (0.3))
             )
         )
 
         (honeypot
             (HostObs'
-                (user_files     (0.5))
-                (none           (0.5))
+                (user_files     (0.3))
+                (none           (0.7))
             )
         )
 
@@ -581,10 +581,10 @@
 -- Initial belief of the attacker
 (defdd initAttl0
     (attHostBelief)
-    * (HostHasData      UNIFORM)
+    * (HostHasData      yes)
     * (DataFound        no)
     * (DataPrivs        UNIFORM)
-    * (EscAccounts      UNIFORM)
+    * (EscAccounts      yes)
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -593,7 +593,7 @@
 
 (defdd initAttl0Absent
     (attHostBelief)
-    * (HostHasData      UNIFORM)
+    * (HostHasData      yes)
     * (DataFound        no)
     * (DataPrivs        UNIFORM)
     * (EscAccounts      UNIFORM)
@@ -954,7 +954,7 @@
 
 (defdd initDefl1hp_active
     (HostType           honeypot)
-    * (EscAccounts      yes)
+    * (EscAccounts      no)
     * (AccFound         no)
     * (HostHasData      no)
     * (DataFound        no)
@@ -1052,7 +1052,7 @@
 
 (defdd initDefl1hp_passive
     (HostType           honeypot)
-    * (EscAccounts      yes)
+    * (EscAccounts      no)
     * (AccFound         no)
     * (HostHasData      no)
     * (DataFound        no)
@@ -1254,8 +1254,8 @@
 (defdd initAttl2
     (attHostBelief)
     * (DataPrivs        UNIFORM)
-    * (HostHasData      UNIFORM)
-    * (EscAccounts      UNIFORM)
+    * (HostHasData      yes)
+    * (EscAccounts      yes)
     * (DataFound        no)
     * (AccFound         no)
     * (AccessLevel      user)
@@ -1267,8 +1267,8 @@
 (defdd initAttl2Absent
     (attHostBelief)
     * (DataPrivs        UNIFORM)
-    * (HostHasData      UNIFORM)
-    * (EscAccounts      UNIFORM)
+    * (HostHasData      yes)
+    * (EscAccounts      yes)
     * (DataFound        no)
     * (AccFound         no)
     * (AccessLevel      user)
@@ -1337,7 +1337,7 @@
 
 (defdd initDefl3
     (HostType           honeypot)
-    * (EscAccounts      yes)
+    * (EscAccounts      no)
     * (AccFound         no)
     * (HostHasData      no)
     * (DataFound        no)
