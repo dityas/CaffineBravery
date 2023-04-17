@@ -559,7 +559,10 @@
 )
 
 (defdd attHostBelief
-    (HostType           critical_honeypot)
+    (HostType
+        (critical           (0.5))
+        (honeypot           (0.5))
+    )
 )
 
 -- Initial belief of the attacker
@@ -1349,5 +1352,4 @@
     * (AttActive        yes)
     * (DataInjected     no)
 )
-
 
