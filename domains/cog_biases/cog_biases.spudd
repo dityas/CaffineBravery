@@ -1,4 +1,5 @@
-(defvar HostType    (hp c u))
+(defvar HostType        (hp c u))
+(defvar HostHasData     (yes no))
 
 -- Defender modeling the Attacker
 (defvar Defl1ModelsAttl0            (m0))
