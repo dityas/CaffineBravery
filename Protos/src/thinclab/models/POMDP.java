@@ -167,6 +167,12 @@ public class POMDP extends PBVISolvablePOMDPBasedModel {
             List.of(o) : List.of();
     }
 
+    public float getWeight(DD likelihoods, DD prediction) {
+
+        float sum = DDOP.l2NormSq(likelihoods, prediction);
+        return 1.0f / (1.0f + sum);
+    }
+
     public float getWeight(List<DD> factors, List<DD> fPreds) {
         
         float sum = 0.0f;
@@ -181,9 +187,6 @@ public class POMDP extends PBVISolvablePOMDPBasedModel {
 
                 var p = fPreds.get(vars.first() 
                         - 1 - (Global.NUM_VARS / 2));
-                LOGGER.debug("predicted %s, likelihood %s for %s", p, f,
-                        Global.varNames.get(vars.first() 
-                        - 1 - (Global.NUM_VARS / 2)));
                 sum += DDOP.l2NormSq(
                         p, f, 
                         Global.valNames.get(vars.first() - 1).size());
@@ -193,17 +196,22 @@ public class POMDP extends PBVISolvablePOMDPBasedModel {
         return 1.0f / (1.0f + sum);
     }
 
-    public List<DD> getWeightedEvidence(List<DD> p, List<DD> OFao) {
+    public List<DD> getWeightedEvidence(DD predictedB, List<DD> OFao) {
 
         var weighted = new ArrayList<DD>(OFao.size());
         for (var ofao : OFao) {
-            LOGGER.debug("Working on %s", ofao);
-            var w = getWeight(evidenceFactors(ofao), p);
-            // var w = getWeight(List.of(ofao), p);
-            LOGGER.debug("Gamma is %s", w);
-            LOGGER.debug("Before weighting %s", ofao);
+
+            var ofaoVars = ofao.getVars();
+            var vars = new ArrayList<>(i_S_p());
+            vars.removeAll(ofaoVars);
+
+            //var w = getWeight(
+            //        evidenceFactors(ofao), 
+            //        DDOP.addMultVarElim(List.of(predictedB), vars));
+            var w = getWeight(
+                    ofao, 
+                    DDOP.addMultVarElim(List.of(predictedB), vars));
             weighted.add(DDOP.pow(ofao, w));
-            LOGGER.debug("After weighting %s", DDOP.pow(ofao, w));
         }
 
         return weighted;
@@ -223,8 +231,7 @@ public class POMDP extends PBVISolvablePOMDPBasedModel {
         DD nextBelState = DDOP.addMultVarElim(dynamicsArray, i_S);
 
         // compute evidence weight
-        var wOFao = getWeightedEvidence(
-                DDOP.factors(nextBelState, i_S_p), OFao);
+        var wOFao = getWeightedEvidence(nextBelState, OFao);
         
         // f_wevidence(S') x f_pred(S')
         wOFao.add(nextBelState);

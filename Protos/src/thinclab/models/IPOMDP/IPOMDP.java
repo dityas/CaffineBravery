@@ -812,6 +812,30 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
         return 1.0f / (1.0f + sum);
     }
 
+    public float getWeight(DD likelihoods, DD prediction) {
+
+        float sum = DDOP.l2NormSq(likelihoods, prediction);
+        return 1.0f / (1.0f + sum);
+    }
+
+    public List<DD> getWeightedEvidence(DD predictedB, List<DD> OFao) {
+
+        var weighted = new ArrayList<DD>(OFao.size());
+        for (var ofao : OFao) {
+
+            var ofaoVars = ofao.getVars();
+            var vars = new ArrayList<>(i_S_p());
+            vars.removeAll(ofaoVars);
+
+            var w = getWeight(
+                    ofao, 
+                    DDOP.addMultVarElim(List.of(predictedB), vars));
+            weighted.add(DDOP.pow(ofao, w));
+        }
+
+        return weighted;
+    }
+
     public List<DD> getWeightedEvidence(List<DD> p, List<DD> OFao) {
 
         var weighted = new ArrayList<DD>(OFao.size());
@@ -848,8 +872,7 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
         _vars.add(i_Aj);
         
         // compute evidence weight
-        var wOFao = getWeightedEvidence(
-                DDOP.factors(b_p, _vars), OFao);
+        var wOFao = getWeightedEvidence(b_p, OFao);
 
         wOFao.add(b_p);
         b_p = DDOP.addMultVarElim(wOFao, List.of(i_Aj));

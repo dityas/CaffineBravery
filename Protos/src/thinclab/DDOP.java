@@ -1385,6 +1385,18 @@ public class DDOP {
     }
 
     public static float l2NormSq(final DD d1, 
+            final DD d2) {
+
+        var diff = DDOP.pow(DDOP.sub(d1, d2), 2.0f);
+
+        if (diff instanceof DDleaf d)
+            return d.getVal();
+
+        else
+            return addMultVarElim(List.of(diff), diff.getVars()).getVal();
+    }
+
+    public static float l2NormSq(final DD d1, 
             final DD d2, int dimensions) {
 
         var diff = DDOP.pow(DDOP.sub(d1, d2), 2.0f);
