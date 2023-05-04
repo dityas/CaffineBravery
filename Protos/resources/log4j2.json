@@ -1,0 +1,26 @@
+{
+    "configuration": {
+        "status": "error",
+        "name": "libADDLogger",
+        "packages": "libADD",
+        "ThresholdFilter": {
+            "level": "debug"
+        },
+        "appenders": {
+            "Console": {
+                "name": "STDOUT",
+                "PatternLayout": {
+                    "pattern": "%d{HH:mm:ss,SSS} %-5p %c{1} - %m%n"
+                }
+            }
+        },
+        "loggers": {
+            "asyncroot": {
+                "level": "debug",
+                "AppenderRef": {
+                    "ref": "STDOUT"
+                }
+            }
+        }
+    }
+}
