@@ -1,4 +1,4 @@
-(defvar HostType        (critical honeypot critical_honeypot))
+(defvar HostType        (critical honeypot))
 (defvar HostHasData     (yes no))
 (defvar DataPrivs       (user root))
 (defvar EscAccounts     (yes no))
@@ -113,10 +113,6 @@
                 (user_files     (0.2))
                 (none           (0.8))
             )
-        )
-
-        (critical_honeypot
-            (HostObs'   UNIFORM)
         )
     )
 )
@@ -416,7 +412,7 @@
     (AttActive      (# (DefActions) 
         (distDefActions * defActionsAttActive)))
 
-    (HostObs        (hostObsDD))
+    (HostObs        (HostObs'   UNIFORM))
     (ActionResult   (escAccountObs))
     (ConnObs        (connObsDD))
     (SecObs         (# (DefActions) 
@@ -841,7 +837,6 @@
             )
         )
         (honeypot           (loggingActionReward))
-        (critical_honeypot  (0.0))
     )
 )
 
@@ -859,7 +854,6 @@
             )
         )
         (honeypot           (-1.0))
-        (critical_honeypot  (-1.0))
     )
 )
 
@@ -868,11 +862,10 @@
         (critical
             (AttActive
                 (yes    (0.0))
-                (no     (-5.0))
+                (no     (-1.0))
             )
         )
         (honeypot           (-1.0))
-        (critical_honeypot  (-1.0))
     )
 )
 
@@ -1093,7 +1086,7 @@
     (AttActive      (defActionsAttActive))
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (hostObsDD))
+    (HostObs        (HostObs'   UNIFORM))
     (ActionResult   (escAccountObs))
     (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
@@ -1239,14 +1232,6 @@
                 (m2     (0.0))
                 (m3     (0.5))
             )
-        )
-
-        (critical_honeypot
-            (Attl2ModelsDefl1
-                (m0     (0.25))
-                (m1     (0.25))
-                (m2     (0.25))
-                (m3     (0.25))
         )
     )
 )

@@ -814,7 +814,7 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
 
     public float getWeight(DD likelihoods, DD prediction) {
 
-        float sum = DDOP.l2NormSq(likelihoods, prediction);
+        float sum = DDOP.l1Norm(likelihoods, prediction);
         return 1.0f / (1.0f + sum);
     }
 
