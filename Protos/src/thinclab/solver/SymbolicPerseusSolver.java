@@ -217,7 +217,7 @@ SymbolicPerseusSolver<M extends PBVISolvablePOMDPBasedModel>
 
         int convergenceCount = 0;
         var Vn_p = UB;
-        for (int i = 0;; i++) {
+        for (int i = 0; i < 500; i++) {
 
             long then = System.nanoTime();
 

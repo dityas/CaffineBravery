@@ -521,12 +521,7 @@
 
 (defdd exitReward
     (AttActive
-        (yes    
-            (HostType
-                (critical   (successCondition))
-                (honeypot   (successCondition))
-            )
-        )
+        (yes    (successCondition))
         (no     (-1.0))
     )
 )
