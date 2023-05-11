@@ -502,8 +502,8 @@
     (AttActive      (# (DefActions) 
         (distDefActions * defActionsAttActive)))
 
-    (HostObs        (HostObs' UNIFORM))
-    (ActionResult   (dataInjectedObs))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
     (ConnObs        (connObsDD))
     (SecObs         (# (DefActions) 
         (distDefActions * secObsGeneral)))
@@ -519,7 +519,7 @@
                 (no     (-30.0))
             )
         )
-        (no     (10.0))
+        (no     (10))
     )
 )
 
@@ -856,19 +856,6 @@
     )
 )
 
-(defdd confineUserReward
-    (HostType
-        (critical
-            (AttActive
-                (yes    (-10.0))
-                (no     (-1.0))
-            )
-        )
-        (honeypot           (-1.0))
-        (critical_honeypot  (-1.0))
-    )
-)
-
 -- defender L1 model
 (defipomdp defl1_active
     (S
@@ -1154,8 +1141,8 @@
     (AttActive      (defActionsAttActive))
     (DataInjected   (manipulateDataDD))
 
-    (HostObs        (HostObs' UNIFORM))
-    (ActionResult   (dataInjectedObs))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
     (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
 )
@@ -1311,7 +1298,7 @@
     
     (R
         (LockAccount        (honeypotReward + lockAccountReward))
-        (ConfineUser        (honeypotReward + confineUserReward))
+        (ConfineUser        (honeypotReward - 10.0))
         (Nop                (honeypotReward))
         (DeployDataDecoys   (honeypotReward - 1.0))
         (DecoyAccount       (honeypotReward - 1.0))
