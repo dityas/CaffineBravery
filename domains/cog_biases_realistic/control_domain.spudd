@@ -75,7 +75,7 @@
 (defdd defActionsPrivEsc
     (DefActions
         (LockAccount        (SAME AccessLevel))
-        (ConfineUser        (SAME AccessLevel))
+        (ConfineUser        (privEscAccDD))
         (DeployDataDecoys   (privEscAccDD))
         (DecoyAccount       (privEscAccDD))
         (Nop                (privEscAccDD))
@@ -196,8 +196,8 @@
                 (yes    (DataFound' yes))
                 (no 
                     (DataFound'
-                        (yes    (0.8))
-                        (no     (0.2))
+                        (yes    (0.9))
+                        (no     (0.1))
                     )
                 )
             )
@@ -293,8 +293,8 @@
                 (yes    (AccFound' yes))
                 (no
                     (AccFound'
-                        (yes    (0.99))
-                        (no     (0.01))
+                        (yes    (0.9))
+                        (no     (0.1))
                     )
                 )
             )
@@ -533,11 +533,16 @@
     (HostHasData
         (yes
             (DataInjected
-                (yes    (30.0))
-                (no     (-30.0))
+                (yes    (100.0))
+                (no     (0.0))
             )
         )
-        (no     (10.0))
+        (no     
+            (DataInjected
+                (no     (10.0))
+                (yes    (0.0))
+            )
+        )
     )
 )
 
@@ -546,7 +551,12 @@
         (yes    
             (HostType
                 (critical   (successCondition))
-                (honeypot   (10))
+                (honeypot   
+                    (DataInjected
+                        (no     (10.0))
+                        (yes    (-10.0))
+                    )
+                )
             )
         )
         (no     (-1.0))
@@ -800,7 +810,7 @@
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
     (AccFound       (attActionsAccFound))
-    (AccessLevel    (SAME AccessLevel))
+    (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
 

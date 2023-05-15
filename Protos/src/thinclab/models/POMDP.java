@@ -170,7 +170,7 @@ public class POMDP extends PBVISolvablePOMDPBasedModel {
     public float getWeight(DD likelihoods, DD prediction) {
 
         float sum = DDOP.l1Norm(likelihoods, prediction);
-        return 1.0f / (1.0f + sum);
+        return 2.0f / (1.0f + sum);
     }
 
     public float getWeight(List<DD> factors, List<DD> fPreds) {
