@@ -1,4 +1,4 @@
-(defvar HostType        (critical honeypot))
+(defvar HostType        (critical honeypot critical_honeypot))
 (defvar HostHasData     (yes no))
 (defvar DataPrivs       (user root))
 (defvar EscAccounts     (yes no))
@@ -75,7 +75,7 @@
 (defdd defActionsPrivEsc
     (DefActions
         (LockAccount        (SAME AccessLevel))
-        (ConfineUser        (SAME AccessLevel))
+        (ConfineUser        (privEscAccDD))
         (DeployDataDecoys   (privEscAccDD))
         (DecoyAccount       (privEscAccDD))
         (Nop                (privEscAccDD))
@@ -103,16 +103,20 @@
     (HostType'
         (critical
             (HostObs'
-                (user_files     (0.8))
-                (none           (0.2))
+                (user_files     (0.9))
+                (none           (0.1))
             )
         )
 
         (honeypot
             (HostObs'
-                (user_files     (0.2))
-                (none           (0.8))
+                (user_files     (0.1))
+                (none           (0.9))
             )
+        )
+
+        (critical_honeypot
+            (HostObs'   UNIFORM)
         )
     )
 )
@@ -174,8 +178,8 @@
                 (yes    (DataFound' yes))
                 (no 
                     (DataFound'
-                        (yes    (0.8))
-                        (no     (0.2))
+                        (yes    (0.9))
+                        (no     (0.1))
                     )
                 )
             )
@@ -271,8 +275,8 @@
                 (yes    (AccFound' yes))
                 (no
                     (AccFound'
-                        (yes    (0.99))
-                        (no     (0.01))
+                        (yes    (0.9))
+                        (no     (0.1))
                     )
                 )
             )
@@ -412,7 +416,7 @@
     (AttActive      (# (DefActions) 
         (distDefActions * defActionsAttActive)))
 
-    (HostObs        (HostObs'   UNIFORM))
+    (HostObs        (hostObsDD))
     (ActionResult   (escAccountObs))
     (ConnObs        (connObsDD))
     (SecObs         (# (DefActions) 
@@ -498,8 +502,8 @@
     (AttActive      (# (DefActions) 
         (distDefActions * defActionsAttActive)))
 
-    (HostObs        (HostObs' UNIFORM))
-    (ActionResult   (dataInjectedObs))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
     (ConnObs        (connObsDD))
     (SecObs         (# (DefActions) 
         (distDefActions * secObsGeneral)))
@@ -511,22 +515,22 @@
     (HostHasData
         (yes
             (DataInjected
-                (yes    (30.0))
+                (yes    (100.0))
                 (no     (0.0))
             )
         )
-        (no     (0.0))
+        (no     
+            (DataInjected
+                (no     (10.0))
+                (yes    (0.0))
+            )
+        )
     )
 )
 
 (defdd exitReward
     (AttActive
-        (yes    
-            (HostType
-                (critical   (successCondition))
-                (honeypot   (successCondition))
-            )
-        )
+        (yes    (successCondition))
         (no     (-1.0))
     )
 )
@@ -572,16 +576,9 @@
     (discount 0.95)
 )
 
-(defdd attHostBelief
-    (HostType
-        (critical           (0.5))
-        (honeypot           (0.5))
-    )
-)
-
 -- Initial belief of the attacker
 (defdd initAttl0
-    (attHostBelief)
+    (HostType           critical_honeypot)
     * (HostHasData      UNIFORM)
     * (DataFound        no)
     * (DataPrivs        UNIFORM)
@@ -593,7 +590,7 @@
 )
 
 (defdd initAttl0Absent
-    (attHostBelief)
+    (HostType           critical_honeypot)
     * (HostHasData      UNIFORM)
     * (DataFound        no)
     * (DataPrivs        UNIFORM)
@@ -618,37 +615,37 @@
 ---- Observations
 (defdd defaultEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.01))
-        (file_write             (0.2))
-        (su_login               (0.01))
-        (none                   (0.78))
+        (file_enum              (0.1))
+        (file_write             (0.1))
+        (su_login               (0.1))
+        (none                   (0.7))
     )
 )
 
 (defdd hostReconEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.97))
-        (file_write             (0.01))
-        (su_login               (0.01))
-        (none                   (0.01))
+        (file_enum              (0.7))
+        (file_write             (0.1))
+        (su_login               (0.1))
+        (none                   (0.1))
     )
 )
 
 (defdd manipulateDataEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.01))
-        (file_write             (0.97))
-        (su_login               (0.01))
-        (none                   (0.01))
+        (file_enum              (0.1))
+        (file_write             (0.7))
+        (su_login               (0.1))
+        (none                   (0.1))
     )
 )
 
 (defdd privEscEndPtAlert
     (EndPtAlerts'
-        (file_enum              (0.01))
-        (file_write             (0.01))
-        (su_login               (0.97))
-        (none                   (0.01))
+        (file_enum              (0.1))
+        (file_write             (0.1))
+        (su_login               (0.7))
+        (none                   (0.1))
     )
 )
 
@@ -778,7 +775,7 @@
     (DataPrivs      (SAME DataPrivs))
     (EscAccounts    (SAME EscAccounts))
     (AccFound       (attActionsAccFound))
-    (AccessLevel    (SAME AccessLevel))
+    (AccessLevel    (attActionsAccessLevel))
     (AttActive      (attActionsAttActive))
     (DataInjected   (attActionsDataInjected))
 
@@ -842,6 +839,7 @@
             )
         )
         (honeypot           (loggingActionReward))
+        (critical_honeypot  (0.0))
     )
 )
 
@@ -859,18 +857,7 @@
             )
         )
         (honeypot           (-1.0))
-    )
-)
-
-(defdd confineUserReward
-    (HostType
-        (critical
-            (AttActive
-                (yes    (0.0))
-                (no     (-1.0))
-            )
-        )
-        (honeypot           (-1.0))
+        (critical_honeypot  (-1.0))
     )
 )
 
@@ -905,7 +892,7 @@
     
     (R
         (LockAccount        (honeypotReward + lockAccountReward))
-        (ConfineUser        (honeypotReward + confineUserReward))
+        (ConfineUser        (honeypotReward - 10.0))
         (Nop                (honeypotReward))
         (DeployDataDecoys   (honeypotReward - 1.0))
         (DecoyAccount       (honeypotReward - 1.0))
@@ -1091,7 +1078,7 @@
     (AttActive      (defActionsAttActive))
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (HostObs'   UNIFORM))
+    (HostObs        (hostObsDD))
     (ActionResult   (escAccountObs))
     (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
@@ -1159,8 +1146,8 @@
     (AttActive      (defActionsAttActive))
     (DataInjected   (manipulateDataDD))
 
-    (HostObs        (HostObs' UNIFORM))
-    (ActionResult   (dataInjectedObs))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
     (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
 )
@@ -1238,11 +1225,19 @@
                 (m3     (0.5))
             )
         )
+
+        (critical_honeypot
+            (Attl2ModelsDefl1
+                (m0     (0.25))
+                (m1     (0.25))
+                (m2     (0.25))
+                (m3     (0.25))
+        )
     )
 )
 
 (defdd initAttl2
-    (attHostBelief)
+    (HostType           critical_honeypot)
     * (DataPrivs        UNIFORM)
     * (HostHasData      UNIFORM)
     * (EscAccounts      UNIFORM)
@@ -1255,7 +1250,7 @@
 )
 
 (defdd initAttl2Absent
-    (attHostBelief)
+    (HostType           critical_honeypot)
     * (DataPrivs        UNIFORM)
     * (HostHasData      UNIFORM)
     * (EscAccounts      UNIFORM)
@@ -1308,7 +1303,7 @@
     
     (R
         (LockAccount        (honeypotReward + lockAccountReward))
-        (ConfineUser        (honeypotReward + confineUserReward))
+        (ConfineUser        (honeypotReward - 10.0))
         (Nop                (honeypotReward))
         (DeployDataDecoys   (honeypotReward - 1.0))
         (DecoyAccount       (honeypotReward - 1.0))
@@ -1361,4 +1356,3 @@
     * (AttActive        yes)
     * (DataInjected     no)
 )
-

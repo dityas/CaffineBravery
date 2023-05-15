@@ -1,175 +1,163 @@
-(defvar DataType        (decoy legit u))
-(defvar CompAccType     (decoy legit u))
-(defvar AccessPol       (strict permissive))
-(defvar SudoAvailable   (yes no))
+(defvar HostType        (critical honeypot critical_honeypot))
+(defvar HostHasData     (yes no))
+(defvar DataPrivs       (user root))
+(defvar EscAccounts     (yes no))
+(defvar AccFound        (yes no))
 (defvar DataFound       (yes no))
 (defvar AccessLevel     (user root))
 (defvar AttActive       (yes no))
+(defvar DataInjected    (yes no))
 
 -- Defender modeling the attacker
-(defvar Defl1ModelsAttl0            (m0))
+(defvar Defl1ModelsAttl0            (m0 m1))
 (defvar Defl1ModelsAttl0EC          (ec0))
-(defvar PassiveDefl1ModelsAttl0     (m0))
+(defvar PassiveDefl1ModelsAttl0     (m0 m1))
 (defvar PassiveDefl1ModelsAttl0EC   (ec0))
 
-(defvar Attl2ModelsDefl1    (m0 m1 m2 m3 m4 m5 m6 m7))
+(defvar Attl2ModelsDefl1    (m0 m1 m2 m3))
 (defvar Attl2ModelsDefl1EC  (ec0))
 
-(defvar Defl3ModelsAttl2    (m0))
+(defvar Defl3ModelsAttl2    (m0 m1))
 (defvar Defl3ModelsAttl2EC  (ec0))
 
 (defvar AttackerFrame   (att))
-(defvar DefFrame        (active passive))
+(defvar DefFrame        (highCap lowCap))
 
 -- Actions for both agents
 (defvar DefActions      
-    (LockAccount DisableSudo EnableSudo DropDAP HardenDAP Nop))
+    (LockAccount ConfineUser Nop DeployDataDecoys DecoyAccount))
 (defvar AttActions      
-    (CheckSudo FileRecon PrivEsc Nop Exit ManipulateData))
+    (FileRecon EnumAccounts PrivEscAcc Nop Exit ManipulateData))
 
 -- Defender observations
 (defvar EndPtAlerts  
-    (file_enum file_write su_login none))
-(defvar ActiveAccObs  (decoy legit))
-(defvar DataAssetObs  (decoy legit))
+    (file_enum file_write process_creation su_login none))
+(defvar AccObs      (yes no))
+(defvar DataObs     (yes no))
 
 -- Attacker observations
+(defvar HostObs         (user_files none))
 (defvar ActionResult    (success failure))
 (defvar ConnObs         (active inactive))
-(defvar DataTypeObs     (legit fake))
-(defvar AccTypeObs      (legit decoy))
+(defvar SecObs          (none connection_terminated su_unavailable))
 
 -- L0 Attacker's guess of L1 defender's action distribution
 (defdd distDefActions
     (DefActions
         (LockAccount        (0.00001))
-        (DisableSudo        (0.00001))
-        (EnableSudo         (0.00001))
+        (DeployDataDecoys   (0.00001))
+        (DecoyAccount       (0.00001))
+        (ConfineUser        (0.00001))
         (Nop                (0.9999))
     )
 )
 
 --------------------------------------------------------------------
--- General attacker observations
 
-(defdd connObsDD
-    (AttActive'
-        (yes    (ConnObs' active))
-        (no     (ConnObs' inactive))
+(defdd privEscAccDD
+    (AttActive
+        (yes
+            (EscAccounts
+                (yes
+                    (AccFound
+                        (yes    (AccessLevel' root))
+                        (no     (AccessLevel' user))
+                    )
+                )
+
+                (no     (SAME AccessLevel))
+            )
+        )
+        (no     (SAME AccessLevel))
     )
 )
 
-(defdd accTypeObs
+(defdd defActionsPrivEsc
+    (DefActions
+        (LockAccount        (SAME AccessLevel))
+        (ConfineUser        (privEscAccDD))
+        (DeployDataDecoys   (privEscAccDD))
+        (DecoyAccount       (privEscAccDD))
+        (Nop                (privEscAccDD))
+    )
+)
+
+(defdd privEscObs
+    (AccessLevel'
+        (root
+            (ActionResult'
+                (success    (0.999))
+                (failure    (0.001))
+            )
+        )
+        (user
+            (ActionResult'
+                (success    (0.001))
+                (failure    (0.999))
+            )
+        )
+    )
+)
+
+(defdd hostObsDD
+    (HostType'
+        (critical
+            (HostObs'
+                (user_files     (0.9))
+                (none           (0.1))
+            )
+        )
+
+        (honeypot
+            (HostObs'
+                (user_files     (0.1))
+                (none           (0.9))
+            )
+        )
+
+        (critical_honeypot
+            (HostObs'   UNIFORM)
+        )
+    )
+)
+
+----------------------------------------------------------
+
+(defdd dataInjectedObs
     (AttActive'
         (yes    
-            (CompAccType'
-                (legit
-                    (AccTypeObs'
-                        (legit  (0.9))
-                        (decoy  (0.1))
-                    )          
+            (DataInjected'
+                (yes
+                    (ActionResult'
+                        (success    (0.999))
+                        (failure    (0.001))
+                    )
                 )
-                (decoy
-                    (AccTypeObs'
-                        (legit  (0.1))
-                        (decoy  (0.9))
-                    )          
+
+                (no
+                    (ActionResult'
+                        (failure    (0.999))
+                        (success    (0.001))
+                    )
                 )
-                (u  (AccTypeObs' UNIFORM))
             )
         )
-        (no     (AccTypeObs' UNIFORM))
-    )
-)
 
-(defdd fileReconDataTypeObs
-    (DataType'
-        (legit
-            (DataTypeObs'
-                (legit  (0.9))
-                (fake   (0.1))
-            )
-        )
-        (decoy
-            (DataTypeObs'
-                (legit  (0.1))
-                (fake   (0.9))
-            )
-        )
-        (u  (DataTypeObs' UNIFORM))
-    )
-)
-
-(defdd manipulateDataDataTypeObs
-    (DataFound'
-        (yes
-            (DataType'
-                (legit  (DataTypeObs' legit))
-                (decoy  (DataTypeObs' fake))
-                (u      (DataTypeObs' UNIFORM))
-            )
-        )
-        (no     (DataTypeObs' fake))
-    )
-)
-
---------------------------------------------------------------------
--- Check sudo 
-
-(defdd checkSudoObs
-    (AttActive'
-        (yes
-            (SudoAvailable'
-                (yes    (ActionResult' success))
-                (no     (ActionResult' failure))
-            )
-        )
         (no     (ActionResult' UNIFORM))
     )
 )
 
---------------------------------------------------------------------
--- File recon
-
-(defdd dataFoundTransition
-    (DataFound
-        (yes    (DataFound' yes))
-        (no
-            (DataFound'
-                (yes    (0.9))
-                (no     (0.1))
-            )
-        )
-    )
-)
-
-(defdd fileReconDataFound
-    (AttActive
-        (yes    
-            (AccessLevel
-                (user   
-                    (AccessPol
-                        (strict     (DataFound' no))
-                        (permissive (dataFoundTransition))
-                    )
-                )
-                (root   (dataFoundTransition))
-            )
-        )
-        (no     (DataFound' no))
-    )
-)
-
-(defdd fileReconObs
+(defdd escAccountObs
     (AttActive'
         (yes
-            (DataFound'
+            (AccFound'
                 (yes
                     (ActionResult'
                         (success    (0.9))
                         (failure    (0.1))
                     )
                 )
+
                 (no
                     (ActionResult'
                         (success    (0.1))
@@ -178,253 +166,391 @@
                 )
             )
         )
+
         (no     (ActionResult' UNIFORM))
     )
 )
 
---------------------------------------------------------------------
--- Manipulate data
+(defdd hostHasDataDataFound
+    (HostHasData
+        (yes
+            (DataFound
+                (yes    (DataFound' yes))
+                (no 
+                    (DataFound'
+                        (yes    (0.8))
+                        (no     (0.2))
+                    )
+                )
+            )
+        )
 
-(defdd manipulateDataResultObs
-    (DataFound'
-        (yes    (ActionResult' success))
-        (no     (ActionResult' failure))
+        (no     (DataFound' no))
     )
 )
 
-(defdd manipulateDataObs
-    (AttActive'
-        (yes    (manipulateDataResultObs))
-        (no     (ActionResult' UNIFORM))
-    )
-)
-
-
---------------------------------------------------------------------
--- Priv Esc
-
-(defdd privEscAccessLevel
+(defdd fileReconDataFound
     (AttActive
         (yes
-            (SudoAvailable
-                (yes    (AccessLevel' root))
-                (no     (AccessLevel' user))
+            (AccessLevel
+                (user
+                    (DataPrivs
+                        (user   (hostHasDataDataFound))
+                        (root   (SAME DataFound))
+                    )
+                )
+
+                (root   (hostHasDataDataFound))
             )
         )
-        (no     (SAME AccessLevel))
+        (no     (DataFound' no))
     )
 )
 
-(defdd privEscObs
+(defdd fileReconObs
     (AttActive'
-        (yes
-            (AccessLevel'
-                (root   (ActionResult' success))
-                (user   (ActionResult' failure))
+        (yes    
+            (DataFound'
+                (yes
+                    (ActionResult'
+                        (success    (0.9))
+                        (failure    (0.1))
+                    )
+                )
+
+                (no
+                    (ActionResult'
+                        (success    (0.1))
+                        (failure    (0.9))
+                    )
+                )
             )
         )
+
         (no     (ActionResult' UNIFORM))
     )
 )
 
---------------------------------------------------------------------
--- Defender actions actions
-
-(defdd defActionsSudoAvailable
+(defdd defActionsEscAccounts
     (DefActions
-        (LockAccount        (SAME SudoAvailable))
-        (DisableSudo        (SudoAvailable' no))
-        (EnableSudo         (SudoAvailable' yes))
-        (Nop                (SAME SudoAvailable))
-        (DropDAP            (SAME SudoAvailable))
-        (HardenDAP          (SAME SudoAvailable))
+        (LockAccount        (SAME EscAccounts))
+        (ConfineUser        (SAME EscAccounts))
+        (DeployDataDecoys   (SAME EscAccounts))
+        (DecoyAccount       (EscAccounts' yes))
+        (Nop                (SAME EscAccounts))
+    )
+)
+
+(defdd defActionsHostHasData
+    (DefActions
+        (LockAccount        (SAME HostHasData))
+        (ConfineUser        (SAME HostHasData))
+        (DeployDataDecoys   (HostHasData' yes))
+        (DecoyAccount       (SAME HostHasData))
+        (Nop                (SAME HostHasData))
+    )
+)
+
+(defdd dataFoundChange
+    (AccessLevel
+        (user   (DataFound' no))
+        (root   (fileReconDataFound))
+    )
+)
+
+(defdd defActionsDataPrivs
+    (DefActions
+        (LockAccount        (SAME DataPrivs))
+        (ConfineUser        (SAME DataPrivs))
+        (DeployDataDecoys   (SAME DataPrivs))
+        (DecoyAccount       (SAME DataPrivs))
+        (Nop                (SAME DataPrivs))
+    )
+)
+
+(defdd accFoundDD
+    (EscAccounts'
+        (yes
+            (AccFound
+                (yes    (AccFound' yes))
+                (no
+                    (AccFound'
+                        (yes    (0.8))
+                        (no     (0.2))
+                    )
+                )
+            )
+        )
+
+        (no (AccFound'  no))
+    )
+)
+
+(defdd dataInjectionPrivs
+    (AccessLevel
+        (user
+            (DataPrivs
+                (user   (DataInjected' yes))
+                (root   (SAME DataInjected))
+            )
+        )
+
+        (root   (DataInjected' yes))
+    )
+)
+
+(defdd manipulateDataDD
+    (DataFound
+        (yes    (dataInjectionPrivs))
+        (no     (SAME DataInjected))
     )
 )
 
 (defdd defActionsAttActive
     (DefActions
         (LockAccount        (AttActive' no))
-        (DisableSudo        (SAME AttActive))
-        (EnableSudo         (SAME AttActive))
+        (DeployDataDecoys   (SAME AttActive))
+        (DecoyAccount       (SAME AttActive))
+        (ConfineUser        (SAME AttActive))
         (Nop                (SAME AttActive))
-        (DropDAP            (SAME AttActive))
-        (HardenDAP          (SAME AttActive))
     )
 )
 
-(defdd defActionsAccessPol
-    (DefActions
-        (LockAccount        (SAME AccessPol))
-        (DisableSudo        (SAME AccessPol))
-        (EnableSudo         (SAME AccessPol))
-        (Nop                (SAME AccessPol))
-        (DropDAP            (AccessPol' permissive))
-        (HardenDAP          (AccessPol' strict))
+---------------------------------------------------------------------------
+(defdd secObsDefault
+    (SecObs'
+        (connection_terminated  (0.0000005))
+        (su_unavailable         (0.0000005))
+        (none                   (0.999999))
     )
 )
 
---------------------------------------------------------------------
-
-(defdd sudoAvailableSumout
-    (# (DefActions) (distDefActions * defActionsSudoAvailable))
+(defdd secObsEvicted
+    (SecObs'
+        (connection_terminated  (0.999999))
+        (su_unavailable         (0.0000005))
+        (none                   (0.0000005))
+    )
 )
 
-(defdd attActiveSumout
-    (# (DefActions) (distDefActions * defActionsAttActive))
+(defdd secObsConfined
+    (SecObs'
+        (connection_terminated  (0.0000005))
+        (su_unavailable         (0.999999))
+        (none                   (0.0000005))
+    )
 )
 
-(defdd accessPolSumout
-    (# (DefActions) (distDefActions * defActionsAccessPol))
+(defdd secObsPrivEsc
+            (DefActions
+                (LockAccount        (secObsEvicted))
+                (DeployDataDecoys   (secObsDefault))
+                (DecoyAccount       (secObsDefault))
+                (ConfineUser        (secObsConfined))
+                (Nop                (secObsDefault))
+            )
 )
 
---------------------------------------------------------------------
+(defdd secObsGeneral
+            (DefActions
+                (LockAccount        (secObsEvicted))
+                (DeployDataDecoys   (secObsDefault))
+                (DecoyAccount       (secObsDefault))
+                (ConfineUser        (secObsDefault))
+                (Nop                (secObsDefault))
+            )
+)
+
+(defdd connObsDD
+    (AttActive'
+        (yes    
+            (ConnObs'
+                (active     (1.0))
+                (inactive   (0.0))
+            )
+        )
+
+        (no
+            (ConnObs'
+                (inactive   (1.0))
+                (active     (0.0))
+            )
+        )
+    )
+)
 
 (defdbn attackerFileReconDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (accessPolSumout))
-    (SudoAvailable  (sudoAvailableSumout))
+    (HostType       (SAME HostType))
+    (HostHasData    (# (DefActions) 
+        (distDefActions * defActionsHostHasData)))
     (DataFound      (fileReconDataFound))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
+    (EscAccounts    (# (DefActions) 
+        (distDefActions * defActionsEscAccounts)))
+    (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (attActiveSumout))
+    (DataInjected   (SAME DataInjected))
+    (AttActive      (# (DefActions) 
+        (distDefActions * defActionsAttActive)))
 
+    (HostObs        (hostObsDD))
     (ActionResult   (fileReconObs))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (fileReconDataTypeObs))
-    (AccTypeObs     (accTypeObs))
+    (SecObs         (# (DefActions) 
+        (distDefActions * secObsGeneral)))
+)
+
+(defdbn attackerEnumAccountsDBN
+    (HostType       (SAME HostType))
+    (HostHasData    (# (DefActions) 
+        (distDefActions * defActionsHostHasData)))
+    (EscAccounts    (# (DefActions) 
+        (distDefActions * defActionsEscAccounts)))
+    (DataFound      (SAME DataFound))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
+    (AccFound       (accFoundDD))
+    (AccessLevel    (SAME AccessLevel))
+    (DataInjected   (SAME DataInjected))
+    (AttActive      (# (DefActions) 
+        (distDefActions * defActionsAttActive)))
+
+    (HostObs        (HostObs'   UNIFORM))
+    (ActionResult   (escAccountObs))
+    (ConnObs        (connObsDD))
+    (SecObs         (# (DefActions) 
+        (distDefActions * secObsGeneral)))
 )
 
 (defdbn attackerExitDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (accessPolSumout))
-    (SudoAvailable  (sudoAvailableSumout))
+    (HostType       (SAME HostType))
+    (HostHasData    (# (DefActions) 
+        (distDefActions * defActionsHostHasData)))
     (DataFound      (SAME DataFound))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
+    (EscAccounts    (# (DefActions) 
+        (distDefActions * defActionsEscAccounts)))
+    (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
+    (DataInjected   (SAME DataInjected))
     (AttActive      (AttActive' no))
 
-    (ActionResult   (ActionResult' UNIFORM))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (DataTypeObs' UNIFORM))
-    (AccTypeObs     (AccTypeObs' UNIFORM))
+    (SecObs         (# (DefActions) 
+        (distDefActions * secObsGeneral)))
 )
 
 (defdbn attackerNopDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (accessPolSumout))
-    (SudoAvailable  (sudoAvailableSumout))
+    (HostType       (SAME HostType))
+    (HostHasData    (# (DefActions) 
+        (distDefActions * defActionsHostHasData)))
     (DataFound      (SAME DataFound))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
+    (EscAccounts    (# (DefActions) 
+        (distDefActions * defActionsEscAccounts)))
+    (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (attActiveSumout))
+    (DataInjected   (SAME DataInjected))
+    (AttActive      (# (DefActions) 
+        (distDefActions * defActionsAttActive)))
 
-    (ActionResult   (ActionResult' UNIFORM))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (DataTypeObs' UNIFORM))
-    (AccTypeObs     (AccTypeObs' UNIFORM))
+    (SecObs         (SecObs'        UNIFORM))
 )
 
-(defdbn attackerCheckSudoDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (accessPolSumout))
-    (SudoAvailable  (sudoAvailableSumout))
+(defdbn attackerPrivEscAccDBN
+    (HostType       (SAME HostType))
+    (HostHasData    (# (DefActions) 
+        (distDefActions * defActionsHostHasData)))
     (DataFound      (SAME DataFound))
-    (AccessLevel    (SAME AccessLevel))
-    (AttActive      (attActiveSumout))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
+    (EscAccounts    (# (DefActions) 
+        (distDefActions * defActionsEscAccounts)))
+    (AccFound       (SAME AccFound))
+    (AccessLevel    (# (DefActions) 
+        (distDefActions * defActionsPrivEsc)))
+    (DataInjected   (SAME DataInjected))
+    (AttActive      (# (DefActions) 
+        (distDefActions * defActionsAttActive)))
 
-    (ActionResult   (checkSudoObs))
-    (ConnObs        (connObsDD))
-    (DataTypeObs    (DataTypeObs' UNIFORM))
-    (AccTypeObs     (accTypeObs))
-)
-
-(defdbn attackerPrivEscDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (accessPolSumout))
-    (SudoAvailable  (sudoAvailableSumout))
-    (DataFound      (SAME DataFound))
-    (AccessLevel    (privEscAccessLevel))
-    (AttActive      (attActiveSumout))
-
+    (HostObs        (HostObs'       UNIFORM))
     (ActionResult   (privEscObs))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (DataTypeObs' UNIFORM))
-    (AccTypeObs     (AccTypeObs' UNIFORM))
+    (SecObs         (# (DefActions) 
+        (distDefActions * secObsPrivEsc)))
 )
 
 (defdbn attackerManipulateDataDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (accessPolSumout))
-    (SudoAvailable  (sudoAvailableSumout))
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (DataPrivs      (# (DefActions) 
+        (distDefActions * defActionsDataPrivs)))
     (DataFound      (SAME DataFound))
+    (EscAccounts    (# (DefActions) 
+        (distDefActions * defActionsEscAccounts)))
+    (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (AttActive' no))
+    (DataInjected   (manipulateDataDD))
+    (AttActive      (# (DefActions) 
+        (distDefActions * defActionsAttActive)))
 
-    (ActionResult   (manipulateDataObs))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (manipulateDataDataTypeObs))
-    (AccTypeObs     (AccTypeObs' UNIFORM))
+    (SecObs         (# (DefActions) 
+        (distDefActions * secObsGeneral)))
 )
 
---------------------------------------------------------------------
 -- multi agent reward DD for level 0
 
-(defdd stepCost (-0.1))
-(defdd successReward (10))
-
-(defdd dataManipulationRewardDD
-    (AttActive
+(defdd successCondition
+    (HostHasData
         (yes
-            (DataFound
-                (yes    (successReward))
-                (no     -(successReward))
+            (DataInjected
+                (yes    (100.0))
+                (no     (0.0))
             )
         )
-        (no     (stepCost))
+        (no     
+            (DataInjected
+                (no     (10.0))
+                (yes    (0.0))
+            )
+        )
     )
 )
 
-(defdd dataManipulationReward
-    (DataType
-        (decoy  (dataManipulationRewardDD))
-        (legit  (dataManipulationRewardDD))
-        (u      (dataManipulationRewardDD))
+(defdd exitReward
+    (AttActive
+        (yes    (successCondition))
+        (no     (-1.0))
     )
 )
 
 (defdd nopCost
     (AttActive
-        (yes    (stepCost))
+        (yes    (-1.0))
         (no     (0.0))
-    )
-)
-
-(defdd exitCost
-    (AttActive
-        (no     (stepCost))
-        (yes    (0.0))
-    )
-)
-
-(defdd privEscCost
-    (SudoAvailable
-        (yes    (stepCost))
-        (no     (-5.0))
     )
 )
 
 -- Attacker model
 (defpomdp attl0
     (S
-        (DataType CompAccType AccessPol SudoAvailable DataFound
-        AccessLevel AttActive)
+        (HostType HostHasData DataFound DataPrivs EscAccounts 
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
-        (ActionResult ConnObs DataTypeObs AccTypeObs)
+        (ActionResult HostObs ConnObs)
     )
 
     (A  AttActions)
@@ -434,61 +560,45 @@
         (Nop                (attackerNopDBN))
         (Exit               (attackerExitDBN))
         (ManipulateData     (attackerManipulateDataDBN))
-        (CheckSudo          (attackerCheckSudoDBN))
-        (PrivEsc            (attackerPrivEscDBN))
+        (EnumAccounts       (attackerEnumAccountsDBN))
+        (PrivEscAcc         (attackerPrivEscAccDBN))
     )
     
     (R
-        (FileRecon          (stepCost))
+        (FileRecon          (-1.0))
+        (EnumAccounts       (-1.0))
+        (PrivEscAcc         (-1.0))
+        (ManipulateData     (-1.0))
         (Nop                (nopCost))
-        (Exit               (exitCost))
-        (ManipulateData     (dataManipulationReward))
-        (CheckSudo          (stepCost))
-        (PrivEsc            (privEscCost))
+        (Exit               (exitReward))
     )
 
     (discount 0.95)
 )
 
-(defdd dataTypeBelief
-    (DataType
-        (decoy  (0.5))
-        (legit  (0.5))
-    )
-)
-
-(defdd compAccTypeBelief
-    (CompAccType
-        (decoy  (0.5))
-        (legit  (0.5))
-    )
-)
-
-(defdd accessPolGivenAccount
-    (CompAccType
-        (decoy  (AccessPol strict))
-        (legit  (AccessPol permissive))
-        (u      (AccessPol UNIFORM))
-    )
-)
-
-(defdd sudoGivenCompAccType
-    (CompAccType
-        (legit  (SudoAvailable yes))
-        (decoy  (SudoAvailable no))
-        (u      (SudoAvailable UNIFORM))
-    )
-)
-
 -- Initial belief of the attacker
 (defdd initAttl0
-    (DataType           u)
-    * (CompAccType      u)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+    (HostType           critical_honeypot)
+    * (HostHasData      UNIFORM)
     * (DataFound        no)
+    * (DataPrivs        UNIFORM)
+    * (EscAccounts      yes)
+    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
+    * (DataInjected     no)
+)
+
+(defdd initAttl0Absent
+    (HostType           critical_honeypot)
+    * (HostHasData      UNIFORM)
+    * (DataFound        no)
+    * (DataPrivs        UNIFORM)
+    * (EscAccounts      UNIFORM)
+    * (AccFound         no)
+    * (AccessLevel      user)
+    * (AttActive        no)
+    * (DataInjected     no)
 )
 
 ---------------------------------------------------------------
@@ -498,84 +608,87 @@
     (frames AttackerFrame)
     (
         (att    (m0     (initAttl0)))
+        (att    (m1     (initAttl0Absent)))
     )
 )
 ---------------------------------------------------------------
 ---- Observations
 (defdd defaultEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.05))
-        (file_write             (0.05))
-        (su_login               (0.05))
-        (none                   (0.85))
+        (file_enum              (0.1))
+        (file_write             (0.1))
+        (su_login               (0.1))
+        (none                   (0.7))
     )
 )
 
 (defdd hostReconEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.85))
-        (file_write             (0.05))
-        (su_login               (0.05))
-        (none                   (0.05))
+        (file_enum              (0.7))
+        (file_write             (0.1))
+        (su_login               (0.1))
+        (none                   (0.1))
     )
 )
 
 (defdd manipulateDataEndPtAlerts
     (EndPtAlerts'
-        (file_enum              (0.05))
-        (file_write             (0.85))
-        (su_login               (0.05))
-        (none                   (0.05))
+        (file_enum              (0.1))
+        (file_write             (0.7))
+        (su_login               (0.1))
+        (none                   (0.1))
     )
 )
 
 (defdd privEscEndPtAlert
     (EndPtAlerts'
-        (file_enum              (0.05))
-        (file_write             (0.05))
-        (su_login               (0.85))
-        (none                   (0.05))
+        (file_enum              (0.1))
+        (file_write             (0.1))
+        (su_login               (0.7))
+        (none                   (0.1))
     )
 )
 
 (defdd endPtAlertsObs
-    (AttActions
-        (FileRecon          (hostReconEndPtAlerts))
-        (CheckSudo          (defaultEndPtAlerts))
-        (ManipulateData     (manipulateDataEndPtAlerts))
-        (PrivEsc            (privEscEndPtAlert))
-        (Nop                (defaultEndPtAlerts))
-        (Exit               (defaultEndPtAlerts))
-    )
-)
-
-(defdd activeAccObs
     (AttActive'
         (yes
-            (CompAccType'
-                (legit  (ActiveAccObs' legit))
-                (decoy  (ActiveAccObs' decoy))
-                (u      (ActiveAccObs' UNIFORM))
+            (AttActions
+                (FileRecon          (hostReconEndPtAlerts))
+                (EnumAccounts       (hostReconEndPtAlerts))
+                (ManipulateData     (manipulateDataEndPtAlerts))
+                (PrivEscAcc         (privEscEndPtAlert))
+                (Nop                (defaultEndPtAlerts))
+                (Exit               (defaultEndPtAlerts))
             )
         )
-        (no     (ActiveAccObs' UNIFORM))
+
+        (no     (defaultEndPtAlerts))
     )
 )
 
-(defdd dataAssetObs
-    (DataType'
-        (legit  (DataAssetObs' legit))
-        (decoy  (DataAssetObs' decoy))
-        (u      (DataAssetObs' UNIFORM))
+(defdd accStateObs
+    (EscAccounts'
+        (yes    
+            (AccObs'
+                (yes    (1.0))
+                (no     (0.0))
+            )
+        )
+        (no     
+            (AccObs'
+                (yes    (0.0))
+                (no     (1.0))
+            )
+        )
     )
 )
 
 (defdd attActionsAccessLevel
     (AttActions
         (FileRecon          (SAME AccessLevel))
-        (CheckSudo          (SAME AccessLevel))
+        (EnumAccounts       (SAME AccessLevel))
         (ManipulateData     (SAME AccessLevel))
-        (PrivEsc            (privEscAccessLevel))
+        (PrivEscAcc         (privEscAccDD))
         (Nop                (SAME AccessLevel))
         (Exit               (SAME AccessLevel))
     )
@@ -584,164 +697,175 @@
 (defdd attActionsAttActive
     (AttActions
         (FileRecon          (SAME AttActive))
-        (CheckSudo          (SAME AttActive))
-        (ManipulateData     (AttActive' no))
-        (PrivEsc            (SAME AttActive))
+        (EnumAccounts       (SAME AttActive))
+        (ManipulateData     (SAME AttActive))
+        (PrivEscAcc         (SAME AttActive))
         (Nop                (SAME AttActive))
         (Exit               (AttActive' no))
+    )
+)
+
+(defdd attActionsDataInjected
+    (AttActions
+        (FileRecon          (SAME DataInjected))
+        (EnumAccounts       (SAME DataInjected))
+        (ManipulateData     (manipulateDataDD))
+        (PrivEscAcc         (SAME DataInjected))
+        (Nop                (SAME DataInjected))
+        (Exit               (SAME DataInjected))
     )
 )
 
 (defdd attActionsDataFound
     (AttActions
         (FileRecon          (fileReconDataFound))
-        (CheckSudo          (SAME DataFound))
+        (EnumAccounts       (SAME DataFound))
         (ManipulateData     (SAME DataFound))
-        (PrivEsc            (SAME DataFound))
+        (PrivEscAcc         (SAME DataFound))
         (Nop                (SAME DataFound))
         (Exit               (SAME DataFound))
     )
 )
 
-(defdbn actionLockAccount
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (SAME AccessPol))
-    (SudoAvailable  (SAME SudoAvailable))
-    (DataFound      (attActionsDataFound))
-    (AccessLevel    (attActionsAccessLevel))
-    (AttActive      (AttActive' no))
-
-    (EndPtAlerts    (endPtAlertsObs))
-    (ActiveAccObs   (activeAccObs))
-    (DataAssetObs   (dataAssetObs))
-)
-
-(defdbn actionDropDAP
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (AccessPol' permissive))
-    (SudoAvailable  (SAME SudoAvailable))
-    (DataFound      (attActionsDataFound))
-    (AccessLevel    (attActionsAccessLevel))
-    (AttActive      (attActionsAttActive))
-
-    (EndPtAlerts    (endPtAlertsObs))
-    (ActiveAccObs   (activeAccObs))
-    (DataAssetObs   (dataAssetObs))
-)
-
-(defdbn actionHardenDAP
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (AccessPol' strict))
-    (SudoAvailable  (SAME SudoAvailable))
-    (DataFound      (attActionsDataFound))
-    (AccessLevel    (attActionsAccessLevel))
-    (AttActive      (attActionsAttActive))
-
-    (EndPtAlerts    (endPtAlertsObs))
-    (ActiveAccObs   (activeAccObs))
-    (DataAssetObs   (dataAssetObs))
-)
-
-(defdbn actionNop
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (SAME AccessPol))
-    (SudoAvailable  (SAME SudoAvailable))
-    (DataFound      (attActionsDataFound))
-    (AccessLevel    (attActionsAccessLevel))
-    (AttActive      (attActionsAttActive))
-
-    (EndPtAlerts    (endPtAlertsObs))
-    (ActiveAccObs   (activeAccObs))
-    (DataAssetObs   (dataAssetObs))
-)
-
-(defdbn actionDisableSudo
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (SAME AccessPol))
-    (SudoAvailable  (SudoAvailable' no))
-    (DataFound      (attActionsDataFound))
-    (AccessLevel    (attActionsAccessLevel))
-    (AttActive      (attActionsAttActive))
-
-    (EndPtAlerts    (endPtAlertsObs))
-    (ActiveAccObs   (activeAccObs))
-    (DataAssetObs   (dataAssetObs))
-)
-
-(defdbn actionEnableSudo
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (SAME AccessPol))
-    (SudoAvailable  (SudoAvailable' yes))
-    (DataFound      (attActionsDataFound))
-    (AccessLevel    (attActionsAccessLevel))
-    (AttActive      (attActionsAttActive))
-
-    (EndPtAlerts    (endPtAlertsObs))
-    (ActiveAccObs   (activeAccObs))
-    (DataAssetObs   (dataAssetObs))
-)
-
---------------------------------------------------------------------
-
-(defdd lockAccountCost
-    (AttActive
-        (yes    (0.0))
-        (no     (-5.0))
+(defdd attActionsAccFound
+    (AttActions
+        (FileRecon          (SAME AccFound))
+        (EnumAccounts       (accFoundDD))
+        (ManipulateData     (SAME AccFound))
+        (PrivEscAcc         (SAME AccFound))
+        (Nop                (SAME AccFound))
+        (Exit               (SAME AccFound))
     )
 )
 
-(defdd activeDefenderRewardFn
-    (DataType
-        (legit
-            (AttActive
-                (yes    
-                    (AttActions     
-                        (ManipulateData     (-10.0))
-                    )
-                )
-                (no     (10.0))
-            )
-        )
+(defdbn actionLockAccount
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (DataFound      (attActionsDataFound))
+    (DataPrivs      (SAME DataPrivs))
+    (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (SAME AccessLevel))
+    (AttActive      (AttActive' no))
+    (DataInjected   (attActionsDataInjected))
 
-        (decoy
-            (CompAccType
-                (decoy
-                    (AttActive
-                        (yes
-                            (AttActions     
-                                (ManipulateData     (10.0))
-                            )
-                        )
-                        (no     (0.0))
-                    )
-                )
-                (legit
-                    (AttActive
-                        (yes
-                            (AccessLevel
-                                (user   (5.0))
-                                (root   (-5.0))
-                            )
-                        )
-                        (no     (0.0))
-                    )
-                )
+    (EndPtAlerts    (endPtAlertsObs))
+    (AccObs         (accStateObs))
+)
+
+(defdbn actionNop
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (DataFound      (attActionsDataFound))
+    (DataPrivs      (SAME DataPrivs))
+    (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+    (AccObs         (accStateObs))
+)
+
+(defdbn actionConfineUser
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (DataFound      (attActionsDataFound))
+    (DataPrivs      (SAME DataPrivs))
+    (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+    (AccObs         (accStateObs))
+)
+
+(defdbn actionDeployDataDecoys
+    (HostType       (SAME HostType))
+    (HostHasData    (HostHasData' yes))
+    (DataFound      (attActionsDataFound))
+    (DataPrivs      (SAME DataPrivs))
+    (EscAccounts    (SAME EscAccounts))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+    (AccObs         (accStateObs))
+)
+
+(defdbn actionDecoyAccount
+    (HostType       (SAME HostType))
+    (HostHasData    (SAME HostHasData))
+    (DataFound      (attActionsDataFound))
+    (DataPrivs      (SAME DataPrivs))
+    (EscAccounts    (EscAccounts' yes))
+    (AccFound       (attActionsAccFound))
+    (AccessLevel    (attActionsAccessLevel))
+    (AttActive      (attActionsAttActive))
+    (DataInjected   (attActionsDataInjected))
+
+    (EndPtAlerts    (endPtAlertsObs))
+    (AccObs         (accStateObs))
+)
+
+
+(defdd loggingActionReward
+    (AttActions
+        (FileRecon      (0.0))
+        (EnumAccounts   (0.0))
+        (PrivEscAcc     (0.0))
+        (Nop            (0.0))
+        (Exit           
+            (DataInjected
+                (yes    (10.0))
+                (no     (0.0))
             )
         )
+        (ManipulateData (0.0))
+    )
+)
+
+(defdd honeypotReward
+    (HostType
+        (critical           
+            (DataInjected
+                (yes    (-10.0))
+                (no     (0.0))
+            )
+        )
+        (honeypot           (loggingActionReward))
+        (critical_honeypot  (0.0))
+    )
+)
+
+(defdd lockAccountReward
+    (HostType
+        (critical
+            (DataInjected
+                (no
+                    (AttActive
+                        (yes    (10.0))
+                        (no     (-10.0))
+                    )
+                )
+                (yes    (0.0))
+            )
+        )
+        (honeypot           (-1.0))
+        (critical_honeypot  (-1.0))
     )
 )
 
 -- defender L1 model
 (defipomdp defl1_active
     (S
-        (DataType CompAccType AccessPol SudoAvailable DataFound
-        AccessLevel AttActive)
+        (HostType HostHasData DataFound DataPrivs EscAccounts 
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -760,71 +884,72 @@
 
     (dynamics
         (LockAccount        (actionLockAccount))
-        (EnableSudo         (actionEnableSudo))
-        (DisableSudo        (actionDisableSudo))
-        (DropDAP            (actionDropDAP))
-        (HardenDAP          (actionHardenDAP))
+        (ConfineUser        (actionConfineUser))
         (Nop                (actionNop))
+        (DeployDataDecoys   (actionDeployDataDecoys))
+        (DecoyAccount       (actionDecoyAccount))
     )
     
     (R
-        (LockAccount        (activeDefenderRewardFn - 0.1))
-        (EnableSudo         (activeDefenderRewardFn - 0.1))
-        (DisableSudo        (activeDefenderRewardFn - 0.1))
-        (DropDAP            (activeDefenderRewardFn - 0.1))
-        (HardenDAP          (activeDefenderRewardFn - 0.1))
-        (Nop                (activeDefenderRewardFn))
+        (LockAccount        (honeypotReward + lockAccountReward))
+        (ConfineUser        (honeypotReward - 10.0))
+        (Nop                (honeypotReward))
+        (DeployDataDecoys   (honeypotReward - 1.0))
+        (DecoyAccount       (honeypotReward - 1.0))
     )
 
     (discount 0.95)
     (H 10)
 )
 
+(defdd attl0GivenAttActive
+    (AttActive
+        (yes    (Defl1ModelsAttl0 m0))
+        (no     (Defl1ModelsAttl0 m1))
+    )
+)
+
+(defdd initDefl1_active
+    (HostType           honeypot)
+    * (EscAccounts      no)
+    * (AccFound         no)
+    * (HostHasData      yes)
+    * (DataFound        no)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        UNIFORM)
+    * (attl0GivenAttActive)
+    * (DataInjected     no)
+)
+
 ------ Initial beliefs of l1 defender
 
-(defdd initDefl10_active
-    (DataType           decoy)
-    * (CompAccType      decoy)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+(defdd initDefl1c_active
+    (HostType           critical)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      yes)
     * (DataFound        no)
-    * (AttActive        yes)
-    * (Defl1ModelsAttl0 m0)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        UNIFORM)
+    * (attl0GivenAttActive)
+    * (DataInjected     no)
 )
 
-(defdd initDefl11_active
-    (DataType           decoy)
-    * (CompAccType      legit)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+(defdd initDefl1hp_active
+    (HostType           honeypot)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      no)
     * (DataFound        no)
-    * (AttActive        yes)
-    * (Defl1ModelsAttl0 m0)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        UNIFORM)
+    * (attl0GivenAttActive)
+    * (DataInjected     no)
 )
 
-(defdd initDefl12_active
-    (DataType           legit)
-    * (CompAccType      decoy)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
-    * (DataFound        no)
-    * (AttActive        yes)
-    * (Defl1ModelsAttl0 m0)
-)
-
-(defdd initDefl13_active
-    (DataType           legit)
-    * (CompAccType      legit)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
-    * (DataFound        no)
-    * (AttActive        yes)
-    * (Defl1ModelsAttl0 m0)
-)
 
 -- Make passive defender model
 
@@ -832,14 +957,15 @@
     (frames AttackerFrame)
     (
         (att    (m0     (initAttl0)))
+        (att    (m1     (initAttl0Absent)))
     )
 )
 
 -- passive defender l1 model
 (defipomdp defl1_passive
     (S
-        (DataType CompAccType AccessPol SudoAvailable DataFound
-        AccessLevel AttActive)
+        (HostType HostHasData DataFound DataPrivs EscAccounts
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -858,272 +984,193 @@
 
     (dynamics
         (LockAccount        (actionLockAccount))
-        (EnableSudo         (actionEnableSudo))
-        (DisableSudo        (actionDisableSudo))
-        (DropDAP            (actionDropDAP))
-        (HardenDAP          (actionHardenDAP))
+        (ConfineUser        (actionConfineUser))
         (Nop                (actionNop))
+        (DeployDataDecoys   (actionDeployDataDecoys))
+        (DecoyAccount       (actionDecoyAccount))
     )
     
     (R
-        (LockAccount        (-0.1))
-        (EnableSudo         (-0.1))
-        (DisableSudo        (-0.1))
-        (DropDAP            (-0.1))
-        (HardenDAP          (-0.1))
+        (LockAccount        (-1.0))
+        (ConfineUser        (-1.0))
         (Nop                (0.0))
+        (DeployDataDecoys   (-1.0))
+        (DecoyAccount       (-1.0))
     )
 
     (discount 0.95)
     (H 10)
 )
 
-(defdd initDefl10_passive
-    (DataType           decoy)
-    * (CompAccType      decoy)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
-    * (DataFound        no)
-    * (AttActive        yes)
-    * (PassiveDefl1ModelsAttl0 m0)
+(defdd attl0GivenAttActivePassive
+    (AttActive
+        (yes    (PassiveDefl1ModelsAttl0 m0))
+        (no     (PassiveDefl1ModelsAttl0 m1))
+    )
 )
 
-(defdd initDefl11_passive
-    (DataType           decoy)
-    * (CompAccType      legit)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+(defdd initDefl1_passive
+    (HostType           honeypot)
+    * (EscAccounts      UNIFORM)
     * (DataFound        no)
-    * (AttActive        yes)
-    * (PassiveDefl1ModelsAttl0 m0)
+    * (AccFound         no)
+    * (HostHasData      yes)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        UNIFORM)
+    * (attl0GivenAttActivePassive)
+    * (DataInjected     no)
 )
 
-(defdd initDefl12_passive
-    (DataType           legit)
-    * (CompAccType      decoy)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+(defdd initDefl1c_passive
+    (HostType           critical)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      yes)
     * (DataFound        no)
-    * (AttActive        yes)
-    * (PassiveDefl1ModelsAttl0 m0)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        UNIFORM)
+    * (attl0GivenAttActivePassive)
+    * (DataInjected     no)
 )
 
-(defdd initDefl13_passive
-    (DataType           legit)
-    * (CompAccType      legit)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+(defdd initDefl1hp_passive
+    (HostType           honeypot)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      no)
     * (DataFound        no)
-    * (AttActive        yes)
-    * (PassiveDefl1ModelsAttl0 m0)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        UNIFORM)
+    * (attl0GivenAttActivePassive)
+    * (DataInjected     no)
 )
 
---------------------------------------------------------------------
 -- Attacker l2
 
-(defdbn attackerFileReconlNDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (defActionsAccessPol))
-    (SudoAvailable  (defActionsSudoAvailable))
+(defdbn actionAttFileReconDBN
+    (HostType       (SAME HostType))
+    (HostHasData    (defActionsHostHasData))
     (DataFound      (fileReconDataFound))
+    (DataPrivs      (defActionsDataPrivs))
+    (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (defActionsAttActive))
+    (DataInjected   (SAME DataInjected))
 
+    (HostObs        (hostObsDD))
     (ActionResult   (fileReconObs))
+    (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (fileReconDataTypeObs))
-    (AccTypeObs     (accTypeObs))
 )
 
-(defdbn attackerExitlNDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (defActionsAccessPol))
-    (SudoAvailable  (defActionsSudoAvailable))
+(defdbn actionAttEnumAccountsDBN
+    (HostType       (SAME HostType))
+    (HostHasData    (defActionsHostHasData))
     (DataFound      (SAME DataFound))
+    (DataPrivs      (defActionsDataPrivs))
+    (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (accFoundDD))
+    (AccessLevel    (SAME AccessLevel))
+    (AttActive      (defActionsAttActive))
+    (DataInjected   (SAME DataInjected))
+
+    (HostObs        (HostObs'   UNIFORM))
+    (ActionResult   (escAccountObs))
+    (SecObs         (secObsGeneral))
+    (ConnObs        (connObsDD))
+)
+
+(defdbn actionAttExitDBN
+    (HostType       (SAME HostType))
+    (HostHasData    (defActionsHostHasData))
+    (DataFound      (SAME DataFound))
+    (DataPrivs      (defActionsDataPrivs))
+    (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (AttActive' no))
+    (DataInjected   (SAME DataInjected))
 
-    (ActionResult   (ActionResult' UNIFORM))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
+    (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (DataTypeObs' UNIFORM))
-    (AccTypeObs     (AccTypeObs' UNIFORM))
 )
 
-(defdbn attackerNoplNDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (defActionsAccessPol))
-    (SudoAvailable  (defActionsSudoAvailable))
+(defdbn actionAttNopDBN
+    (HostType       (SAME HostType))
+    (HostHasData    (defActionsHostHasData))
     (DataFound      (SAME DataFound))
+    (DataPrivs      (defActionsDataPrivs))
+    (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
     (AttActive      (defActionsAttActive))
+    (DataInjected   (SAME DataInjected))
 
-    (ActionResult   (ActionResult' UNIFORM))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
+    (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (DataTypeObs' UNIFORM))
-    (AccTypeObs     (AccTypeObs' UNIFORM))
 )
 
-(defdbn attackerCheckSudolNDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (defActionsAccessPol))
-    (SudoAvailable  (defActionsSudoAvailable))
+(defdbn actionAttPrivEscAccDBN
+    (HostType       (SAME HostType))
+    (HostHasData    (defActionsHostHasData))
     (DataFound      (SAME DataFound))
-    (AccessLevel    (SAME AccessLevel))
+    (DataPrivs      (defActionsDataPrivs))
+    (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (SAME AccFound))
+    (AccessLevel    (defActionsPrivEsc))
     (AttActive      (defActionsAttActive))
+    (DataInjected   (SAME DataInjected))
 
-    (ActionResult   (checkSudoObs))
-    (ConnObs        (connObsDD))
-    (DataTypeObs    (DataTypeObs' UNIFORM))
-    (AccTypeObs     (accTypeObs))
-)
-
-(defdbn attackerPrivEsclNDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (defActionsAccessPol))
-    (SudoAvailable  (defActionsSudoAvailable))
-    (DataFound      (SAME DataFound))
-    (AccessLevel    (privEscAccessLevel))
-    (AttActive      (defActionsAttActive))
-
+    (HostObs        (HostObs'       UNIFORM))
     (ActionResult   (privEscObs))
+    (SecObs         (secObsPrivEsc))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (DataTypeObs' UNIFORM))
-    (AccTypeObs     (AccTypeObs' UNIFORM))
 )
 
-(defdbn attackerManipulateDatalNDBN
-    (DataType       (SAME DataType))
-    (CompAccType    (SAME CompAccType))
-    (AccessPol      (defActionsAccessPol))
-    (SudoAvailable  (defActionsSudoAvailable))
+(defdbn actionAttManipulateDataDBN
+    (HostType       (SAME HostType))
+    (HostHasData    (defActionsHostHasData))
     (DataFound      (SAME DataFound))
+    (DataPrivs      (defActionsDataPrivs))
+    (EscAccounts    (defActionsEscAccounts))
+    (AccFound       (SAME AccFound))
     (AccessLevel    (SAME AccessLevel))
-    (AttActive      (AttActive' no))
+    (AttActive      (defActionsAttActive))
+    (DataInjected   (manipulateDataDD))
 
-    (ActionResult   (manipulateDataObs))
+    (HostObs        (HostObs'       UNIFORM))
+    (ActionResult   (ActionResult'  UNIFORM))
+    (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
-    (DataTypeObs    (manipulateDataDataTypeObs))
-    (AccTypeObs     (AccTypeObs' UNIFORM))
 )
 
 (initmodelvar Attl2ModelsDefl1
     (frames DefFrame)
     (
-        (passive    (m0 (initDefl10_passive)))
-        (passive    (m1 (initDefl11_passive)))
-        (passive    (m2 (initDefl12_passive)))
-        (passive    (m3 (initDefl13_passive)))
-        (active     (m4 (initDefl10_active)))
-        (active     (m5 (initDefl11_active)))
-        (active     (m6 (initDefl12_active)))
-        (active     (m7 (initDefl13_active)))
-    )
-)
-
-(defdd dependentMjAttl2
-    (DataType
-        (legit
-            (CompAccType
-                (legit
-                    (Attl2ModelsDefl1
-                        (m3     (0.5))
-                        (m7     (0.5))
-                    )
-                )
-                (decoy
-                    (Attl2ModelsDefl1
-                        (m2     (0.5))
-                        (m6     (0.5))
-                    )
-                )
-                (u
-                    (Attl2ModelsDefl1
-                        (m2     (0.25))
-                        (m3     (0.25))
-                        (m6     (0.25))
-                        (m7     (0.25))
-                    )
-                )
-            )
-        )
-        (decoy
-            (CompAccType
-                (legit
-                    (Attl2ModelsDefl1
-                        (m1     (0.5))
-                        (m5     (0.5))
-                    )
-                )
-                (decoy
-                    (Attl2ModelsDefl1
-                        (m0     (0.5))
-                        (m4     (0.5))
-                    )
-                )
-                (u
-                    (Attl2ModelsDefl1
-                        (m0     (0.25))
-                        (m1     (0.25))
-                        (m4     (0.25))
-                        (m5     (0.25))
-                    )
-                )
-            )
-        )
-
-        (u
-            (CompAccType
-                (legit
-                    (Attl2ModelsDefl1
-                        (m1     (0.25))
-                        (m3     (0.25))
-                        (m5     (0.25))
-                        (m7     (0.25))
-                    )
-                )
-                (decoy
-                    (Attl2ModelsDefl1
-                        (m0     (0.25))
-                        (m2     (0.25))
-                        (m4     (0.25))
-                        (m6     (0.25))
-                    )
-                )
-                (u
-                    (Attl2ModelsDefl1
-                        (m0     (0.125))
-                        (m1     (0.125))
-                        (m2     (0.125))
-                        (m3     (0.125))
-                        (m4     (0.125))
-                        (m5     (0.125))
-                        (m6     (0.125))
-                        (m7     (0.125))
-                    )
-                )
-            )
-        )
+        (lowCap     (m0 (initDefl1c_passive)))
+        (lowCap     (m1 (initDefl1hp_passive)))
+        (highCap    (m2 (initDefl1c_active)))
+        (highCap    (m3 (initDefl1hp_active)))
     )
 )
 
 -- Level 2 Attacker model
 (defipomdp attl2
     (S
-        (DataType CompAccType AccessPol SudoAvailable DataFound
-        AccessLevel AttActive)
+        (HostType EscAccounts AccFound HostHasData DataFound 
+        DataPrivs AccessLevel AttActive DataInjected)
     )
 
     (O
-        (ActionResult ConnObs DataTypeObs AccTypeObs) 
+        (ActionResult HostObs ConnObs) 
     )
 
     (A  AttActions)
@@ -1133,42 +1180,86 @@
     (EC Attl2ModelsDefl1EC)
 
     (Thetaj DefFrame
-        (passive    defl1_passive)
-        (active     defl1_active)
+        (lowCap    defl1_passive)
+        (highCap   defl1_active)
     )
 
     (dynamics
-        (FileRecon          (attackerFileReconlNDBN))
-        (Nop                (attackerNoplNDBN))
-        (Exit               (attackerExitlNDBN))
-        (ManipulateData     (attackerManipulateDatalNDBN))
-        (CheckSudo          (attackerCheckSudolNDBN))
-        (PrivEsc            (attackerPrivEsclNDBN))
+        (FileRecon          (actionAttFileReconDBN))
+        (Nop                (actionAttNopDBN))
+        (Exit               (actionAttExitDBN))
+        (ManipulateData     (actionAttManipulateDataDBN))
+        (EnumAccounts       (actionAttEnumAccountsDBN))
+        (PrivEscAcc         (actionAttPrivEscAccDBN))
     )
 
     (R
-        (FileRecon          (stepCost))
+        (FileRecon          (-1.0))
+        (EnumAccounts       (-1.0))
+        (PrivEscAcc         (-1.0))
+        (ManipulateData     (-1.0))
         (Nop                (nopCost))
-        (Exit               (exitCost))
-        (ManipulateData     (dataManipulationReward))
-        (CheckSudo          (stepCost))
-        (PrivEsc            (privEscCost))
+        (Exit               (exitReward))
     )
 
     (discount 0.95)
     (H 10)
 )
 
+(defdd dependentMjAttl2
+    (HostType
+        (critical
+            (Attl2ModelsDefl1
+                (m0     (0.5))
+                (m1     (0.0))
+                (m2     (0.5))
+                (m3     (0.0))
+            )      
+        )
+
+        (honeypot
+            (Attl2ModelsDefl1
+                (m0     (0.0))
+                (m1     (0.5))
+                (m2     (0.0))
+                (m3     (0.5))
+            )
+        )
+
+        (critical_honeypot
+            (Attl2ModelsDefl1
+                (m0     (0.25))
+                (m1     (0.25))
+                (m2     (0.25))
+                (m3     (0.25))
+        )
+    )
+)
 
 (defdd initAttl2
-    (DataType           u)
-    * (CompAccType      u)
-    * (dependentMjAttl2)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+    (HostType           critical_honeypot)
+    * (DataPrivs        UNIFORM)
+    * (HostHasData      UNIFORM)
+    * (EscAccounts      yes)
     * (DataFound        no)
+    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
+    * (DataInjected     no)
+    * (dependentMjAttl2)
+)
+
+(defdd initAttl2Absent
+    (HostType           critical_honeypot)
+    * (DataPrivs        UNIFORM)
+    * (HostHasData      UNIFORM)
+    * (EscAccounts      UNIFORM)
+    * (DataFound        no)
+    * (AccFound         no)
+    * (AccessLevel      user)
+    * (AttActive        no)
+    * (DataInjected     no)
+    * (dependentMjAttl2)
 )
 
 -- defender L3 model
@@ -1177,14 +1268,15 @@
     (frames AttackerFrame)
     (
         (att    (m0     (initAttl2)))
+        (att    (m1     (initAttl2Absent)))
     )
 )
 
 
 (defipomdp defl3
     (S
-        (DataType CompAccType AccessPol SudoAvailable DataFound
-        AccessLevel AttActive)
+        (HostType HostHasData DataFound DataPrivs EscAccounts 
+        AccFound AccessLevel AttActive DataInjected)
     )
 
     (O
@@ -1203,54 +1295,64 @@
 
     (dynamics
         (LockAccount        (actionLockAccount))
-        (EnableSudo         (actionEnableSudo))
-        (DisableSudo        (actionDisableSudo))
-        (DropDAP            (actionDropDAP))
-        (HardenDAP          (actionHardenDAP))
+        (ConfineUser        (actionConfineUser))
         (Nop                (actionNop))
+        (DeployDataDecoys   (actionDeployDataDecoys))
+        (DecoyAccount       (actionDecoyAccount))
     )
     
     (R
-        (LockAccount        (activeDefenderRewardFn - 0.1))
-        (EnableSudo         (activeDefenderRewardFn - 0.1))
-        (DisableSudo        (activeDefenderRewardFn - 0.1))
-        (DropDAP            (activeDefenderRewardFn - 0.1))
-        (HardenDAP          (activeDefenderRewardFn - 0.1))
-        (Nop                (activeDefenderRewardFn))
+        (LockAccount        (honeypotReward + lockAccountReward))
+        (ConfineUser        (honeypotReward - 10.0))
+        (Nop                (honeypotReward))
+        (DeployDataDecoys   (honeypotReward - 1.0))
+        (DecoyAccount       (honeypotReward - 1.0))
     )
 
     (discount 0.95)
     (H 10)
 )
 
+(defdd attl2GivenAttActive
+    (AttActive
+        (yes    (Defl3ModelsAttl2 m0))
+        (no     (Defl3ModelsAttl2 m1))
+    )
+)
+
 (defdd initDefl3
-    (DataType           decoy)
-    * (CompAccType      decoy)
-    * (AccessLevel      user)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+    (HostType           honeypot)
+    * (EscAccounts      yes)
+    * (AccFound         no)
+    * (HostHasData      no)
     * (DataFound        no)
-    * (AttActive        yes)
-    * (Defl3ModelsAttl2 m0)
+    * (DataPrivs        root)
+    * (AccessLevel      user)
+    * (AttActive        UNIFORM)
+    * (DataInjected     no)
+    * (attl2GivenAttActive)
 )
 
 (defdd initState
-    (DataType           decoy)
-    * (CompAccType      decoy)
-    * (sudoGivenCompAccType)
-    * (accessPolGivenAccount)
+    (HostType           honeypot)
+    * (HostHasData      no)
     * (DataFound        no)
+    * (DataPrivs        root)
+    * (EscAccounts      yes)
+    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
+    * (DataInjected     no)
 )
 
 (defdd initStateCritical
-    (DataType           legit)
-    * (CompAccType      legit)
-    * (SudoAvailable    yes)
-    * (accessPolGivenAccount)
+    (HostType           critical)
+    * (HostHasData      yes)
     * (DataFound        no)
+    * (DataPrivs        root)
+    * (EscAccounts      yes)
+    * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
+    * (DataInjected     no)
 )
-

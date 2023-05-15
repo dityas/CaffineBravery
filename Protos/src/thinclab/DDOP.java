@@ -1105,9 +1105,10 @@ public class DDOP {
         var _valList = new ArrayList<Integer>(1);
 
         // it's a leaf
-        if (dd.getVar() == 0) {
-
-            _valList.add(Global.random.nextInt(Global.valNames.get(varId - 1).size()) + 1);
+        if (dd instanceof DDleaf l) {
+            _valList.add(
+                    Global.random.nextInt(
+                        Global.valNames.get(varId - 1).size()) + 1);
             return Tuple.of(_varList, _valList);
         }
 
@@ -1118,7 +1119,11 @@ public class DDOP {
             DD[] children = dd.getChildren();
             for (int childId = 0; childId < children.length; childId++) {
 
-                sum += children[childId].getVal();
+                if (children[childId] instanceof DDleaf l)
+                    sum += l.val;
+
+                else
+                    LOGGER.error("Something seriously wrong with sampling");
             }
 
             float randomVal = Global.random.nextFloat() * sum;
@@ -1388,6 +1393,18 @@ public class DDOP {
             final DD d2) {
 
         var diff = DDOP.pow(DDOP.sub(d1, d2), 2.0f);
+
+        if (diff instanceof DDleaf d)
+            return d.getVal();
+
+        else
+            return addMultVarElim(List.of(diff), diff.getVars()).getVal();
+    }
+
+    public static float l1Norm(final DD d1, 
+            final DD d2) {
+
+        var diff = DDOP.abs(DDOP.sub(d1, d2));
 
         if (diff instanceof DDleaf d)
             return d.getVal();

@@ -103,15 +103,15 @@
     (HostType'
         (critical
             (HostObs'
-                (user_files     (0.8))
-                (none           (0.2))
+                (user_files     (0.9))
+                (none           (0.1))
             )
         )
 
         (honeypot
             (HostObs'
-                (user_files     (0.2))
-                (none           (0.8))
+                (user_files     (0.1))
+                (none           (0.9))
             )
         )
 
@@ -416,7 +416,7 @@
     (AttActive      (# (DefActions) 
         (distDefActions * defActionsAttActive)))
 
-    (HostObs        (hostObsDD))
+    (HostObs        (HostObs'   UNIFORM))
     (ActionResult   (escAccountObs))
     (ConnObs        (connObsDD))
     (SecObs         (# (DefActions) 
@@ -861,7 +861,7 @@
         (critical
             (AttActive
                 (yes    (0.0))
-                (no     (-5.0))
+                (no     (-1.0))
             )
         )
         (honeypot           (-1.0))
@@ -1086,7 +1086,7 @@
     (AttActive      (defActionsAttActive))
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (hostObsDD))
+    (HostObs        (HostObs'   UNIFORM))
     (ActionResult   (escAccountObs))
     (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))

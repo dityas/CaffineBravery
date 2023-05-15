@@ -217,12 +217,14 @@ SymbolicPerseusSolver<M extends PBVISolvablePOMDPBasedModel>
 
         int convergenceCount = 0;
         var Vn_p = UB;
-        for (int i = 0;; i++) {
+        for (int i = 0; i < 500; i++) {
 
             long then = System.nanoTime();
+            int VnSize = Vn.size();
 
             // new value function after backups
             Vn_p = solveForB(B, Vn, exploredSpace);
+            int VnPSize = Vn_p.size();
 
             // report error stats
             float backupT = (System.nanoTime() - then) / 1000000000.0f;
