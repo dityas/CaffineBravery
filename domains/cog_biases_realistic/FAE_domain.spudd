@@ -25,7 +25,7 @@
 
 -- Actions for both agents
 (defvar DefActions      
-    (LockAccount ConfineUser Nop DeployDataDecoys DecoyAccount))
+    (LockAccount LogActivity Nop DeployDataDecoys DecoyAccount))
 (defvar AttActions      
     (FileRecon EnumAccounts PrivEscAcc Nop Exit ManipulateData))
 
@@ -47,7 +47,7 @@
         (LockAccount        (0.00001))
         (DeployDataDecoys   (0.00001))
         (DecoyAccount       (0.00001))
-        (ConfineUser        (0.00001))
+        (LogActivity        (0.00001))
         (Nop                (0.9999))
     )
 )
@@ -75,7 +75,7 @@
 (defdd defActionsPrivEsc
     (DefActions
         (LockAccount        (SAME AccessLevel))
-        (ConfineUser        (privEscAccDD))
+        (LogActivity        (privEscAccDD))
         (DeployDataDecoys   (privEscAccDD))
         (DecoyAccount       (privEscAccDD))
         (Nop                (privEscAccDD))
@@ -178,8 +178,8 @@
                 (yes    (DataFound' yes))
                 (no 
                     (DataFound'
-                        (yes    (0.8))
-                        (no     (0.2))
+                        (yes    (0.9))
+                        (no     (0.1))
                     )
                 )
             )
@@ -234,7 +234,7 @@
 (defdd defActionsEscAccounts
     (DefActions
         (LockAccount        (SAME EscAccounts))
-        (ConfineUser        (SAME EscAccounts))
+        (LogActivity        (SAME EscAccounts))
         (DeployDataDecoys   (SAME EscAccounts))
         (DecoyAccount       (EscAccounts' yes))
         (Nop                (SAME EscAccounts))
@@ -244,7 +244,7 @@
 (defdd defActionsHostHasData
     (DefActions
         (LockAccount        (SAME HostHasData))
-        (ConfineUser        (SAME HostHasData))
+        (LogActivity        (SAME HostHasData))
         (DeployDataDecoys   (HostHasData' yes))
         (DecoyAccount       (SAME HostHasData))
         (Nop                (SAME HostHasData))
@@ -261,7 +261,7 @@
 (defdd defActionsDataPrivs
     (DefActions
         (LockAccount        (SAME DataPrivs))
-        (ConfineUser        (SAME DataPrivs))
+        (LogActivity        (SAME DataPrivs))
         (DeployDataDecoys   (SAME DataPrivs))
         (DecoyAccount       (SAME DataPrivs))
         (Nop                (SAME DataPrivs))
@@ -275,8 +275,8 @@
                 (yes    (AccFound' yes))
                 (no
                     (AccFound'
-                        (yes    (0.8))
-                        (no     (0.2))
+                        (yes    (0.9))
+                        (no     (0.1))
                     )
                 )
             )
@@ -311,7 +311,7 @@
         (LockAccount        (AttActive' no))
         (DeployDataDecoys   (SAME AttActive))
         (DecoyAccount       (SAME AttActive))
-        (ConfineUser        (SAME AttActive))
+        (LogActivity        (SAME AttActive))
         (Nop                (SAME AttActive))
     )
 )
@@ -346,7 +346,7 @@
                 (LockAccount        (secObsEvicted))
                 (DeployDataDecoys   (secObsDefault))
                 (DecoyAccount       (secObsDefault))
-                (ConfineUser        (secObsConfined))
+                (LogActivity        (secObsConfined))
                 (Nop                (secObsDefault))
             )
 )
@@ -356,7 +356,7 @@
                 (LockAccount        (secObsEvicted))
                 (DeployDataDecoys   (secObsDefault))
                 (DecoyAccount       (secObsDefault))
-                (ConfineUser        (secObsDefault))
+                (LogActivity        (secObsDefault))
                 (Nop                (secObsDefault))
             )
 )
@@ -416,7 +416,7 @@
     (AttActive      (# (DefActions) 
         (distDefActions * defActionsAttActive)))
 
-    (HostObs        (HostObs'   UNIFORM))
+    (HostObs        (hostObsDD))
     (ActionResult   (escAccountObs))
     (ConnObs        (connObsDD))
     (SecObs         (# (DefActions) 
@@ -511,6 +511,16 @@
 
 -- multi agent reward DD for level 0
 
+(defdd attackCost
+    (DefActions
+        (LockAccount        (0.0))
+        (DeployDataDecoys   (0.0))
+        (DecoyAccount       (0.0))
+        (LogActivity        (-100.0))
+        (Nop                (0.0))
+    )
+)
+
 (defdd successCondition
     (HostHasData
         (yes
@@ -582,7 +592,7 @@
     * (HostHasData      UNIFORM)
     * (DataFound        no)
     * (DataPrivs        UNIFORM)
-    * (EscAccounts      yes)
+    * (EscAccounts      UNIFORM)
     * (AccFound         no)
     * (AccessLevel      user)
     * (AttActive        yes)
@@ -768,7 +778,7 @@
     (AccObs         (accStateObs))
 )
 
-(defdbn actionConfineUser
+(defdbn actionLogActivity
     (HostType       (SAME HostType))
     (HostHasData    (SAME HostHasData))
     (DataFound      (attActionsDataFound))
@@ -814,23 +824,34 @@
 )
 
 
-(defdd loggingActionReward
-    (AttActions
-        (FileRecon      (0.0))
-        (EnumAccounts   (0.0))
-        (PrivEscAcc     (0.0))
-        (Nop            (0.0))
-        (Exit           
-            (DataInjected
-                (yes    (10.0))
-                (no     (0.0))
+(defdd logActivityReward
+    (HostType
+        (critical           (-1.0))
+        (critical_honeypot  (-1.0))
+        (honeypot
+            (HostHasData
+                (yes
+                    (AttActions
+                        (FileRecon      (0.0))
+                        (EnumAccounts   (0.0))
+                        (PrivEscAcc     (0.0))
+                        (Nop            (0.0))
+                        (Exit           (0.0))
+                        (ManipulateData 
+                            (AttActive
+                                (yes    (10.0))
+                                (no     (0.0))
+                            )
+                        )
+                    )
+                )
+                (no     (-1.0))
             )
         )
-        (ManipulateData (0.0))
-    )
+    ) 
 )
 
-(defdd honeypotReward
+(defdd defenderReward
     (HostType
         (critical           
             (DataInjected
@@ -838,8 +859,7 @@
                 (no     (0.0))
             )
         )
-        (honeypot           (loggingActionReward))
-        (critical_honeypot  (0.0))
+        (honeypot           (0.0))
     )
 )
 
@@ -884,18 +904,18 @@
 
     (dynamics
         (LockAccount        (actionLockAccount))
-        (ConfineUser        (actionConfineUser))
+        (LogActivity        (actionLogActivity))
         (Nop                (actionNop))
         (DeployDataDecoys   (actionDeployDataDecoys))
         (DecoyAccount       (actionDecoyAccount))
     )
     
     (R
-        (LockAccount        (honeypotReward + lockAccountReward))
-        (ConfineUser        (honeypotReward - 10.0))
-        (Nop                (honeypotReward))
-        (DeployDataDecoys   (honeypotReward - 1.0))
-        (DecoyAccount       (honeypotReward - 1.0))
+        (LockAccount        (defenderReward + lockAccountReward))
+        (LogActivity        (defenderReward + logActivityReward))
+        (Nop                (defenderReward))
+        (DeployDataDecoys   (defenderReward - 1.0))
+        (DecoyAccount       (defenderReward - 1.0))
     )
 
     (discount 0.95)
@@ -984,7 +1004,7 @@
 
     (dynamics
         (LockAccount        (actionLockAccount))
-        (ConfineUser        (actionConfineUser))
+        (LogActivity        (actionLogActivity))
         (Nop                (actionNop))
         (DeployDataDecoys   (actionDeployDataDecoys))
         (DecoyAccount       (actionDecoyAccount))
@@ -992,7 +1012,7 @@
     
     (R
         (LockAccount        (-1.0))
-        (ConfineUser        (-1.0))
+        (LogActivity        (-1.0))
         (Nop                (0.0))
         (DeployDataDecoys   (-1.0))
         (DecoyAccount       (-1.0))
@@ -1078,7 +1098,7 @@
     (AttActive      (defActionsAttActive))
     (DataInjected   (SAME DataInjected))
 
-    (HostObs        (HostObs'   UNIFORM))
+    (HostObs        (hostObsDD))
     (ActionResult   (escAccountObs))
     (SecObs         (secObsGeneral))
     (ConnObs        (connObsDD))
@@ -1197,7 +1217,7 @@
         (FileRecon          (-1.0))
         (EnumAccounts       (-1.0))
         (PrivEscAcc         (-1.0))
-        (ManipulateData     (-1.0))
+        (ManipulateData     (-1.0 + attackCost))
         (Nop                (nopCost))
         (Exit               (exitReward))
     )
@@ -1240,7 +1260,7 @@
     (HostType           critical_honeypot)
     * (DataPrivs        UNIFORM)
     * (HostHasData      UNIFORM)
-    * (EscAccounts      yes)
+    * (EscAccounts      UNIFORM)
     * (DataFound        no)
     * (AccFound         no)
     * (AccessLevel      user)
@@ -1295,18 +1315,18 @@
 
     (dynamics
         (LockAccount        (actionLockAccount))
-        (ConfineUser        (actionConfineUser))
+        (LogActivity        (actionLogActivity))
         (Nop                (actionNop))
         (DeployDataDecoys   (actionDeployDataDecoys))
         (DecoyAccount       (actionDecoyAccount))
     )
     
     (R
-        (LockAccount        (honeypotReward + lockAccountReward))
-        (ConfineUser        (honeypotReward - 10.0))
-        (Nop                (honeypotReward))
-        (DeployDataDecoys   (honeypotReward - 1.0))
-        (DecoyAccount       (honeypotReward - 1.0))
+        (LockAccount        (defenderReward + lockAccountReward))
+        (LogActivity        (defenderReward + logActivityReward))
+        (Nop                (defenderReward))
+        (DeployDataDecoys   (defenderReward - 1.0))
+        (DecoyAccount       (defenderReward - 1.0))
     )
 
     (discount 0.95)
@@ -1356,3 +1376,4 @@
     * (AttActive        yes)
     * (DataInjected     no)
 )
+
