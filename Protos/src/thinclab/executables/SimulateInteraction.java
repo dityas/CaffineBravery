@@ -125,14 +125,15 @@ public class SimulateInteraction {
         var parser = new SpuddXMainParser(domainFile);
         parser.run();
 
+        LOGGER.info("Parsed domain file");
+
         AlphaVectorPolicy p = null;
 
         // Get the agent model
         var model = (IPOMDP) parser.getModel(iName).orElseGet(() ->
                 {
                     LOGGER.error("Model %s not found", iName);
-                    System.exit(-1);
-                    return null;
+                    throw new RuntimeException("Model not found error");
                 });
 
         // Get the opponent model

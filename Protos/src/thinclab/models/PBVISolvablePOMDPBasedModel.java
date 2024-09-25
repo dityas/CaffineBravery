@@ -161,7 +161,6 @@ PBVISolvable, POSeqDecMakingModel<DD> {
         }).collect(Collectors.toList());
 
         this.discount = discount;
-
     }
 
     public void setBiased() {
@@ -172,19 +171,16 @@ PBVISolvable, POSeqDecMakingModel<DD> {
         return BIASED_AGENT;
     }
 
-    protected static boolean underSpecifiedDBN(DBN dbn, List<Integer> vars) {
+    protected static void underSpecifiedDBN(DBN dbn, List<Integer> vars) {
 
         var res = vars.stream()
             .filter(v -> !dbn.cpds.containsKey(v))
             .findAny();
 
-        if (res.isEmpty())
-            return false;
-
-        else {
-            LOGGER.error("Under specified DBN %s", dbn);
-            System.exit(-1);
-            return true;
+        if (!res.isEmpty()) {
+            LOGGER.error("Under specified DBN for %s from %s", res, vars);
+            throw new RuntimeException(
+                    String.format("Underspecified DBN %s", dbn));
         }
     }
 

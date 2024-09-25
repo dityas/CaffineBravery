@@ -29,7 +29,8 @@ public class ModelsParser extends SpuddXBaseVisitor<Model> {
 	private HashMap<String, Model> declaredModels;
 	private DDParser ddParser;
 
-	private static final Logger LOGGER = LogManager.getLogger(ModelsParser.class);
+	private static final Logger LOGGER = 
+        LogManager.getFormatterLogger(ModelsParser.class);
 
 	public ModelsParser(DDParser ddParser, HashMap<String, Model> declaredModels) {
 
@@ -119,7 +120,7 @@ public class ModelsParser extends SpuddXBaseVisitor<Model> {
 		if (wrongFrames.isPresent()) {
 			LOGGER.error("While parsing opponent frames for IPOMDP, " +
                     "%s is not a valid opponent frame type", wrongFrames.get());
-			System.exit(-1);
+            throw new RuntimeException("Incorrect frames error");
 		}
 
 		HashMap<String, Model> dynamics = new HashMap<>(5);

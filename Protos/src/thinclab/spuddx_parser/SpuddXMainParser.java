@@ -192,14 +192,11 @@ public class SpuddXMainParser extends SpuddXBaseListener {
         Model dbn = this.modelParser.visit(ctx);
 
         if (!(dbn instanceof DBN)) {
-
             LOGGER.error(String.format("%s should be a DBN but is %s", modelName, dbn.getClass().getTypeName()));
-            System.exit(-1);
+            throw new RuntimeException("DBN parsing error");
         }
 
         this.models.put(modelName, dbn);
-        LOGGER.debug(String.format("Parsed DBN %s", modelName));
-
         super.enterDBNDef(ctx);
     }
 
@@ -207,12 +204,11 @@ public class SpuddXMainParser extends SpuddXBaseListener {
     public void enterPOMDPDef(POMDPDefContext ctx) {
 
         String modelName = ctx.pomdp_def().model_name().IDENTIFIER().getText();
+        LOGGER.debug("Parsing POMDP %s", modelName);
 
         if (this.models.containsKey(modelName)) {
-
-            LOGGER.error(String.format("A model named %s has been defined previously.", modelName));
-            LOGGER.error(String.format("Error while parsing %s", ctx.getText()));
-            System.exit(-1);
+            LOGGER.error(String.format("A model named %s has been defined previously", modelName));
+            throw new RuntimeException("Model redefined error");
         }
 
         Model pomdp = this.modelParser.visit(ctx);
@@ -241,10 +237,8 @@ public class SpuddXMainParser extends SpuddXBaseListener {
         String modelName = ctx.ipomdp_def().model_name().IDENTIFIER().getText();
 
         if (this.models.containsKey(modelName)) {
-
-            LOGGER.error("A model named %s has been defined previously.", modelName);
-            LOGGER.error("Error while parsing %s", ctx.getText());
-            System.exit(-1);
+            LOGGER.error("A model named %s has been defined previously", modelName);
+            throw new RuntimeException("Model redefined error");
         }
 
         Model ipomdp = this.modelParser.visit(ctx);

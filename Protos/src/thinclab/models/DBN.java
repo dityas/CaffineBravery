@@ -49,20 +49,6 @@ public class DBN extends DirectedGraphicalModel {
 	}
 
 	@Override
-	public String toString() {
-
-		var builder = new StringBuilder();
-
-		builder.append("DBN : [\r\n");
-		this.cpds.entrySet().stream().forEach(e -> builder.append(Global.varNames.get(e.getKey() - 1)).append(" : ")
-				.append(e.getValue()).append("\r\n"));
-
-		builder.append("]\r\n");
-
-		return builder.toString();
-	}
-
-	@Override
 	public List<String> S() {
 
 		// TODO Auto-generated method stub

@@ -136,6 +136,7 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
     public void solveOpponent() {
 
         // create interactive state space using mjs
+        LOGGER.debug("Solving opponent model for %s", this.getName());
         updateIS();
 
         // populate mj to EC map
@@ -303,6 +304,7 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
 
         // initialize dynamics like POMDP
         super(S, O, A, dynamics, R, discount);
+        LOGGER.debug("Initializing IPOMDP");
 
         jointR = new ArrayList<DD>(this.R.size());
         jointR.addAll(this.R);
