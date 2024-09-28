@@ -8,6 +8,7 @@ import thinclab.legacy.DDleaf;
 import thinclab.legacy.Global;
 import thinclab.models.POMDP;
 import thinclab.models.datastructures.PolicyGraph;
+import thinclab.models.datastructures.PolicyTreeFSC;
 import thinclab.policy.AlphaVectorPolicy;
 import thinclab.solver.SymbolicPerseusSolver;
 import thinclab.spuddx_parser.SpuddXMainParser;
@@ -56,8 +57,8 @@ class TestPolicyGraph {
 		System.gc();
 
 		LOGGER.info("Running Single agent tiger domain");
-		String domainFile = this.getClass().getClassLoader().getResource("test_domains/test_tiger_domain.spudd")
-				.getFile();
+		String domainFile = this.getClass().getClassLoader()
+            .getResource("test_domains/test_tiger_domain.spudd").getFile();
 
 		// Run domain
 		var domainRunner = new SpuddXMainParser(domainFile);
@@ -66,7 +67,6 @@ class TestPolicyGraph {
 		// Get agent I
 		var I = (POMDP) domainRunner.getModel("agentI").orElseGet(() ->
 			{
-
 				LOGGER.error("Model not found");
 				System.exit(-1);
 				return null;
@@ -75,9 +75,8 @@ class TestPolicyGraph {
 		var solver = new SymbolicPerseusSolver<POMDP>(I);
 		var policy = solver.solve(List.of(DDleaf.getDD(0.5f)), 100, 10);
 
-		var G = PolicyGraph.makePolicyGraph(List.of(DDleaf.getDD(0.5f)), I, policy);
-		
-		LOGGER.info(String.format("Made policy graph %s", G));
+        var T = new PolicyTreeFSC(List.of(DDleaf.getDD(0.5f)), I, policy, 10);
+        T.makeFSC(I.oAll);
 	}
 
 }

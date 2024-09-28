@@ -21,6 +21,7 @@ import thinclab.legacy.DD;
 import thinclab.legacy.DDleaf;
 import thinclab.legacy.Global;
 import thinclab.models.PBVISolvablePOMDPBasedModel;
+import thinclab.models.POMDP;
 import thinclab.policy.AlphaVectorPolicy;
 import thinclab.solver.SymbolicPerseusSolver;
 import thinclab.utils.Jsonable;
@@ -169,8 +170,10 @@ public class PolicyGraph implements Jsonable {
         for (var obs: m.oAll) {
 
             var prob = DDOP.restrict(likelihoods, m.i_Om_p(), obs).getVal();
-            if (prob < 1e-6f)
+            if (prob < 1e-6f) {
+                LOGGER.debug("Obs Prob of %s was %s, skipping", obs, prob);
                 continue;
+            }
             
             var nextBelief = m.beliefUpdate(b, a, obs);
             nextBeliefList.add(
@@ -191,8 +194,10 @@ public class PolicyGraph implements Jsonable {
             return Tuple.of(G, b_is);
 
         DD b = b_is.remove(0);
-        if (G.adjMap.containsKey(DDOP.bestAlphaIndex(p, b)))
+        if (G.adjMap.containsKey(DDOP.bestAlphaIndex(p, b))) {
+            LOGGER.debug("%s belief left for checking ECIS", b_is.size());
             return expandPolicyGraphDFS(b_is, G, m, p);
+        }
 
         // get start policy node
         int alphaId = DDOP.bestAlphaIndex(p, b);
@@ -285,6 +290,10 @@ public class PolicyGraph implements Jsonable {
     }
 
     public static PolicyGraph makePolicyGraph(final List<DD> b_is, PBVISolvablePOMDPBasedModel m, AlphaVectorPolicy p) {
+
+        if (m instanceof POMDP) {
+            var t = new PolicyTreeFSC(b_is, (POMDP) m, p, 10);
+        }
 
         // Make empty policy graph
         var G = new PolicyGraph(m, p);
