@@ -91,7 +91,7 @@ SymbolicPerseusSolver<M extends PBVISolvablePOMDPBasedModel>
 
         beliefSamplingWeights = DDOP.getBeliefRegionEvalDiff(B, UB, Vn);
 
-        while (true) {
+        while (true && newVn.size() <= 30) {
 
             var index = DDOP.sample(beliefSamplingWeights);
             if (index < 0)

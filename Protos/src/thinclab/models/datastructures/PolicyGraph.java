@@ -8,6 +8,7 @@
 package thinclab.models.datastructures;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -141,7 +142,7 @@ public class PolicyGraph implements Jsonable {
 
                 if (adjMap.get(node).containsKey(edge.getValue())) {
 
-                    var _node = nodeMap.get(adjMap.get(node).get(edge.getValue())).alphaId;
+                    var _node = nodeMap.get(adjMap.get(node).get(edge.getValue())).nodeId;
 
                     thisEdgeJson.add(edgeLabelMap.get(edge.getKey()._1()).toString(),
                             gson.toJsonTree(Integer.toString(_node)));
@@ -149,7 +150,7 @@ public class PolicyGraph implements Jsonable {
             }
 
             // edgeJson.add(Tuple.of(nodeMap.get(node).actName, nodeMap.get(node).alphaId).toString(), thisEdgeJson);
-            edgeJson.add(String.format("%s", nodeMap.get(node).alphaId), thisEdgeJson);
+            edgeJson.add(String.format("%s", nodeMap.get(node).nodeId), thisEdgeJson);
         }
 
         json.add("nodes", gson.toJsonTree(nodeJson));
@@ -170,10 +171,8 @@ public class PolicyGraph implements Jsonable {
         for (var obs: m.oAll) {
 
             var prob = DDOP.restrict(likelihoods, m.i_Om_p(), obs).getVal();
-            if (prob < 1e-6f) {
-                LOGGER.debug("Obs Prob of %s was %s, skipping", obs, prob);
+            if (prob < 1e-6f)
                 continue;
-            }
             
             var nextBelief = m.beliefUpdate(b, a, obs);
             nextBeliefList.add(
@@ -195,7 +194,6 @@ public class PolicyGraph implements Jsonable {
 
         DD b = b_is.remove(0);
         if (G.adjMap.containsKey(DDOP.bestAlphaIndex(p, b))) {
-            LOGGER.debug("%s belief left for checking ECIS", b_is.size());
             return expandPolicyGraphDFS(b_is, G, m, p);
         }
 
@@ -291,49 +289,98 @@ public class PolicyGraph implements Jsonable {
 
     public static PolicyGraph makePolicyGraph(final List<DD> b_is, PBVISolvablePOMDPBasedModel m, AlphaVectorPolicy p) {
 
-        if (m instanceof POMDP) {
-            var t = new PolicyTreeFSC(b_is, (POMDP) m, p, 10);
-        }
-
         // Make empty policy graph
         var G = new PolicyGraph(m, p);
-        var _b_is = new ArrayList<DD>(b_is);
-        LOGGER.debug(String.format("Initialized empty policy graph. Starting expansion from %s beliefs", b_is.size()));
+//        var _b_is = new ArrayList<DD>(b_is);
+//        LOGGER.debug(String.format("Initialized empty policy graph. Starting expansion from %s beliefs", b_is.size()));
+//
+//        var nextState = Tuple.of(G, (List<DD>) _b_is);
+//
+//        while (nextState._1().size() > 0) {
+//
+//            nextState = expandPolicyGraphDFS(nextState._1(), nextState._0(), m, p);
+//
+//            if (nextState._1().size() > 1000) {
+//
+//                LOGGER.warn("Belief explosion while making policy graph");
+//                LOGGER.info("Stopping Policy Graph construction");
+//                break;
+//            }
+//        }
+//
+//        if (nextState._1().size() > 0) {
+//
+//            LOGGER.warn("Graph construction was terminated prematurely. The partial graph is shown below");
+//            G.approximate();
+//        }
+//
+//        LOGGER.info("Policy Graph for %s has %s nodes", 
+//                m.getName(), nextState._0().adjMap.size());
+//
+//        // mark start nodes
+//        LOGGER.debug("Marking start nodes for %s beliefs", b_is.size());
+//        b_is.forEach(_b -> {
+//
+//            int id = DDOP.bestAlphaIndex(p, _b);
+//            var _n = G.nodeMap.get(id);
+//            G.nodeMap.put(id, 
+//                    new PolicyNode(_n.alphaId, _n.actId, _n.actName, true));
+//        });
 
-        var nextState = Tuple.of(G, (List<DD>) _b_is);
+        var t = new PolicyTreeFSC(b_is, m, p, 6);
+        G.convertToTree(t, m);
 
-        while (nextState._1().size() > 0) {
+        return G;
+    }
 
-            nextState = expandPolicyGraphDFS(nextState._1(), nextState._0(), m, p);
+    public void convertToTree(PolicyTreeFSC t, PBVISolvablePOMDPBasedModel m) {
 
-            if (nextState._1().size() > 1000) {
+        nodeMap.clear();
+        adjMap.clear();
 
-                LOGGER.warn("Belief explosion while making policy graph");
-                LOGGER.info("Stopping Policy Graph construction");
-                break;
+        nodeMap.putAll(t.nodeMap);
+        for (var k: nodeMap.keySet()) {
+            int actId = nodeMap.get(k).actId;
+            nodeMap.get(k).actName = m.A().get(actId);
+        }
+
+        var reverseMap = new HashMap<Integer, List<Integer>>();
+
+        for (var e: t.observationSpace.entrySet())
+            reverseMap.put(e.getValue(), e.getKey());
+
+        for (var adjEntry: t.adjMap.entrySet()) {
+            
+            int src = adjEntry.getKey();
+            for (var edges: adjEntry.getValue().entrySet()) {
+
+                int srcAct = t.nodeMap.get(src).actId;
+                var obs = reverseMap.get(edges.getKey());
+                int dest = edges.getValue();
+
+                int edgeIdx = edgeMap.get(Tuple.of(srcAct, obs));
+
+                if (src == -1)
+                    continue;
+
+                if(dest != -1)
+                    updateAgjMap(src, edgeIdx, dest);
             }
         }
 
-        if (nextState._1().size() > 0) {
+        for (var n: nodeMap.keySet()) {
 
-            LOGGER.warn("Graph construction was terminated prematurely. The partial graph is shown below");
-            G.approximate();
+            if (!adjMap.containsKey(n))
+                adjMap.put(n, new ConcurrentHashMap<>());
         }
+    }
 
-        LOGGER.info("Policy Graph for %s has %s nodes", 
-                m.getName(), nextState._0().adjMap.size());
+    private void updateAgjMap(int src, int edge, int dest) {
 
-        // mark start nodes
-        LOGGER.debug("Marking start nodes for %s beliefs", b_is.size());
-        b_is.forEach(_b -> {
+        if (!adjMap.containsKey(src))
+            adjMap.put(src, new ConcurrentHashMap<Integer, Integer>());
 
-            int id = DDOP.bestAlphaIndex(p, _b);
-            var _n = G.nodeMap.get(id);
-            G.nodeMap.put(id, 
-                    new PolicyNode(_n.alphaId, _n.actId, _n.actName, true));
-        });
-
-        return G;
+        adjMap.get(src).put(edge, dest);
     }
 
 }

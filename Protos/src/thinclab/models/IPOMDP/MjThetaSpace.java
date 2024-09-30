@@ -92,6 +92,14 @@ public class MjThetaSpace implements Frame<PolicyNode> {
     @Override
     public List<Tuple3<MjRepr<PolicyNode>, List<Integer>, MjRepr<PolicyNode>>> getTriples() {
 
+//        for (var k: G.nodeMap.keySet())
+//            LOGGER.debug("%s: %s", k, G.nodeMap.get(k));
+//
+//        for (var k: G.adjMap.keySet()) {
+//            for (var e: G.adjMap.get(k).entrySet()) 
+//                LOGGER.debug("%s: %s: %s", k, e.getKey(), e.getValue());
+//        }
+
         var triples = G.adjMap.entrySet().stream()
             .flatMap(e -> G.edgeMap.entrySet().stream().map(f ->
                         {
@@ -125,5 +133,4 @@ public class MjThetaSpace implements Frame<PolicyNode> {
 
         return triples;
     }
-
 }

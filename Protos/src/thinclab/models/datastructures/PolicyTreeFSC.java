@@ -10,8 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import thinclab.DDOP;
 import thinclab.legacy.DD;
-import thinclab.models.POMDP;
-import thinclab.models.IPOMDP.IPOMDP;
+import thinclab.models.PBVISolvablePOMDPBasedModel;
 import thinclab.policy.AlphaVectorPolicy;
 import thinclab.utils.Tuple;
 import thinclab.utils.Tuple3;
@@ -41,22 +40,44 @@ public class PolicyTreeFSC {
 
     private int nodeId = 1;
 
-    public PolicyTreeFSC(final List<DD> beliefs, final POMDP ipomdp,
+    public PolicyTreeFSC(final List<DD> beliefs,
+            final PBVISolvablePOMDPBasedModel ipomdp,
             final AlphaVectorPolicy Vn, final int maxDepth) {
 
-        LOGGER.info("Making approximate FSC for IPOMDP %s", ipomdp.getName());
+        LOGGER.info("Making approximate FSC for IPOMDP %s for horizon %s",
+                ipomdp.getName(), maxDepth);
 
         makeActionObservationIndex(ipomdp);
-        LOGGER.info("Action-observation space for %s is %s", ipomdp.getName(),
-                edgeMap.size());
+        LOGGER.info("Observation space for %s is %s", ipomdp.getName(),
+                observationSpace.size());
 
         makePolicyTree(beliefs, ipomdp, maxDepth, Vn);
         LOGGER.info("Policy tree for %s contains %s nodes", ipomdp.getName(),
                 this.nodeId);
         makeFSC(ipomdp.oAll);
+        sanityCheck();
     }
 
-    private void makeActionObservationIndex(final POMDP ipomdp) {
+    private void sanityCheck() {
+
+        LOGGER.debug(adjMap.size());
+        for (var n: adjMap.keySet()) {
+            for (var o: adjMap.get(n).keySet()) {
+                var dest = adjMap.get(n).get(o);
+
+                if (dest == -1)
+                    continue;
+
+                if (!nodeMap.containsKey(n) || !nodeMap.containsKey(dest)) {
+                    throw new RuntimeException(
+                            String.format("Node %s or %s not in %s",
+                                n, dest, nodeMap));
+                }
+            }
+        }
+    }
+
+    private void makeActionObservationIndex(final PBVISolvablePOMDPBasedModel ipomdp) {
 
         var allObservations = ipomdp.oAll;
 
@@ -195,7 +216,8 @@ public class PolicyTreeFSC {
         }
     }
 
-    public void makePolicyTree(final List<DD> beliefs, final POMDP ipomdp,
+    public void makePolicyTree(final List<DD> beliefs,
+            final PBVISolvablePOMDPBasedModel ipomdp,
             final int maxDepth, final AlphaVectorPolicy Vn) {
 
         // Populate belief deck with initial beliefs
@@ -212,9 +234,14 @@ public class PolicyTreeFSC {
             var n = node._2(); // node id
             
             int bestAction = Vn.getBestActionIndex(b);
+            int alphaId = DDOP.bestAlphaIndex(Vn, b);
 
             // Make new node
-            var pnode = new PolicyNode(n, bestAction, "");
+            PolicyNode pnode = new PolicyNode(alphaId, bestAction, "");
+            if (d == 0)
+                pnode.start = true;
+
+            pnode.nodeId = n;
             nodeMap.put(n, pnode);
 
             if (d >= maxDepth - 1) {

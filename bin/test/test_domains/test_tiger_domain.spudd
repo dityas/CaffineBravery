@@ -1,4 +1,5 @@
 (defvar TigerLoc (TL TR))
+(defvar DummyState (TL TR))
 	
 (defvar Growl (GL GR))
 	
@@ -16,15 +17,15 @@
 		(TigerLoc'
 			(TL
 				(Growl'
-					(GL 	(0.85))
-					(GR 	(0.15))
+					(GL 	(0.65))
+					(GR 	(0.35))
 				)
 			)
 			
 			(TR
 				(Growl'
-					(GL 	(0.15))
-					(GR 	(0.85))
+					(GL 	(0.35))
+					(GR 	(0.65))
 				)
 			)
 		)

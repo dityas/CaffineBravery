@@ -18,10 +18,11 @@ import thinclab.utils.Jsonable;
  */
 public class PolicyNode implements Jsonable {
 
-	final public String actName;
-	final public int alphaId;
-	final public int actId;
-    final public boolean start;
+	public String actName;
+	public int alphaId;
+	public int actId;
+    public int nodeId = -99;
+    public boolean start;
 	
 	public PolicyNode(int alphaId, int actId, String actName) {
 
@@ -53,7 +54,9 @@ public class PolicyNode implements Jsonable {
 
 		var node = (PolicyNode) obj;
 
-		if (node.alphaId == alphaId && node.actId == actId && node.actName.contentEquals(actName))
+		if (node.alphaId == alphaId && node.actId == actId 
+                && node.actName.contentEquals(actName)
+                && node.nodeId == nodeId)
 			return true;
 
 		return false;
@@ -63,7 +66,7 @@ public class PolicyNode implements Jsonable {
 	public int hashCode() {
 
 		var builder = new HashCodeBuilder();
-		builder.append(alphaId).append(actId).append(actName);
+		builder.append(alphaId).append(actId).append(actName).append(nodeId);
 
 		return builder.toHashCode();
 	}
@@ -74,6 +77,7 @@ public class PolicyNode implements Jsonable {
 		var json = new JsonObject();
 		json.addProperty("alpha", alphaId);
 		json.addProperty("actId", actId);
+		json.addProperty("nodeId", nodeId);
 		json.addProperty("act", actName);
 
         if (start)

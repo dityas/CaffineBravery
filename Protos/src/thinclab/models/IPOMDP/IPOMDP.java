@@ -133,6 +133,23 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
 
     }
 
+    public String findStartNode(int frameId, int alphaId, int actId,
+            String actName) {
+
+        for (var n: ECMap.keySet()) {
+
+            if (n._0() != frameId)
+                continue;
+
+            var node = n._1();
+            if (node.actId == actId && node.alphaId == alphaId
+                    && node.actName == actName && node.start)
+                return ECMap.get(n);
+        }
+
+        return null;
+    }
+
     public void solveOpponent() {
 
         // create interactive state space using mjs
@@ -143,7 +160,6 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
         Global.modelVars.get(Global.varNames.get(i_Mj - 1)).entrySet().stream()
             .forEach(e ->
                     {
-
                         int frameId = e.getKey().frame;
                         var bel = e.getKey().m.beliefs.stream().findAny().get();
                         var frame = ecThetas.get(frameId);
@@ -153,11 +169,14 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
 
                         int alphaId = DDOP.bestAlphaIndex(frame.Vn, bel);
                         int actId = frame.Vn.get(alphaId).getActId();
+                        var actName = frame.m.A().get(actId);
 
-                        var node = new MjRepr<>(frameId, 
-                                new PolicyNode(alphaId, 
-                                    actId, frame.m.A().get(actId)));
-                        var ec = ECMap.get(node);
+//                        var node = new MjRepr<>(frameId, 
+//                                new PolicyNode(alphaId, 
+//                                    actId, frame.m.A().get(actId)));
+//                        var ec = ECMap.get(node);
+
+                        var ec = findStartNode(frameId, alphaId, actId, actName);
 
                         if (ec == null) {
                             LOGGER.error("Panic! Could not find equivalence" +
@@ -172,7 +191,7 @@ public class IPOMDP extends PBVISolvablePOMDPBasedModel {
                             System.exit(-1);
                         }
 
-                        mjToECMap.put(e.getValue(), ECMap.get(node));
+                        mjToECMap.put(e.getValue(), ec);
                     });
     }
 
